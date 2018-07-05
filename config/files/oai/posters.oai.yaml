@@ -1,0 +1,19 @@
+Kafka:
+  host: sb-uwf3:7078
+  partition: 1
+  topicToUse: POSTERS
+OAI:
+  granularity: YYYY-MM-DD
+  httpproxy: null
+  metadataPrefix: marcxml
+  resumptionToken: null
+  setName: null
+  setSpec: AllBib
+  stoppageTime: '2017-07-09T20:36:55Z'
+  timestampUTC: '2017-07-01'
+  until: null
+  url: http://opac.admin.ch/cgi-bin/postersoai/VTLS/Vortex.pl
+Processing:
+  encodeUnicodeAsUTF8: null
+  processorType: OAI
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>

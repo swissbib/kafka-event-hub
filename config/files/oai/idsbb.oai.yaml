@@ -1,0 +1,19 @@
+Kafka:
+  host: sb-uwf3:7078
+  partition: 1
+  topicToUse: IDSBB
+OAI:
+  granularity: YYYY-MM-DDThh:mm:ssZ
+  httpproxy: null
+  metadataPrefix: marc21
+  resumptionToken: null
+  setName: null
+  setSpec: SWISSBIB-FULL-OAI
+  stoppageTime: '2017-07-06T19:58:54Z'
+  timestampUTC: '2017-07-06T17:58:54Z'
+  until: null
+  url: http://alephtest.unibas.ch/OAI
+Processing:
+  encodeUnicodeAsUTF8: null
+  processorType: OAI
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>

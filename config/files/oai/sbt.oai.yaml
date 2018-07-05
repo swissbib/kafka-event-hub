@@ -1,0 +1,19 @@
+Kafka:
+  host: sb-uwf3:7078
+  partition: 0
+  topicToUse: SBT
+OAI:
+  granularity: YYYY-MM-DDThh:mm:ssZ
+  httpproxy: null
+  metadataPrefix: marc21
+  resumptionToken: null
+  setName: null
+  setSpec: SWISSBIB-FULL-OAI
+  stoppageTime: '2017-07-09T13:10:32Z'
+  timestampUTC: '2017-07-09T11:10:26Z'
+  until: null
+  url: http://aleph.sbt.ti.ch/OAI
+Processing:
+  encodeUnicodeAsUTF8: null
+  processorType: OAI
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>

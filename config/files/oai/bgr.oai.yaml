@@ -1,0 +1,19 @@
+Kafka:
+  host: localhost:9092
+  partition: 0
+  topicToUse: BGR
+OAI:
+  granularity: YYYY-MM-DDThh:mm:ssZ
+  httpproxy: null
+  metadataPrefix: marc21
+  resumptionToken: null
+  setName: null
+  setSpec: SWISSBIB-FULL-OAI
+  stoppageTime: '2018-06-21T21:58:26Z'
+  timestampUTC: 2018-06-21T19:29:7Z
+  until: null
+  url: http://aleph.gr.ch/OAI
+Processing:
+  encodeUnicodeAsUTF8: null
+  processorType: OAI
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>

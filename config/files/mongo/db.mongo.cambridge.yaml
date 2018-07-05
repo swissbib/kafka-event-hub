@@ -1,0 +1,23 @@
+DB:
+  dbname: nativeSources
+  collection:
+    name : sourceCambridge
+    docfield: jatsRecord
+
+HOST:
+  authDB: admin
+  password: null
+  port: 29017
+  server: localhost
+  user: null
+Kafka:
+  host: localhost:9092
+  partition: 0
+  topicToUse: CambridgeMongo
+Processing:
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+  identifierRegEx: .*?<identifier>(.*?)</identifier>.*
+  eventTimeRegEx: .*?<datestamp>(.*?)</datestamp>.*
+  mfCompatibleBeingReplaced: .*?<marc:record.*?>
+  cleanUpType: Jats
+

@@ -1,0 +1,23 @@
+DB:
+  dbname: nativeSources
+  collection:
+    name : sourceSersol
+    docfield: record
+
+HOST:
+  authDB: admin
+  password: null
+  port: 29017
+  server: localhost
+  user: null
+Kafka:
+  host: localhost:9092
+  partition: 0
+  topicToUse: SersolMongo
+Processing:
+  recordBodyRegEx: (.*)
+  identifierRegEx: .*?<controlfield tag="001">(.*?)</controlfield>.*
+  eventTimeRegEx: .*?<datestamp>(.*?)</datestamp>.*
+  mfCompatibleBeingReplaced: .*?<marc:record.*?>
+  cleanUpType: NebisCleanUp
+

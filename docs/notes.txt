@@ -1,0 +1,81 @@
+
+Python
+the hitchhicker guide to python
+(für Aufsetzen einer Umgebung)
+
+
+Ressourcen sickle
+https://pypi.python.org/pypi/Sickle
+https://readthedocs.org/projects/sickle/
+
+
+
+kafka-python doc
+http://kafka-python.readthedocs.io/en/master/usage.html
+
+
+
+start Kafka and Zookeeper servers
+
+$ZK_RUN/zkServer.sh start
+
+
+
+$KAFKA_RUN/kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
+
+nur einmal
+$KAFKA_RUN/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic OAI
+
+$KAFKA_RUN/kafka-topics.sh --zookeeper localhost:2181 --describe --topic OAI
+
+
+
+stop Kafka server
+$KAFKA_RUN/kafka-server-stop.sh
+stop Zookeeper
+$ZK_RUN/zkServer.sh  stop
+
+
+
+
+shell producer / consumer
+$KAFKA_RUN/kafka-console-producer.sh --broker-list localhost:9092 --topic OAI
+$KAFKA_RUN/kafka-console-consumer.sh --zookeeper localhost:2181 --topic OAI --from-beginning
+
+$KAFKA_RUN/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker  --topic OAI --zookeeper localhost:2181 --group testgroup
+
+//$KAFKA_HOME/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic OAI --time -1 | awk -F ":" '{sum += $3} END {print sum}'
+$KAFKA_RUN/kafka-run-class.sh kafka.tools.DumpLogSegments
+$KAFKA_RUN/kafka-run-class.sh kafka.tools.ExportZkOffsets
+
+
+Abfrage des Offsets eines topics
+$KAFKA_RUN/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic OAI --time -1
+
+Anzeige der vorhandenen Topics
+$KAFKA_HOME/bin/kafka-topics.sh  --zookeeper localhost:2181 --list
+
+Default TTL
+7 Tage
+https://www.quora.com/When-do-the-messages-published-in-Kafka-get-deleted
+
+
+delete a topic
+$KAFKA_RUN/kafka-topics.sh --delete --zookeeper localhost:2181 --topic LIBIBMongo
+
+Videobeispiele
+https://github.com/gwenshap/kafka-examples
+
+
+
+Flink and Kafka example
+https://www.youtube.com/watch?v=7RPQUsy4qOM
+bin/kafka-run-class.sh kafka.tools.ExportZkOffsets --group swissbib.oai --zkconnect localhost:2181 --output-file test.txt
+bin/kafka-run-class.sh kafka.tools.ImportZkOffsets  --zkconnect localhost:2181 --input-file test.txt
+mögliche tools
+https://cwiki.apache.org/confluence/display/KAFKA/System+Tools
+
+
+Hintergrund: https://github.com/confluentinc/confluent-kafka-python/issues/11
+https://www.virtualbox.org/wiki/Linux_Downloads
+https://tecadmin.net/install-oracle-virtualbox-on-ubuntu/

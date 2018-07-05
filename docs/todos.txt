@@ -1,0 +1,32 @@
+
+
+Fragen:
+1)wie gehe ich mit deleted messages um?
+-- werden diese auch 1:1 nach Kafka geschrieben und wie werden sie dirt behandelt
+-- früher waren diese messages zum Teil deformiert (hier vor allem Nebis). Wen wir sie nach Kafka schicken, braucht es einen Mechanismus, der die Nachrichten in eine einheitlices Format transformiert
+
+
+
+
+2) Konfiguration
+-- Konfiguratinen müssen nach Nutzung wieder serialisiert werden. (Bei OAI vor allem wegen des neuen timestamps)
+benutze ich neu YAML als Konfiguration, muss ich das noch implementieren. Hier auch vor allem die Möglichkeit, KOnfigurationen zu mischen
+
+
+3) Aufbereiten des abgeholten content (verschiedene Aspekte) - dafür brauche ich eine Form von pipeline
+-- füge allen records ein type Attribut zu damit es von Metafacture verarbeitet werden kann
+-- soll ich die namespaces aus dem raw Satz herausnehmen?
+
+
+4) Error handling wenn config file fehlt
+
+erstes Harvesting für HSG
+swissbib@ub-sbhp02:~$ $KAFKA_RUN/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic OAI --time -1
+OAI:0:916816
+
+
+5) Leere Liste (keine Treffer) einer OAI Abfrage führt zu Fehler, den muss man abfangen und loggen
+
+6) wenn man schreiben konnte und dann ein Fehler auftritt der zum Abbruch führt sollte dies geloggt werden
+
+

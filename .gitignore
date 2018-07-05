@@ -1,0 +1,6 @@
+ingestion/*/__pycache__
+ingestion/__pycache__
+config/__pycache__/
+utils/__pycache__
+ingestion/mongo/cleanup/__pycache__
+utils/__pycache__/

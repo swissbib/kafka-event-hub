@@ -1,0 +1,19 @@
+Kafka:
+  host: sb-uwf3:7078
+  partition: 1
+  topicToUse: HEMU
+OAI:
+  granularity: YYYY-MM-DDThh:mm:ssZ
+  httpproxy: null
+  metadataPrefix: marcxml
+  resumptionToken: null
+  setName: null
+  setSpec: marcxml
+  stoppageTime: 2017-07-12T22:49:5Z
+  timestampUTC: 2017-07-10T20:48:4Z
+  until: null
+  url: http://opacbiblio.hemu-cl.ch/cgi-bin/koha/oai.pl
+Processing:
+  encodeUnicodeAsUTF8: null
+  processorType: OAI
+  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
