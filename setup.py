@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 
+from distutils.core import setup
 import os.path
 import re
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
 import sys
-
-if sys.argv[-1] == 'publish':
-    os.system("python setup.py sdist")
-    os.system('twine upload dist/* -r pypi')
-    sys.exit()
 
 
 def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
+
+version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                    read('kafka_event_hub/__init__.py'), re.MULTILINE).group(1)
+
+if sys.argv[-1] == 'publish':
+    os.system("python setup.py sdist")
+    os.system('twine upload dist/swissbib_kafka_event_hub-{}.tar.gz -r pypi'.format(version))
+    sys.exit()
+
 
 description = 'Swissbib Kafka Event Hub'
 
@@ -26,8 +27,7 @@ A small library which implements various producers and consumers for the Swissbi
 A wide range of specific data sources and data target will be covered.
 """
 
-version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                    read('kafka_event_hub/__init__.py'), re.MULTILINE).group(1)
+
 
 install_require = ['confluent-kafka', 'PyYAML', 'Sickle', 'PyMongo', 'requests']
 
