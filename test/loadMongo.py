@@ -42,5 +42,5 @@ if __name__ == '__main__':
     client.lookUpData()
     client.preProcessData()
     client.process()
-    client.postProcessData()
+    client.update_configuration()
     print("".join(["job ",args.confFile, " finished: ",'{:%Y-%m-%dT%H:%M:%SZ}'.format(datetime.now(), '%Y-%m-%dT%H:%M:%SZ')]))

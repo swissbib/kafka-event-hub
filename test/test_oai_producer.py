@@ -10,10 +10,12 @@ __maintainer__ = "Guenter Hipler"
 __email__ = "guenter.hipler@unibas.ch"
 __status__ = "in development"
 __description__ = """
-bootstrap mechanism to start the various ingestion types
+bootstrap mechanism to start the various producers types
 
 
                     """
+from kafka_event_hub.config import OAIConfig
+from kafka_event_hub.producers import OAI
 
 
 if __name__ == '__main__':
@@ -29,25 +31,13 @@ if __name__ == '__main__':
     __description__ = """
 
                         """
-    from argparse import ArgumentParser
-    from config.appConfig import OAIConfig
-    #client could be one of these types
-    from ingestion.oai.oai import OAI
-    from ingestion.webdav.webdav import WebDav
-    from ingestion.filePush.filepush import FilePush
+    appConfig = OAIConfig('configs/oai/')
 
-
-    oParser = ArgumentParser()
-    oParser.add_argument("-c", "--config", dest="confFile")
-    args = oParser.parse_args()
-
-    appConfig = OAIConfig(args.confFile)
-
-    client = globals()[appConfig.getProcessor()](appConfig)
+    client = OA()[appConfig.processor](appConfig)
     client.initialize()
     client.lookUpData()
     client.preProcessData()
     client.process()
-    client.postProcessData()
+    client.update_configuration()
 
 

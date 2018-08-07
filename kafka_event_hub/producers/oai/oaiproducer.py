@@ -13,44 +13,40 @@ __description__ = """
 
                     """
 
+from kafka_event_hub.producers.base_producer import AbstractBaseProducer
+from kafka_event_hub.config import OAIConfig
+from kafka_event_hub.utility.producer_utility import transform_from_until
+
 from sickle import Sickle
-from ingestion.processor import BaseProcessor
-from sickle.oaiexceptions import OAIError
-from config.appConfig import AppConfig
+from sickle.oaiexceptions import OAIError, BadArgument
+
 import re
-from utils.ingestUtils import IngestUtils
-from sickle.oaiexceptions import BadArgument
 import sys
 
 
+class OAIProducer(AbstractBaseProducer):
 
-class OAI(BaseProcessor):
-
-    def __init__(self, appConfig : AppConfig = None):
-        BaseProcessor.__init__(self,appConfig)
-        self.recordBodyRegEx = re.compile(self.appConfig.getConfig()['Processing']['recordBodyRegEx'],
-                                                    re.UNICODE | re.DOTALL | re.IGNORECASE)
-        self.appConfig.setStartTimeInNextConfig()
-
-
+    def __init__(self, configuration: OAIConfig):
+        super().__init__(configuration)
+        self.recordBodyRegEx = re.compile(self.configuration['Processing']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.configuration.update_start_time()
 
     def process(self):
-
         try:
 
-            sickle = Sickle(self.appConfig.getConfig()['OAI']['url'])
+            sickle = Sickle(self.configuration['OAI']['url'])
             #print(sickle.endpoint)
             dic = {}
-            if not self.appConfig.getConfig()['OAI']['metadataPrefix'] is None:
-                dic['metadataPrefix'] =  self.appConfig.getConfig()['OAI']['metadataPrefix']
-            if not self.appConfig.getConfig()['OAI']['setSpec'] is None:
-                dic['set'] = self.appConfig.getConfig()['OAI']['setSpec']
-            if not self.appConfig.getConfig()['OAI']['timestampUTC'] is None:
-                dic['from'] = IngestUtils.transformFromUntil(self.appConfig.getConfig()['OAI']['timestampUTC'],
-                                                             self.appConfig.getConfig()['OAI']['granularity'])
-            if not self.appConfig.getConfig()['OAI']['until'] is None:
-                dic['until'] = IngestUtils.transformFromUntil(self.appConfig.getConfig()['OAI']['until'],
-                                                              self.appConfig.getConfig()['OAI']['granularity'])
+            if not self.configuration['OAI']['metadataPrefix'] is None:
+                dic['metadataPrefix'] =  self.configuration['OAI']['metadataPrefix']
+            if not self.configuration['OAI']['setSpec'] is None:
+                dic['set'] = self.configuration['OAI']['setSpec']
+            if not self.configuration['OAI']['timestampUTC'] is None:
+                dic['from'] = transform_from_until(self.configuration['OAI']['timestampUTC'],
+                                                             self.configuration['OAI']['granularity'])
+            if not self.configuration['OAI']['until'] is None:
+                dic['until'] = transform_from_until(self.configuration['OAI']['until'],
+                                                              self.configuration['OAI']['granularity'])
 
             #for k, v in dic.items():
             #    print(k, v)
@@ -75,9 +71,9 @@ class OAI(BaseProcessor):
                     #todo
                     #key should not contain the ID of the OAI identifier (sysID of library system
                     #otherwise partitions for single networks won't be stable
-                self.produceKafkaMessage(record.raw,
-                                         key=record.header.identifier,
-                                         eventTime=record.header.datestamp)
+                self._produce_kafka_message(record.raw,
+                                            key=record.header.identifier,
+                                            eventTime=record.header.datestamp)
                 #else:
                 #    raise Exception("we havent't found the body which should not be the case")
 
@@ -90,7 +86,7 @@ class OAI(BaseProcessor):
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
-    def postProcessData(self):
-        self.appConfig.setStopTimeInNextConfig()
-        super().postProcessData()
+    def update_configuration(self):
+        self.configuration.update_stop_time()
+        super().update_configuration()
 

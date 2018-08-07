@@ -8,8 +8,6 @@ Ressourcen sickle
 https://pypi.python.org/pypi/Sickle
 https://readthedocs.org/projects/sickle/
 
-
-
 kafka-python doc
 http://kafka-python.readthedocs.io/en/master/usage.html
 
