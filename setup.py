@@ -11,8 +11,6 @@ import sys
 
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist")
-    os.system("python2 setup.py bdist_wheel")
-    os.system("python3 setup.py bdist_wheel")
     os.system('twine upload dist/* -r pypi')
     sys.exit()
 
@@ -20,7 +18,7 @@ if sys.argv[-1] == 'publish':
 def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
 
-description = 'Kafka Event Hub Producers/Consumers'
+description = 'Swissbib Kafka Event Hub'
 
 long_description = """
 A small library which implements various producers and consumers for the Swissbib Kafka Event Hub.
@@ -34,16 +32,15 @@ version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
 install_require = ['confluent-kafka', 'PyYAML', 'Sickle', 'PyMongo', 'requests']
 
 setup(
-    name='Swissbib Kafka Event Hub',
+    name='swissbib_kafka_event_hub',
     packages=['kafka_event_hub'],
     description=description,
     version=version,
     author='Jonas Waeber',
     author_email='jonas.waeber@unibas.ch',
-    url='https://github/swissbib/kafka_event_hub',
+    url='https://github.com/swissbib/kafka_event_hub',
     keywords=['kafka', 'swissbib', 'oai', 'mongodb'],
     install_requires=install_require,
-    download_url='',
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
