@@ -4,7 +4,7 @@ Kafka:
   topicToUse: DSV05
 SRU:
   database: defaultdb
-  schema: march/json
+  schema: marc/json
   max_records: 100
   queries:
     - query:
