@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from setuptools import find_packages
 from distutils.core import setup
 import os.path
 import re
@@ -21,20 +22,16 @@ if sys.argv[-1] == 'publish':
 
 description = 'Swissbib Kafka Event Hub'
 
-long_description = """
-A small library which implements various producers and consumers for the Swissbib Kafka Event Hub.
-
-A wide range of specific data sources and data target will be covered.
-"""
-
+long_description = read('README.md')
 
 
 install_require = ['confluent-kafka', 'PyYAML', 'Sickle', 'PyMongo', 'requests']
 
 setup(
     name='swissbib_kafka_event_hub',
-    packages=['kafka_event_hub'],
+    packages=find_packages(),
     description=description,
+    long_description=long_description,
     version=version,
     author='Jonas Waeber',
     author_email='jonas.waeber@unibas.ch',
@@ -50,5 +47,5 @@ setup(
         "Intended Audience :: Science/Research",
         "Topic :: Software Development :: Libraries :: Python Modules"
         ],
-    license='GPL-3.0'
+    license='LICENSE'
     )
