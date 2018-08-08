@@ -1,4 +1,4 @@
-import kafka_event_hub.producers
+from kafka_event_hub.producers import SRUProducer
 
-__version__ = 'v0.1.3'
+__version__ = '0.1.7'
 __author__ = 'Jonas Waeber'

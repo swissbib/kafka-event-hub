@@ -1,7 +1,8 @@
-from kafka_event_hub.utility import current_timestamp, \
+from kafka_event_hub.utility.producer_utility import current_timestamp, \
     current_utc_timestamp, \
     transform_from_until, \
     detailed_granularity_pattern
+
 
 import re
 
