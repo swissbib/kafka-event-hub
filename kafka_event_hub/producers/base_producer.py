@@ -12,17 +12,27 @@ __status__ = "in development"
 __description__ = """
 
                     """
+from kafka_event_hub.config import BaseConfig
 
 from confluent_kafka import Producer
-from kafka_event_hub.config import BaseConfig
+
+import logging
+
+
+def basic_callback(err, msg):
+    if err is not None:
+        logging.error('Message delivery failed: %s.', err)
+    else:
+        logging.info('Message delivered to %s [%s].', msg.topic(), msg.partition())
 
 
 class AbstractBaseProducer(object):
 
-    def __init__(self, config: str, config_parser: type(BaseConfig)):
+    def __init__(self, config: str, config_parser: type(BaseConfig), call_back=None):
         self._configuration = config_parser(config)
         config = {'bootstrap.servers': self._configuration['Kafka']['host']}
         self._producer = Producer(**config)
+        self._call_back = basic_callback if call_back is None else call_back
 
     @property
     def configuration(self):
@@ -36,13 +46,6 @@ class AbstractBaseProducer(object):
         """Check the data source whether new data is available."""
         pass
 
-    def pre_process_data(self):
-        """Data may be preprocessed.
-
-        TODO: replace with Kafka Streams!
-        """
-        pass
-
     def process(self):
         """Load data from source and write it into the Kafka topic."""
         pass
@@ -53,5 +56,11 @@ class AbstractBaseProducer(object):
 
     def _produce_kafka_message(self, value, **kwargs):
         self._producer.produce(self._configuration['Kafka']['topicToUse'],
-                               value=value, **kwargs)
+                               value=value.encode('utf-8'), callback=self._call_back, **kwargs)
+
+    def _poll(self, timeout=0):
+        self._producer.poll(timeout=timeout)
+
+    def _flush(self):
+        self._producer.flush()
 

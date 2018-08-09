@@ -37,14 +37,14 @@ class SRUProducer(AbstractBaseProducer):
             'availableDBs': self._db
         }
 
-    def create_simple_query(self, name, relation, value):
+    def set_simple_query(self, name, relation, value):
         self._query = '{} {} {}'.format(name, relation, value)
 
-    def query_id_equal(self, value):
-        self.create_simple_query('dc.id', '=', value)
+    def set_query_id_equal_with(self, value):
+        self.set_simple_query('dc.id', '=', value)
 
-    def query_anywhere_equal(self, value):
-        self.create_simple_query('dc.anywhere', '=', value)
+    def set_query_anywhere_equal_with(self, value):
+        self.set_simple_query('dc.anywhere', '=', value)
 
     def process(self):
         """Load all MARC JSON records from SRU with the given query into Kafka"""
@@ -55,11 +55,15 @@ class SRUProducer(AbstractBaseProducer):
             for record in records['collection']:
                 self._produce_kafka_message(json.dumps(record))
             while records['numberOfRecords'] > self._record_count:
+                self._poll(0)
                 response = requests.get(self._domain + self._db, params=self._params(records['startRecord'] + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
                     for record in records['collection']:
                         self._produce_kafka_message(json.dumps(record))
+
+        self._flush()
+
 
 
 
