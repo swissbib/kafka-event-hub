@@ -19,8 +19,8 @@ from kafka_event_hub.config import BaseConfig
 
 class AbstractBaseProducer(object):
 
-    def __init__(self, config: BaseConfig):
-        self._configuration = config
+    def __init__(self, config: str, config_parser: type(BaseConfig)):
+        self._configuration = config_parser(config)
         config = {'bootstrap.servers': self._configuration['Kafka']['host']}
         self._producer = Producer(**config)
 

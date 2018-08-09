@@ -17,19 +17,18 @@ class SRUProducer(AbstractBaseProducer):
         'marc/json': 'info:srw/schema/json'
     }
 
-    def __init__(self, configuration: BaseConfig):
-        super().__init__(configuration)
+    def __init__(self, configuration: str):
+        super().__init__(configuration, BaseConfig)
         self._search = list()
         self._db = self.configuration['SRU']['database']
         self._schema = self._schemas[self.configuration['SRU']['schema']]
         self._max_records = self.configuration['SRU']['max_records']
-        for query in self.configuration['SRU']['queries']:
-            self._search.append(query)
+        self._query = ''
         self._record_count = 0
 
     def _params(self, start_record):
         return {
-            'query': self._query(),
+            'query': self._query,
             'operation': 'searchRetrieve',
             'recordSchema': self._schemas[self._schema],
             'maximumRecords': self._max_records,
@@ -38,12 +37,17 @@ class SRUProducer(AbstractBaseProducer):
             'availableDBs': self._db
         }
 
-    def _query(self):
-        if len(self._search) == 1:
-            return '{} {} {}'.format(self._search[0]['name'], self._search[0]['relation'], self._search[0]['value'])
+    def create_simple_query(self, name, relation, value):
+        self._query = '{} {} {}'.format(name, relation, value)
+
+    def query_id_equal(self, value):
+        self.create_simple_query('dc.id', '=', value)
+
+    def query_anywhere_equal(self, value):
+        self.create_simple_query('dc.anywhere', '=', value)
 
     def process(self):
-        """Load all MARCJSON records from SRU with the given query into Kafka"""
+        """Load all MARC JSON records from SRU with the given query into Kafka"""
         response = requests.get(self._domain + self._db, params=self._params(0))
         if response.ok:
             records = json.loads(response.text)
