@@ -1,7 +1,9 @@
-from kafka_event_hub.producers import SRUProducer
-
 import logging
 import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from kafka_event_hub.producers import SRUProducer
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
