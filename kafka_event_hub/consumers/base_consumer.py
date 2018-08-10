@@ -12,6 +12,7 @@ class AbstractBaseConsumer(object):
         self._configuration = config_class(config)
         self._admin = AdminClient(**self._configuration['AdminClient'])
         self._consumer = Consumer(**self._configuration['Consumer'])
+        self.subscribe(**self._configuration['Topic'])
 
     @property
     def configuration(self):

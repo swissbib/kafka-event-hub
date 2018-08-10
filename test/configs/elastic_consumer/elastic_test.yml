@@ -1,14 +1,13 @@
 AdminClient:
   conf:
     bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
-    debug: all
-Producer:
+    # debug: all
+Consumer:
   bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
-  debug: all
+  # debug: all
 Topic:
-  topic: ELASTIC_TEST
-  num_partitions: 1
-  replication_factor: 1
+  topics:
+    - elastic_test
 Elastic:
   index: consumer-test
   doc_type: test
