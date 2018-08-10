@@ -16,7 +16,7 @@ class TestSRUProducer(object):
     def test_init(self):
         p = SRUProducer('configs/sru/dsv05_dump.yml')
         assert p.configuration['SRU']['database'] == 'defaultdb'
-        assert p.configuration['Kafka']['partitions'] == 0
+        assert p.configuration['Producer']['debug'] == 'all'
 
     def test_producer(self):
         self.producer.set_query_id_equal_with('HAN000214657')

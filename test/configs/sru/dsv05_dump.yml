@@ -1,9 +1,9 @@
 AdminClient:
   conf:
-    bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092
+    bootstrap.servers: localhost:9092
     debug: all
 Producer:
-  bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092
+  bootstrap.servers: localhost:9092
   debug: all
 Topic:
   topic: test

@@ -1,16 +1,17 @@
 AdminClient:
   conf:
-    bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
-    # debug: all
+    bootstrap.servers: localhost:9092
+    debug: all
 Consumer:
-  bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
-  # debug: all
+  bootstrap.servers: localhost:9092
+  group.id: dsv05-marc-test
+  debug: all
 Topic:
   topics:
-    - elastic_test
+    - test
 Elastic:
   index: consumer-test
   doc_type: test
-  url: sb-ues2.swissbib.unibas.ch:9200
+  url: http://localhost:9200
   timeout: 300
   mapping: null
