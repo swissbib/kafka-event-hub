@@ -53,14 +53,14 @@ class SRUProducer(AbstractBaseProducer):
             records = json.loads(response.text)
             self._record_count += len(records['collection'])
             for record in records['collection']:
-                self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record))
+                self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
             while int(records['numberOfRecords']) > self._record_count:
                 self._logger.debug('Poll response: %s', self._poll(1))
                 response = requests.get(self._domain + self._db, params=self._params(int(records['startRecord']) + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
                     for record in records['collection']:
-                        self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record))
+                        self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
         self._logger.debug('Flush response: %s', self._flush(5))
 
 
