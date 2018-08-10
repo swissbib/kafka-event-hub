@@ -12,9 +12,9 @@ class SRUProducer(AbstractBaseProducer):
     _domain = 'http://sru.swissbib.ch/sru/search/'
 
     _schemas = {
-        'marc/xml': 'info:srw/schema/1/marcxml-v1.1-light',
-        'dc/xml': 'info:srw/schema/1/dc-v1.1-light',
-        'marc/json': 'info:srw/schema/json'
+        'marc/xml': 'info:sru/schema/1/marcxml-v1.1-light',
+        'dc/xml': 'info:sru/schema/1/dc-v1.1-light',
+        'marc/json': 'info:sru/schema/json'
     }
 
     def __init__(self, configuration: str):
@@ -30,7 +30,7 @@ class SRUProducer(AbstractBaseProducer):
         return {
             'query': self._query,
             'operation': 'searchRetrieve',
-            'recordSchema': self._schemas[self._schema],
+            'recordSchema': self._schema,
             'maximumRecords': self._max_records,
             'startRecord': start_record,
             'recordPacking': 'XML',
@@ -53,16 +53,15 @@ class SRUProducer(AbstractBaseProducer):
             records = json.loads(response.text)
             self._record_count += len(records['collection'])
             for record in records['collection']:
-                self._produce_kafka_message(json.dumps(record))
-            while records['numberOfRecords'] > self._record_count:
-                self._poll(0)
-                response = requests.get(self._domain + self._db, params=self._params(records['startRecord'] + len(records['collection'])))
+                self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record))
+            while int(records['numberOfRecords']) > self._record_count:
+                self._logger.debug('Poll response: %s', self._poll(1))
+                response = requests.get(self._domain + self._db, params=self._params(int(records['startRecord']) + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
                     for record in records['collection']:
-                        self._produce_kafka_message(json.dumps(record))
-
-        self._flush()
+                        self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record))
+        self._logger.debug('Flush response: %s', self._flush(5))
 
 
 

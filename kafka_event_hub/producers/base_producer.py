@@ -15,6 +15,7 @@ __description__ = """
 from kafka_event_hub.config import BaseConfig
 
 from confluent_kafka import Producer
+from confluent_kafka.admin import AdminClient, NewPartitions, NewTopic
 
 import logging
 
@@ -28,15 +29,27 @@ def basic_callback(err, msg):
 
 class AbstractBaseProducer(object):
 
-    def __init__(self, config: str, config_parser: type(BaseConfig), call_back=None):
+    def __init__(self, config: str, config_parser: type(BaseConfig), call_back=None, logger=logging.getLogger(__name__)):
+        self._logger = logger
         self._configuration = config_parser(config)
-        config = {'bootstrap.servers': self._configuration['Kafka']['host']}
-        self._producer = Producer(**config)
+        self._admin = AdminClient(**self._configuration['AdminClient'])
+        self._prepare_topic()
+        self._producer = Producer(**self._configuration['Producer'])
         self._call_back = basic_callback if call_back is None else call_back
 
     @property
     def configuration(self):
         return self._configuration
+
+    def _prepare_topic(self):
+        fs = self._admin.create_topics([NewTopic(**self._configuration['Topic'])])
+
+        for topic,f in fs.items():
+            try:
+                f.result()
+                self._logger.info('Topic %s created.', topic)
+            except Exception as e:
+                self._logger.error('Failed to create topic %s: %s', topic, e)
 
     def initialize(self):
         """"""
@@ -54,13 +67,19 @@ class AbstractBaseProducer(object):
         """Update the configuration if necessary."""
         self._configuration.store()
 
-    def _produce_kafka_message(self, value, **kwargs):
-        self._producer.produce(self._configuration['Kafka']['topicToUse'],
+    def _produce_kafka_message(self, key, value, **kwargs):
+        self._producer.produce(self._configuration['Topic']['topic'], key=key,
                                value=value.encode('utf-8'), callback=self._call_back, **kwargs)
 
     def _poll(self, timeout=0):
         self._producer.poll(timeout=timeout)
 
-    def _flush(self):
-        self._producer.flush()
+    def _flush(self, timeout=0):
+        self._producer.flush(timeout)
+
+    def list_topics(self):
+        return self._producer.list_topics()
+
+    def __len__(self):
+        return self._producer.__len__()
 
