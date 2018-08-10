@@ -66,7 +66,7 @@ class ElasticConsumer(AbstractBaseConsumer):
                         value = self._update_func(value, record)
                         self._logger.info('Message was updated before indexing.')
 
-                self._index.index_into(value, value[self._identifier_key])
+                self._index.index_into(value, key if key is not None else value[self._identifier_key])
             else:
                 self._logger.info('Message was filtered: %s.', value)
         else:
