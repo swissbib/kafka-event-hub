@@ -4,16 +4,29 @@ from kafka_event_hub.config import BaseConfig
 from simple_elastic import ElasticIndex
 
 from typing import Callable
+import logging
+
+
+def no_filter(message):
+    return False
+
+
+def no_update(new, old):
+    return new
+
+
+def no_transformation(message):
+    return message
 
 
 class ElasticConsumer(AbstractBaseConsumer):
 
-    def __init__(self, config_path: str):
-        super().__init__(config_path, BaseConfig)
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, BaseConfig, logger)
         self._index = ElasticIndex(**self.configuration['Elastic'])
-        self._update_func = None
-        self._filter_func = None
-        self._transformation_func = None
+        self._update_func = no_update
+        self._filter_func = no_filter
+        self._transformation_func = no_transformation
         self._identifier_key = 'identifier'
 
     @property
@@ -30,7 +43,7 @@ class ElasticConsumer(AbstractBaseConsumer):
     def set_transformation_policy(self, func: Callable[[str], dict]):
         self._transformation_func = func
 
-    def set_update_policy(self, func: Callable[[dict, dict], str]):
+    def set_update_policy(self, func: Callable[[dict, dict], dict]):
         self._update_func = func
 
     def consume(self, num_messages: int = 1, timeout: int = -1):
@@ -39,11 +52,11 @@ class ElasticConsumer(AbstractBaseConsumer):
             key = message.key()
             value = message.value()
             if value is None:
-                raise ValueError('Message has no value.')
+                self._logger.error('Message had no value. Skipped.')
 
             value = value.decode('utf-8')
 
-            if self._filter_func(value):
+            if not self._filter_func(value):
                 value = self._transformation_func(value)
 
                 if key is not None:
@@ -51,8 +64,12 @@ class ElasticConsumer(AbstractBaseConsumer):
                     record = self._index.get(key)
                     if record is not None:
                         value = self._update_func(value, record)
+                        self._logger.info('Message was updated before indexing.')
 
                 self._index.index_into(value, value[self._identifier_key])
+            else:
+                self._logger.info('Message was filtered: %s.', value)
         else:
+            self._logger.error('Received an event instead of an message.')
             # this is an event. Discard these messages.
             pass

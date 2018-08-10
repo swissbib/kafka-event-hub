@@ -4,14 +4,16 @@ from confluent_kafka.admin import AdminClient, ClusterMetadata
 from confluent_kafka import Consumer, Message, TopicPartition
 
 from typing import List
+import logging
 
 
 class AbstractBaseConsumer(object):
 
-    def __init__(self, config: str, config_class: type(BaseConfig)):
+    def __init__(self, config: str, config_class: type(BaseConfig), logger=logging.getLogger(__name__)):
         self._configuration = config_class(config)
         self._admin = AdminClient(**self._configuration['AdminClient'])
         self._consumer = Consumer(**self._configuration['Consumer'])
+        self._logger = logger
         self.subscribe(**self._configuration['Topic'])
 
     @property
