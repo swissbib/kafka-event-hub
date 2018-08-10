@@ -12,11 +12,10 @@ __status__ = "in development"
 __description__ = """
 
                     """
+from kafka_event_hub.utility.producer_utility import current_timestamp, current_utc_timestamp
+
 import logging
-import copy
 import yaml
-import re
-from kafka_event_hub.utility import detailed_granularity_pattern, current_timestamp, current_utc_timestamp
 
 
 class BaseConfig:
