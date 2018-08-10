@@ -1,0 +1,17 @@
+AdminClient:
+  conf:
+    bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+    debug: all
+Producer:
+  bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+  debug: all
+Topic:
+  topic: ELASTIC_TEST
+  num_partitions: 1
+  replication_factor: 1
+Elastic:
+  index: consumer-test
+  doc_type: test
+  url: sb-ues2.swissbib.unibas.ch:9200
+  timeout: 300
+  mapping: null

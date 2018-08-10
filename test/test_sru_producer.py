@@ -30,6 +30,7 @@ if __name__ == '__main__':
     tests = TestSRUProducer()
     tests.setup_class()
     tests.test_producer()
+    tests.test_list_topics()
 
 
 
