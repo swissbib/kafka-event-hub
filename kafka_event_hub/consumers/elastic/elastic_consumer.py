@@ -86,4 +86,4 @@ class ElasticConsumer(AbstractBaseConsumer):
                 else:
                     self._logger.info('Message was filtered before transformation: %s.', value)
             else:
-                self._logger.error('Received message: %s', message.error())
+                self._logger.error('Received event: %s', message.error())
