@@ -1,6 +1,7 @@
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
 from kafka_event_hub.config import BaseConfig
 
+from confluent_kafka import KafkaError
 from simple_elastic import ElasticIndex
 
 from typing import Callable
@@ -85,5 +86,7 @@ class ElasticConsumer(AbstractBaseConsumer):
                 else:
                     self._logger.info('Message was filtered before transformation: %s.', value)
             else:
-                self._logger.error('Received an event instead of an message.')
-                pass
+                if message.error().code() == KafkaError.__PARTITION_EOF:
+                    self._logger.info('Reached partition EOF: %s', message.error())
+                else:
+                    self._logger.error('Received message: %s', message.error())
