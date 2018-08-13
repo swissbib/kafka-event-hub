@@ -86,7 +86,4 @@ class ElasticConsumer(AbstractBaseConsumer):
                 else:
                     self._logger.info('Message was filtered before transformation: %s.', value)
             else:
-                if message.error().code() == KafkaError.__PARTITION_EOF:
-                    self._logger.info('Reached partition EOF: %s', message.error())
-                else:
-                    self._logger.error('Received message: %s', message.error())
+                self._logger.error('Received message: %s', message.error())
