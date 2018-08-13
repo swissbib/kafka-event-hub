@@ -57,31 +57,33 @@ class ElasticConsumer(AbstractBaseConsumer):
         self._update_func = func
 
     def consume(self, num_messages: int = 1, timeout: int = -1):
-        message = self._consumer.consume(num_messages, timeout)
-        if message.error() is None:
-            key = message.key()
-            value = message.value()
-            if value is None:
-                self._logger.error('Message had no value. Skipped.')
+        messages = self._consumer.consume(num_messages, timeout)
+        for message in messages:
+            if message.error() is None:
+                key = message.key()
+                value = message.value()
+                if value is None:
+                    self._logger.error('Message had no value. Skipped.')
 
-            value = value.decode('utf-8')
+                value = value.decode('utf-8')
 
-            if not self._pre_filter_func(value):
-                value = self._transformation_func(value)
+                if not self._pre_filter_func(value):
+                    value = self._transformation_func(value)
 
-                if not self._after_filter_func(value):
-                    if key is not None:
-                        key = key.decode('utf-8')
-                        record = self._index.get(key)
-                        if record is not None:
-                            value = self._update_func(value, record)
-                            self._logger.info('Message was updated before indexing.')
+                    if not self._after_filter_func(value):
+                        if key is not None:
+                            key = key.decode('utf-8')
+                            record = self._index.get(key)
+                            if record is not None:
+                                value = self._update_func(value, record)
+                                self._logger.info('Message was updated before indexing.')
 
-                    self._index.index_into(value, key if key is not None else value[self._identifier_key])
+                        self._index.index_into(value, key if key is not None else value[self._identifier_key])
+                        self._logger.debug('Message was successfully index!')
+                    else:
+                        self._logger.info('Message was filtered after transformation: %s.', value)
                 else:
-                    self._logger.info('Message was filtered after transformation: %s.', value)
+                    self._logger.info('Message was filtered before transformation: %s.', value)
             else:
-                self._logger.info('Message was filtered before transformation: %s.', value)
-        else:
-            self._logger.error('Received an event instead of an message.')
-            pass
+                self._logger.error('Received an event instead of an message.')
+                pass
