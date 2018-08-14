@@ -1,16 +1,15 @@
-from kafka_event_hub.utility.producer_utility import current_timestamp, \
-    current_utc_timestamp, \
-    transform_from_until, \
-    detailed_granularity_pattern
-
-
-import re
 
 
 class TestUtility(object):
 
     def setup_class(self):
-        pass
+        import re
+        self.regex = re.compile('\d{4}-\d{2}-\d{2}T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]')
 
     def test_current_time(self):
-        assert re.match('\d{4}-\d{2}-\d{2}T[0-2][0-9]:[0-6][0-9]:[0-6][0-9]', current_timestamp())
+        import os
+        import sys
+        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from kafka_event_hub.utility.producer_utility import current_timestamp
+
+        assert self.regex.match(current_timestamp())
