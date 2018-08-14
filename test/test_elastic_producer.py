@@ -1,15 +1,9 @@
+from kafka_event_hub.producers import ElasticProducer
 
 
 class TestElasticProducer(object):
 
     def setup_class(self):
-        import logging
-        import os
-        import sys
-
-        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        from kafka_event_hub.producers import ElasticProducer
-
         self.producer = ElasticProducer('configs/elastic/elastic_producer.yml')
 
     def test_produce(self):
