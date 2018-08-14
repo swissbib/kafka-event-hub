@@ -1,0 +1,1 @@
+from kafka_event_hub.producers.elastic.elastic_producer import ElasticProducer
