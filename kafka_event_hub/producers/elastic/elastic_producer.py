@@ -16,4 +16,4 @@ class ElasticProducer(AbstractBaseProducer):
         for results in self._index.scroll(**self._scroll):
             for record in results:
                 self._produce_kafka_message(key=record[self.configuration['identifier_key']],
-                                            value=json.dumps(record, ensure_ascii=False).encode('utf-8'))
+                                            value=json.dumps(record, ensure_ascii=False))
