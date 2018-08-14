@@ -1,7 +1,6 @@
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
 from kafka_event_hub.config import BaseConfig
 
-from confluent_kafka import KafkaError
 from simple_elastic import ElasticIndex
 
 from typing import Callable
