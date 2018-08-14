@@ -67,7 +67,7 @@ class AbstractBaseProducer(object):
         """Update the configuration if necessary."""
         self._configuration.store()
 
-    def _produce_kafka_message(self, key, value, **kwargs):
+    def _produce_kafka_message(self, key: str, value: str, **kwargs):
         self._producer.produce(self._configuration['Topic']['topic'], key=key,
                                value=value.encode('utf-8'), callback=self._call_back, **kwargs)
 
