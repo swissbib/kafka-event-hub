@@ -1,17 +1,23 @@
 AdminClient:
   conf:
-    bootstrap.servers: localhost:9092
-    debug: all
-Consumer:
-  bootstrap.servers: localhost:9092
-  group.id: dsv05-marc-test
-  debug: all
+    bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+    # debug: all
+Producer:
+  bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+  # debug: all
 Topic:
-  topics:
-    - test
-Elastic:
-  index: consumer-test
-  doc_type: test
-  url: http://localhost:9200
+  topic: test
+  num_partitions: 1
+  replication_factor: 1
+ElasticIndex:
+  index: vlid_mapping
+  doc_type: mapping
+  url: http://sb-ues2.swissbib.unibas.ch:9200
   timeout: 300
   mapping: null
+Scroll:
+  scroll: 5m
+  size: 100
+  # match all!
+  query: null
+identifier_key: idn
