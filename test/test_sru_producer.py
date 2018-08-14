@@ -4,8 +4,6 @@ from kafka_event_hub.producers import SRUProducer
 class TestSRUProducer(object):
 
     def setup_class(self):
-        import os
-        print(os.getcwd())
         self.producer = SRUProducer('test/configs/sru/dsv05_dump.yml')
 
     def test_producer(self):
