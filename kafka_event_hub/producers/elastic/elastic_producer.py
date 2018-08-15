@@ -15,7 +15,8 @@ class ElasticProducer(AbstractBaseProducer):
     def process(self):
         for results in self._index.scroll(**self._scroll):
             for record in results:
-                self._logger.debug('RECORD ID: %s', record[self.configuration['identifier_key']])
-                self._logger.debug(json.dumps(record, ensure_ascii=False))
-                self._produce_kafka_message(key=record[self.configuration['identifier_key']],
+                key = record[self.configuration['identifier_key']]
+                if isinstance(key, list):
+                    key = key[0]
+                self._produce_kafka_message(key=key,
                                             value=json.dumps(record, ensure_ascii=False))

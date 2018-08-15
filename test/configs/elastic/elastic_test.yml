@@ -1,18 +1,18 @@
 AdminClient:
   conf:
-    bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+    bootstrap.servers: localhost:9092
     # debug: all
 Producer:
-  bootstrap.servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092
+  bootstrap.servers: localhost:9092
   # debug: all
 Topic:
   topic: test
   num_partitions: 1
   replication_factor: 1
 ElasticIndex:
-  index: vlid_mapping
-  doc_type: mapping
-  url: http://sb-ues2.swissbib.unibas.ch:9200
+  index: digidata
+  doc_type: objects
+  url: http://localhost:9200
   timeout: 300
   mapping: null
 Scroll:
@@ -20,4 +20,4 @@ Scroll:
   size: 100
   # match all!
   query: null
-identifier_key: idn
+identifier_key: sys_id
