@@ -15,8 +15,8 @@ def no_after_filter(message):
     return False
 
 
-def no_update(new, old):
-    return new
+def no_update(old, new):
+    return old
 
 
 def no_transformation(message):

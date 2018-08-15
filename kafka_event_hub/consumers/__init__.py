@@ -1,1 +1,2 @@
-from kafka_event_hub.consumers.elastic_consumer import ElasticConsumer
+from kafka_event_hub.consumers.elastic.elastic_consumer import ElasticConsumer
+from kafka_event_hub.consumers.simple.simple_consumer import SimpleConsumer
