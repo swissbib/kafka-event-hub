@@ -68,7 +68,7 @@ class AbstractBaseProducer(object):
         self._configuration.store()
 
     def _produce_kafka_message(self, key: str, value: str, **kwargs):
-        self._producer.produce(self._configuration['Topic']['topic'], key=key,
+        self._producer.produce(self._configuration['Topic']['topic'], key=key.encode('utf-8'),
                                value=value.encode('utf-8'), callback=self._call_back, **kwargs)
 
     def _poll(self, timeout=0):
