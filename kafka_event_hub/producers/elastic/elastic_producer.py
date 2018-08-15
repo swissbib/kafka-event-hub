@@ -13,7 +13,6 @@ class ElasticProducer(AbstractBaseProducer):
         self._scroll = self.configuration['Scroll']
 
     def process(self):
-
         for results in self._index.scroll(**self._scroll):
             for record in results:
                 self._logger.debug('RECORD ID: %s', record[self.configuration['identifier_key']])

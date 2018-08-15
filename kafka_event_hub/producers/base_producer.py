@@ -68,6 +68,9 @@ class AbstractBaseProducer(object):
         self._configuration.store()
 
     def _produce_kafka_message(self, key: str, value: str, **kwargs):
+        if isinstance(value, list):
+            self._logger.error('LIST LIST LIST LIST %s LIST LIST LIST LIST', value)
+
         self._producer.produce(self._configuration['Topic']['topic'], key=key.encode('utf-8'),
                                value=value.encode('utf-8'), callback=self._call_back, **kwargs)
 
