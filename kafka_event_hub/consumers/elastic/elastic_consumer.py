@@ -64,6 +64,7 @@ class ElasticConsumer(AbstractBaseConsumer):
                 value = message.value()
                 if value is None:
                     self._logger.error('Message had no value. Skipped.')
+                    continue
 
                 value = value.decode('utf-8')
 
