@@ -17,7 +17,7 @@ class DataTransformation(object):
     def transform(self, value: str) -> dict:
         return json.loads(value)
 
-    def post_filer(self, value: dict) -> bool:
+    def post_filter(self, value: dict) -> bool:
         return False
 
     def update(self, value: dict) -> dict:
@@ -30,19 +30,19 @@ class DataTransformation(object):
         value = message.value()
         if value is None:
             self._logger.error('Message had no value. Skipped.')
-            return '', dict()
+            return 'error', dict()
 
         value = value.decode('utf-8')
 
         if not self.pre_filter(value):
             value = self.transform(value)
 
-            if not self.post_filer(value):
+            if not self.post_filter(value):
                 value = self.update(value)
                 return self.get_identifier(value), value
             else:
                 self._logger.info('Message was filtered after the transformation: %s.', value)
-                return '', dict()
+                return 'filter', dict()
         else:
             self._logger.info('Message was filtered before the transformation: %s.', value)
-            return '', dict()
+            return 'filter', dict()

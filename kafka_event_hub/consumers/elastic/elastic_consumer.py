@@ -24,7 +24,9 @@ class ElasticConsumer(AbstractBaseConsumer):
                 identifier, value = self._transform.run(message)
                 if identifier != '' and len(value.keys()) != 0:
                     self._index.index_into(value, identifier)
-                else:
+                elif identifier == 'error':
                     self._logger.error('Could not transform message: %s.', message.value())
+                elif identifier == 'filter':
+                    pass
             else:
                 self._logger.error('Received event: %s', message.error())
