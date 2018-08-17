@@ -37,6 +37,12 @@ class SRUProducer(AbstractBaseProducer):
             'availableDBs': self._db
         }
 
+    def add_simple_and_query(self, name, relation, value):
+        if self._query == '':
+            self._query = '{} {} {}'.format(name, relation, value)
+        else:
+            self._query = '{} AND {} {} {}'.format(self._query, name, relation, value)
+
     def set_simple_query(self, name, relation, value):
         self._query = '{} {} {}'.format(name, relation, value)
 
