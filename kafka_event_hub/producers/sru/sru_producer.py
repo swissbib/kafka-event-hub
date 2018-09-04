@@ -75,6 +75,7 @@ class SRUProducer(AbstractBaseProducer):
                     self._logger.error('Could not connect to sru with status code %s. Because of: %s',
                                        response.status_code, response.text)
 
+        self._poll(1)
         self._logger.debug('Flush response: %s', self._flush(5))
 
 
