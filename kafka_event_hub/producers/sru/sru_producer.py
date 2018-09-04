@@ -71,6 +71,10 @@ class SRUProducer(AbstractBaseProducer):
                         self._logger.info('%s messages were indexed with query: %s', self._query)
                         for record in records['collection']:
                             self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
+                else:
+                    self._logger.error('Could not connect to sru with status code %s. Because of: %s',
+                                       response.status_code, response.text)
+
         self._logger.debug('Flush response: %s', self._flush(5))
 
 
