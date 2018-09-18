@@ -6,6 +6,12 @@ import os.path
 import re
 import sys
 
+try:
+    from semantic_release import setup_hook
+    setup_hook(sys.argv)
+except ImportError:
+    pass
+
 
 def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
