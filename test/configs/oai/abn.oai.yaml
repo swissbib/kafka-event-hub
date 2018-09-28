@@ -2,17 +2,17 @@ Kafka:
   host: sb-uwf3:7078
   partition: 0
   topicToUse: ABN
-OAI:
-  granularity: YYYY-MM-DDThh:mm:ssZ
-  httpproxy: null
-  metadataPrefix: marc21
-  resumptionToken: null
-  setName: null
-  setSpec: SWISSBIB-FULL-OAI
-  stoppageTime: '2017-07-09T13:10:32Z'
-  timestampUTC: '2017-07-09T11:10:26Z'
-  until: null
+oai:
   url: http://aleph.ag.ch/OAI
+  sickle:
+    granularity: YYYY-MM-DDThh:mm:ssZ
+    httpproxy: null
+    metadataPrefix: marc21
+    setName: Swissbib MARCXML
+    setSpec: SWISSBIB-FULL-OAI
+    stoppageTime: '2017-07-09T13:10:32Z'
+    timestampUTC: '2017-07-09T11:10:26Z'
+    until: null
 Processing:
   encodeUnicodeAsUTF8: null
   processorType: OAI
