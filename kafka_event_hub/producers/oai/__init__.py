@@ -1,1 +1,1 @@
-from kafka_event_hub.producers.oai.oaiproducer import OAIProducer
+from kafka_event_hub.producers.oai.oai_producer import OAIProducer

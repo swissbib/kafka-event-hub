@@ -5,7 +5,6 @@ __author__ = 'swissbib - UB Basel, Switzerland, Guenter Hipler'
 __copyright__ = "Copyright 2018, swissbib project"
 __credits__ = []
 __license__ = "GNU General Public License v3.0"
-__version__ = "0.2"
 __maintainer__ = "Guenter Hipler"
 __email__ = "guenter.hipler@unibas.ch"
 __status__ = "in development"
@@ -26,8 +25,12 @@ import sys
 
 class OAIProducer(AbstractBaseProducer):
 
-    def __init__(self, configuration: OAIConfig):
-        super().__init__(configuration)
+    def __init__(self, configuration: str):
+        """
+
+        :param configuration: The path to the configuration file.
+        """
+        super().__init__(configuration, OAIConfig)
         self.recordBodyRegEx = re.compile(self.configuration['Processing']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.configuration.update_start_time()
 
@@ -71,7 +74,7 @@ class OAIProducer(AbstractBaseProducer):
                     #todo
                     #key should not contain the ID of the OAI identifier (sysID of library system
                     #otherwise partitions for single networks won't be stable
-                self._produce_kafka_message(record.raw,
+                self._produce_kafka_message(value=record.raw,
                                             key=record.header.identifier,
                                             eventTime=record.header.datestamp)
                 #else:
