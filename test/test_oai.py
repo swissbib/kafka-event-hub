@@ -19,6 +19,6 @@ class TestOAI(object):
             'from': self.timestamp
         })
         for r in records:
-            with open('output.txt', 'a') as file:
+            with open('out/output.txt', 'a') as file:
                 file.write(r.raw + '\n')
 
