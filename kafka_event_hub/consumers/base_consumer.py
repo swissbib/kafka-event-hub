@@ -10,11 +10,16 @@ import logging
 class AbstractBaseConsumer(object):
 
     def __init__(self, config: str, config_class: type(BaseConfig), logger=logging.getLogger(__name__)):
+        """
+
+        Consumer configs:
+        
+        """
         self._configuration = config_class(config)
         self._admin = AdminClient(**self._configuration['AdminClient'])
         self._consumer = Consumer(**self._configuration['Consumer'])
         self._logger = logger
-        self.subscribe(**self._configuration['Topic'])
+        self.subscribe(self._configuration['Topic'])
 
     @property
     def configuration(self):

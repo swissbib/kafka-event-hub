@@ -1,0 +1,13 @@
+AdminClient:
+  conf:
+    bootstrap.servers: localhost:9092
+    debug: all
+Consumer:
+  bootstrap.servers: localhost:9092
+  group.id: test-lines-consumer
+  default.topic.config:
+    auto.offset.reset: smallest
+  debug: all
+Topic:
+  - test
+path: "data/lines/test-data.txt"
