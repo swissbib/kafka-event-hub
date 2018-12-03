@@ -1,7 +1,7 @@
-from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
-from kafka_event_hub.config import BaseConfig
-
 import logging
+
+from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
 
 
 class SimpleConsumer(AbstractBaseConsumer):
@@ -9,10 +9,21 @@ class SimpleConsumer(AbstractBaseConsumer):
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
         super().__init__(config_path, BaseConfig, logger)
 
-    def consume(self, num_messages: int = 1, timeout: int = -1):
-        messages = self._consumer.consume(num_messages, timeout)
-        for message in messages:
-            if message.error():
-                self._logger.error(message.error())
+    def consume(self, timeout: int = None) -> (str, str):
+        msg = c.poll(10)
+
+        if msg is None:
+            return None, None
+
+        if msg.error():
+            if msg.error().code() == KafkaError._PARTITION_EOF:
+                return None, None
             else:
-                yield message.key().decode('utf-8'), message.value().decode('utf-8')
+                logging.error(msg.error())
+                return None, None
+
+        key = msg.key().decode('utf-8')
+        value = msg.value().decode('utf-8')
+
+        logging.debug('Received message: {} with key {}'.format(value, key))
+        return key, value
