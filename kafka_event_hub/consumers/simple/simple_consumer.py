@@ -2,6 +2,7 @@ import logging
 
 from kafka_event_hub.config import BaseConfig
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
+from confluent_kafka import KafkaError
 
 
 class SimpleConsumer(AbstractBaseConsumer):
@@ -10,7 +11,7 @@ class SimpleConsumer(AbstractBaseConsumer):
         super().__init__(config_path, BaseConfig, logger)
 
     def consume(self, timeout: int = None) -> (str, str):
-        msg = c.poll(10)
+        msg = self._consumer.poll(10)
 
         if msg is None:
             return None, None
