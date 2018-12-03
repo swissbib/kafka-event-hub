@@ -10,4 +10,6 @@ class LineProducer(AbstractBaseProducer):
     def process(self):
         with open(self.configuration['path'], 'r') as fp:
             for line in fp:
-                self._produce_kafka_message("", line)
+                self._produce_kafka_message("", line)   
+                
+        self._producer.close()
