@@ -11,5 +11,7 @@ class LineProducer(AbstractBaseProducer):
         with open(self.configuration['path'], 'r') as fp:
             for line in fp:
                 self._produce_kafka_message("", line)   
+                self._poll(0)
                 
+        self._flush()
         self._producer.close()
