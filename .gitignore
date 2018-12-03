@@ -1,7 +1,19 @@
+# Python chache files
 __pycache__/
 .pytest_cache/
-.idea/
+test/out/*
+test/kafka/*
+test/logs/*
+
+# Distro Files.
 build/
 dist/
 *.egg-info
 MANIFEST
+
+# IDE Support Files
+.idea/
+.vscode/
+
+# Env Config
+.python-version
