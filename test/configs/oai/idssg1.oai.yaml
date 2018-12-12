@@ -2,6 +2,21 @@ Kafka:
   host: localhost:9092
   partition: 0
   topicToUse: HSG1
+
+AdminClient:
+  conf:
+    bootstrap.servers: localhost:9092
+
+Topic:
+  topic: IDSSG
+  num_partitions: 1
+  replication_factor: 1
+
+Producer:
+  bootstrap.servers: localhost:9092
+  message.send.max.retries: 100
+
+
 OAI:
   granularity: YYYY-MM-DDThh:mm:ssZ
   httpproxy: null
@@ -10,8 +25,8 @@ OAI:
   setName: null
   setSpec: SWISSBIB-FULL-HSB01
   stoppageTime: '2018-07-05T20:51:36Z'
-  timestampUTC: '2018-07-05T18:51:32Z'
-  until: 2018-03-30T18:47:9Z
+  timestampUTC: '2018-01-01T00:00:00Z'
+  until:
   url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:
   encodeUnicodeAsUTF8: null

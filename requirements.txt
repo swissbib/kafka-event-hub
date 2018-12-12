@@ -4,3 +4,4 @@ sickle
 PyMongo
 requests
 simple-elastic
+pytest

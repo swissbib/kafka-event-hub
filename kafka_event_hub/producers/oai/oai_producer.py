@@ -15,15 +15,17 @@ __description__ = """
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 from kafka_event_hub.config import OAIConfig
 from kafka_event_hub.utility.producer_utility import transform_from_until
+from kafka_event_hub.producers.data_preparation import DataPreparation
 
 from sickle import Sickle
 from sickle.oaiexceptions import OAIError, BadArgument
 
 import re
 import sys
+import time
 
 
-class OAIProducer(AbstractBaseProducer):
+class OAIProducer(AbstractBaseProducer, DataPreparation):
 
     def __init__(self, configuration: str):
         """
@@ -32,7 +34,7 @@ class OAIProducer(AbstractBaseProducer):
         """
         super().__init__(configuration, OAIConfig)
         self._record_body_regex = re.compile(self.configuration['Processing']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
-        self.configuration.update_start_time()
+        self.configuration.setStartTimeInNextConfig()
 
     @property
     def record_body_regex(self):
@@ -41,7 +43,7 @@ class OAIProducer(AbstractBaseProducer):
     def process(self):
         try:
 
-            sickle = Sickle(self.configuration['oai']['base']['url'])
+            sickle = Sickle(self.configuration['OAI']['url'])
             dic = {}
             if not self.configuration['OAI']['metadataPrefix'] is None:
                 dic['metadataPrefix'] = self.configuration['OAI']['metadataPrefix']
@@ -55,13 +57,23 @@ class OAIProducer(AbstractBaseProducer):
                                                     self.configuration['OAI']['granularity'])
 
             records_iter = sickle.ListRecords(
-                **self.configuration['oai']
+                **dic
             )
 
+            messages = 0
             for record in records_iter:
+                messages += 1
+                if messages % 1000 == 0:
+                    self._poll()
+                    self._flush()
+                #org = record.header.datestamp
+                #test = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
+                millisecondsSinceEpocUTC = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ')))
+                #zurueck = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(millisecondsSinceEpocUTC)  )
                 self._produce_kafka_message(value=record.raw,
                                             key=record.header.identifier,
-                                            eventTime=record.header.datestamp)
+                                            timestamp=millisecondsSinceEpocUTC
+                                            )
 
         except BadArgument as ba:
             self._logger.exception(ba)
