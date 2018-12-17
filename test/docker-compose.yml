@@ -3,23 +3,46 @@ version: "3"
 services:
   zookeeper:
     image: zookeeper
+    container_name: zookeeper
+    restart: always
     ports:
       - "2181:2181"
-    environment:
-      zk_id: "1"
-    networks:
-      - kafka-net
+      - "2888:2888"
+      - "3888:3888"
+    volumes:
+      - "/home/jonas/data/zookeeper/data:/data"
+      - "/home/jonas/data/zookeeper/datalog:/datalog"
+      - "/home/jonas/data/zookeeper/logs:/logs"
 
   kafka:
-    image: ches/kafka
+    image: solsson/kafka:2.1.0
+    container_name: kafka
+    restart: always
+    entrypoint: "./bin/kafka-server-start.sh ./config/server.properties"
     depends_on:
       - zookeeper
     ports:
+      - "7203:7203"
       - "9092:9092"
+    volumes:
+      - "./config/server.properties:/opt/kafka/config/server.properties:ro"
+      - "/home/jonas/data/kafka/data:/data" 
+      - "/home/jonas/data/kafka/logs:/logs"
+
+  elasticsearch:
+    image: elasticsearch:6.5.3
+    container_name: elastic
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes: 
+      - "/home/jonas/data/elastic/data:/usr/share/elasticsearch/data"
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-    networks:
-      - kafka-net
-      
-networks:
-  kafka-net:
+      ES_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+  kibana:
+    image: kibana:6.5.3
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
