@@ -44,6 +44,16 @@ class AbstractBaseConsumer(object):
     def list_topics(self, topic: str = None, timeout: int = -1) -> ClusterMetadata:
         return self._consumer.list_topics(topic, timeout)
 
+    def delete_topic(self):
+        fs = self._admin.delete_topics(self._configuration['Topic'], operation_timeout=30)
+
+        for topic,f in fs.items():
+            try:
+                f.result()
+                self._logger.info('Topic %s created.', topic)
+            except Exception as e:
+                self._logger.error('Failed to create topic %s: %s', topic, e)
+
 
 
 
