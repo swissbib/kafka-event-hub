@@ -80,6 +80,16 @@ class AbstractBaseProducer(object):
     def list_topics(self):
         return self._producer.list_topics()
 
+    def delete_topic(self):
+        fs = self._admin.delete_topics(self._configuration['Topic'], operation_timeout=30)
+
+        for topic,f in fs.items():
+            try:
+                f.result()
+                self._logger.info('Topic %s created.', topic)
+            except Exception as e:
+                self._logger.error('Failed to create topic %s: %s', topic, e)
+
     def __len__(self):
         return self._producer.__len__()
 
