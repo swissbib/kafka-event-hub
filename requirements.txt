@@ -1,6 +1,6 @@
 PyYAML
 confluent-kafka
-sickle
+Sickle
 PyMongo
 requests
 simple-elastic
