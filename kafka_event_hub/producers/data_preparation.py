@@ -2,7 +2,7 @@
 
 class DataPreparation(object):
     """
-    This type is used by several producers to fetch and prepare data from different data pipelines
+    This type defines a series
     """
 
     def lookUpData(self):

@@ -33,8 +33,7 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
         :param configuration: The path to the configuration file.
         """
         super().__init__(configuration, OAIConfig)
-        self._record_body_regex = re.compile(self.configuration['Processing']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
-        self.configuration.setStartTimeInNextConfig()
+        self._record_body_regex = re.compile(self.configuration['Processing']['Default']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
 
     @property
     def record_body_regex(self):
@@ -86,5 +85,6 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
 
     def update_configuration(self):
         self.configuration.update_stop_time()
+        self.configuration.update_start_time()
         super().update_configuration()
 

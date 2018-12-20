@@ -59,25 +59,25 @@ class OAIConfig(BaseConfig):
 
     def __init__(self, config_path):
         super().__init__(config_path=config_path)
-        self._nextyaml = deepcopy( self.configuration)
+        #todo: open - do we need a temporarily copy of configuration?
+        #self._nextyaml = deepcopy( self.configuration)
+        self._processStarttime = current_utc_timestamp(self._yaml['OAI']['granularity'])
 
     def update_start_time(self):
         granularity = self._yaml['OAI']['granularity']
         if granularity is not None:
             granularity = str(granularity)
-        self._yaml['OAI']['timestampUTC'] = current_utc_timestamp(granularity)
-
-    def setStartTimeInNextConfig(self):
-        granularity = self._nextyaml['OAI']['granularity']
-        if (not granularity is None and not type(granularity) is str):
-            granularity = str(granularity)
-
-        self._nextyaml['OAI']['timestampUTC'] = current_utc_timestamp(granularity)
-
-    def setStopTimeInNextConfig(self):
-        self._nextyaml['OAI']['stoppageTime'] = current_timestamp()
+        self._yaml['OAI']['timestampUTC'] = self._processStarttime
 
 
     def update_stop_time(self):
         self._yaml['OAI']['stoppageTime'] = current_timestamp()
 
+    @property
+    def processStarttime(self):
+        return self._processStarttime
+
+    @processStarttime.setter
+    def processStarttime(self, starttime):
+        #todo: check validaty in relation to granularity pattern
+        self._processStarttime = starttime
