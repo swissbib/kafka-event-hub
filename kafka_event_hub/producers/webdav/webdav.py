@@ -13,16 +13,14 @@ __description__ = """
 
                     """
 
+from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 
-from ingestion.processor import BaseProcessor
-
-
-class WebDav(BaseProcessor):
+class WebDav(AbstractBaseProducer):
 
     def __init__(self, appConfig=None):
         #todo: or do we have to use
         #super(self,appConfig)
-        BaseProcessor.__init__(self,appConfig)
+        AbstractBaseProducer.__init__(self,appConfig)
 
 
     def collectItems(self):
