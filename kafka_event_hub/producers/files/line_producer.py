@@ -14,7 +14,7 @@ class LineProducer(AbstractBaseProducer):
         with open(self.configuration['path'], 'r') as fp:
             for line in fp:
                 self._poll(0)
-                logging.debug("Produced Message %s from Line: %s", count, line)
+                logging.debug("Produced Message %s from Line: %s", self.count, line)
                 self._produce_kafka_message("{}".format(self.count), line.strip())   
                 self.count += 1
         self._flush()
