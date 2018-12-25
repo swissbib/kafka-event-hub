@@ -21,8 +21,8 @@ OAI:
   resumptionToken: null
   setName: null
   setSpec: SWISSBIB-FULL-HSB01
-  stoppageTime: '2018-12-20T17:19:27Z'
-  timestampUTC: '2018-12-15T16:18:51Z'
+  stoppageTime: '2018-12-25T09:45:03Z'
+  timestampUTC: '2018-12-25T09:45:03Z'
   until: null
   url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:

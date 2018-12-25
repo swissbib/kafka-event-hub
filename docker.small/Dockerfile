@@ -92,5 +92,14 @@ RUN pip install -r requirements.txt
 COPY kafka_event_hub /app/kafka_event_hub
 
 VOLUME /in
-#ENTRYPOINT ["/bin/bash"]
-CMD python3  run.py /in
+ENTRYPOINT ["python3", "run.py", "/in"]
+#now you can overwrite the --type parameter for the producer / consumer to be used as argument of the docker run command
+# e.g. docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/in kafka-event-hub --type=blabla
+#todo:
+# 1) find a solution for the network if Kafka is not running s docker container on local host
+# 2) build docker-compose solution just for this scenario (kafka in container on localhost)
+
+CMD ["--type=OAIProducer" ]
+
+#howto start
+#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/in kafka-event-hub
