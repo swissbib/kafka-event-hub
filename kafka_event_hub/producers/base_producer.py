@@ -81,7 +81,8 @@ class AbstractBaseProducer(object):
         return self._producer.list_topics()
 
     def delete_topic(self):
-        fs = self._admin.delete_topics(self._configuration['Topic'], operation_timeout=30)
+        """DO NOT USE AS IT CURRENTLY CREATES A SEG FAULT IN THE C CODE"""
+        fs = self._admin.delete_topics(list(self._configuration['Topic']['topic']), operation_timeout=30)
 
         for topic,f in fs.items():
             try:
