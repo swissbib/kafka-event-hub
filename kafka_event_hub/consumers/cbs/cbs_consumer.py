@@ -1,12 +1,13 @@
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
 from kafka_event_hub.consumers.utility import DataTransformation
 from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.producers.data_preparation import DataPreparation
 
 
 import logging
 
 
-class CBSConsumer(AbstractBaseConsumer):
+class CBSConsumer(AbstractBaseConsumer, DataPreparation):
 
     def __init__(self, config_path: str,
                  transformation_class: type(DataTransformation) = DataTransformation,
