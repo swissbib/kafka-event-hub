@@ -1,12 +1,12 @@
 AdminClient:
   conf:
     bootstrap.servers: localhost:9092
-    # debug: all
+    debug: all
 Producer:
   bootstrap.servers: localhost:9092
-  #debug: all
+  debug: all
 Topic:
-  topic: test-v2
+  topic: json
   num_partitions: 1
   replication_factor: 1
-path: "data/lines/test-data.txt"
+path: "data/lines/test_data.json"

@@ -9,4 +9,4 @@ Consumer:
     auto.offset.reset: smallest
   # debug: all
 Topic:
-  - test-v2
+  - test-gz-v2

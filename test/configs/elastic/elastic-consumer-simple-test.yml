@@ -1,0 +1,17 @@
+AdminClient:
+  conf:
+    bootstrap.servers: localhost:9092
+    debug: all
+Consumer:
+  bootstrap.servers: localhost:9092
+  group.id: elastic-consumer-test
+  default.topic.config:
+    auto.offset.reset: earliest
+  debug: all
+Topic:
+  - json
+ElasticIndex:
+  index: lines-test
+  doc_type: _doc
+  url: http://localhost:9200
+  timeout: 300

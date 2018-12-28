@@ -80,6 +80,17 @@ class AbstractBaseProducer(object):
     def list_topics(self):
         return self._producer.list_topics()
 
+    def delete_topic(self):
+        """DO NOT USE AS IT CURRENTLY CREATES A SEG FAULT IN THE C CODE"""
+        fs = self._admin.delete_topics(list(self._configuration['Topic']['topic']), operation_timeout=30)
+
+        for topic,f in fs.items():
+            try:
+                f.result()
+                self._logger.info('Topic %s created.', topic)
+            except Exception as e:
+                self._logger.error('Failed to create topic %s: %s', topic, e)
+
     def __len__(self):
         return self._producer.__len__()
 
