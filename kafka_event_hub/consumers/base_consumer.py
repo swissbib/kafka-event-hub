@@ -50,9 +50,9 @@ class AbstractBaseConsumer(object):
         for topic,f in fs.items():
             try:
                 f.result()
-                self._logger.info('Topic %s created.', topic)
+                self._logger.info('Topic %s deleted.', topic)
             except Exception as e:
-                self._logger.error('Failed to create topic %s: %s', topic, e)
+                self._logger.error('Failed to delete topic %s: %s', topic, e)
 
 
 
