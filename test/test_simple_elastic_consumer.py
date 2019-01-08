@@ -19,10 +19,5 @@ class TestSimpleElasticConsumer(object):
 
     def test_consume(self):
         self.producer.process()
-        while True:
-            value = self.consumer.consume()
-            if not value:
-                break
-
-    def teardown_class(self):
-        self.consumer.delete_topic()
+        for _ in range(2):
+            self.consumer.consume(10)
