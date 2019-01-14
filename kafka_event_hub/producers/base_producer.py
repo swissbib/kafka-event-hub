@@ -16,9 +16,6 @@ from kafka_event_hub.config import BaseConfig
 
 from kafka import KafkaProducer
 
-from confluent_kafka import Producer
-from confluent_kafka.admin import AdminClient, NewPartitions, NewTopic
-
 import logging
 
 
@@ -44,10 +41,13 @@ class AbstractBaseProducer(object):
         return self._configuration
 
     def send(self, key: bytes, message: bytes):
-        self._producer.send(self.configuration.topic, key, message).add_callback(self._callback_success).add_errback(self._callback_error)
+        self._producer.send(self.configuration.topic, **{'value': message, 'key': key}).add_callback(self._callback_success).add_errback(self._callback_error)
 
     def process(self):
         raise NotImplementedError("Implement process to enable the behaviour.")
         
     def flush(self):
-        self._producer.flush()
+        self._producer.flush(10)
+
+    def close(self):
+        self._producer.close()

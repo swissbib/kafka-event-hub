@@ -1,5 +1,4 @@
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
-from kafka_event_hub.consumers.utility import DataTransformation
 from kafka_event_hub.config import BaseConfig
 
 from simple_elastic import ElasticIndex
