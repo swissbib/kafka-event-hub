@@ -68,6 +68,20 @@ class OAIConfig(BaseConfig):
     def update_stop_time(self):
         self._yaml['OAI']['stoppageTime'] = current_timestamp()
 
+class ConsumerConfig(BaseConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def consumer(self):
+        return self.configuration['Consumer']
+
+    @property
+    def topic(self):
+        return self.configuration['Topics']
+
+
 class ProducerConfig(BaseConfig):
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
@@ -79,7 +93,7 @@ class ProducerConfig(BaseConfig):
 
     @property
     def topic(self):
-        return self.configuration['Topic']
+        return self.configuration['Topics']
 
 class LineProducerConfig(ProducerConfig):
 
