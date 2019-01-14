@@ -11,7 +11,6 @@ from kafka_event_hub.consumers import SimpleConsumer
 class TestLineProducer(object):
 
     def setup_class(self):
-        logging.info("Begin Test")
         self.producer = LineProducer('configs/lines/producer.yml')
         self.producer_gz = LineProducer('configs/lines/producer_gz.yml')
         self.consumer = SimpleConsumer('configs/lines/consumer.yml')

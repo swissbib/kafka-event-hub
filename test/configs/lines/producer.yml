@@ -1,12 +1,5 @@
-AdminClient:
-  conf:
-    bootstrap.servers: localhost:9092
-    # debug: all
 Producer:
-  bootstrap.servers: localhost:9092
-  #debug: all
-Topic:
-  topic: test-v2
-  num_partitions: 1
-  replication_factor: 1
-path: "data/lines/test-data.txt"
+  client_id: test-lines-producer
+  bootstrap_servers: localhost:9092
+Topics: test-lines-v3
+Path: "data/lines/test-data.txt"
