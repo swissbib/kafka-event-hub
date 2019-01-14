@@ -5,7 +5,7 @@ import logging
 from io import TextIOWrapper
 
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
-from kafka_event_hub.config import ProducerConfig
+from kafka_event_hub.config import LineProducerConfig
 
 
 class LineProducer(AbstractBaseProducer):
@@ -17,12 +17,13 @@ class LineProducer(AbstractBaseProducer):
     """
 
     def __init__(self, config: str):
-        super().__init__(config, config_parser=ProducerConfig)
+        super().__init__(config, config_parser=LineProducerConfig)
         self.count = 0
 
     def process(self):
         path = self.configuration.path
         if not os.path.exists(path):
+            self.close()
             raise FileNotFoundError("Path {} does not exist".format(path))
         else:
             if os.path.isdir(path):
@@ -37,6 +38,8 @@ class LineProducer(AbstractBaseProducer):
                 self._send_lines(fp)
                 self.flush()
                 fp.close()
+        
+            self.close()
 
     def _read_file(self, path: str) -> TextIOWrapper: 
         if path.endswith('.gz'):
@@ -51,5 +54,5 @@ class LineProducer(AbstractBaseProducer):
                 line = line.decode('utf-8')
             line = line.strip()
             self._logger.debug("Produced Message %s from Line: %s", self.count, line)
-            self.send('{}'.format(self.count), line)   
+            self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))   
             self.count += 1
