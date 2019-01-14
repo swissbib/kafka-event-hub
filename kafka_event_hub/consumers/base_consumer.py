@@ -34,6 +34,3 @@ class AbstractBaseConsumer(object):
 
     def unsubscribe(self):
         self._consumer.unsubscribe()
-
-    def consume(self):
-        yield self._consumer.consume()
