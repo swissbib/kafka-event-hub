@@ -44,8 +44,8 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
     key = message.key.decode('utf-8')
     value = json.loads(message.value.decode('utf-8'))
   
-    logging.debug("Key: %s", key)
-    logging.debug("Value: %s", value)
+    self._logger.debug("Key: %s", key)
+    self._logger.debug("Value: %s", value)
     result = self._index.index_into(value, key)
     
     if result:
@@ -93,8 +93,8 @@ class BulkElasticConsumer(AbstractBaseConsumer):
       key = message.key.decode('utf-8')
       value = json.loads(message.value.decode('utf-8'))
         
-      logging.debug("Key: %s", key)
-      logging.debug("Value: %s", value)
+      self._logger.debug("Key: %s", key)
+      self._logger.debug("Value: %s", value)
 
       if self._key not in value:
         value['_key'] = key
