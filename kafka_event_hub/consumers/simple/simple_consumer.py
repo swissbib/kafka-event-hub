@@ -6,25 +6,15 @@ from confluent_kafka import KafkaError
 
 
 class SimpleConsumer(AbstractBaseConsumer):
+    """
+    Consumes a subscribed topic and returns one key / message pair at a time.
+    Keys and messages are returned as strings.
+    """
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
         super().__init__(config_path, BaseConfig, logger)
 
     def consume(self, timeout: int = None) -> (str, str):
-        msg = self._consumer.poll(10)
-
-        if msg is None:
-            return None, None
-
-        if msg.error():
-            if msg.error().code() == KafkaError._PARTITION_EOF:
-                return None, None
-            else:
-                logging.error(msg.error())
-                return None, None
-
-        key = msg.key().decode('utf-8')
-        value = msg.value().decode('utf-8')
-
-        logging.debug('Received message: {} with key {}'.format(value, key))
-        return key, value
+        message = next(self._consumer)
+        self._logger.debug('Received message: {} with key {}'.format(value, key))
+        return message.key.decode('utf-8'), message.value.decode('utf-8')
