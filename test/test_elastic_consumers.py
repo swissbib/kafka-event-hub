@@ -9,8 +9,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.consumers import SimpleElasticConsumer
 from kafka_event_hub.producers import LineProducer
 
-from confluent_kafka.admin import AdminClient
-
 class TestSimpleElasticConsumer(object):
 
     def setup_class(self):

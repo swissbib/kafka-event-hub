@@ -8,8 +8,6 @@ import time
 import json
 import logging
 
-
-
 class SimpleElasticConsumer(AbstractBaseConsumer):
   """
   A KafkaConsumer which consumes messages and indexes them into a ElasticIndex one by one.
@@ -33,9 +31,14 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
   
   def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
     super().__init__(config, config_class, logger=logger)
-    self._index = ElasticIndex(**self.configuration['ElasticIndex'])
+    self._index = ElasticIndex(**self.configuration['ElasticIndex'], enable_auto_commit=False)
 
   def consume(self) -> bool:
+    """
+    Consumes a single message from the subscribed topic and indexes it into the elasticsearch index.
+
+    Returns True if successfull, False otherwise.
+    """
     message = next(self._consumer)
 
     key = message.key.decode('utf-8')
@@ -43,10 +46,13 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
   
     logging.debug("Key: %s", key)
     logging.debug("Value: %s", value)
-    self._index.index_into(value, key)
-
-  def close(self):
-    self._consumer.close()
+    result = self._index.index_into(value, key)
+    
+    if result:
+      next_position = self._consumer.position()
+      self._consumer.commit(next_position)
+    
+    return result
 
 
 class BulkElasticConsumer(AbstractBaseConsumer):
@@ -72,7 +78,7 @@ class BulkElasticConsumer(AbstractBaseConsumer):
   
   def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
     super().__init__(config, config_class, logger=logger)
-    self._index = ElasticIndex(**self.configuration['ElasticIndex'])
+    self._index = ElasticIndex(**self.configuration['ElasticIndex'], enable_auto_commit=False)
     try:
       self._key = self.configuration['key']
     except KeyError:
@@ -81,56 +87,23 @@ class BulkElasticConsumer(AbstractBaseConsumer):
   def consume(self) -> bool:
     data = list()
     current = time.time()
-    for message in self._consumer:
+    messages = self._consumer.poll(100, 10000)
+
+    for message in messages:
       key = message.key.decode('utf-8')
       value = json.loads(message.value.decode('utf-8'))
-      
-      if self._key not in value:
-        value['_key'] = key
-
+        
       logging.debug("Key: %s", key)
       logging.debug("Value: %s", value)
 
+      if self._key not in value:
+        value['_key'] = key
       data.append(value)
 
-      if len(data) >= 10000:
-        self._index.bulk(data, '_key')
-        return
+    result = self._index.bulk(data, self._key)
 
-      if time.time() - current > 500:
-        self._index.bulk(data, '_key')
-        return
-
-
-  def close(self):
-    self._consumer.close()
-
-
-class ElasticConsumer(AbstractBaseConsumer):
-    """
-    Specialized elasticsearch consumer which accepts a transformation class. This transformation class must SubClass `DataTransformation`
-    and overwrite the `run(self)` method.
-
-    Each document is indexed one after the other.
-    """
-    def __init__(self, config_path: str,
-                 transformation_class: type(DataTransformation) = DataTransformation,
-                 logger=logging.getLogger(__name__)):
-        super().__init__(config_path, BaseConfig, logger)
-        self._index = ElasticIndex(**self.configuration['Elastic'])
-        self._transform = transformation_class(**self.configuration['DataTransformation'])
-        self._identifier_key = 'identifier'
-
-    def consume(self, num_messages: int = 1, timeout: int = -1):
-        messages = self._consumer.consume(num_messages, timeout)
-        for message in messages:
-            if message.error() is None:
-                identifier, value = self._transform.run(message)
-                if identifier != '' and len(value.keys()) != 0:
-                    self._index.index_into(value, identifier)
-                elif identifier == 'error':
-                    self._logger.error('Could not transform message: %s.', message.value())
-                elif identifier == 'filter':
-                    pass
-            else:
-                self._logger.error('Received event: %s', message.error())
+    if result:
+      next_position = self._consumer.position(self.assignment())
+      self._consumer.commit(next_position)
+    
+    return result
