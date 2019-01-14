@@ -1,30 +1,55 @@
+import os
 import gzip
 import logging
 
+from io import TextIOWrapper
+
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
-from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.config import ProducerConfig
 
 
 class LineProducer(AbstractBaseProducer):
+    """
+    Reads a text file or a directory of text files and sends each line as a message into kafka.
+    The key is the line count across all files.
+
+    Can handle gzip compressed files.
+    """
 
     def __init__(self, config: str):
-        super().__init__(config, config_parser=BaseConfig)
+        super().__init__(config, config_parser=ProducerConfig)
         self.count = 0
 
     def process(self):
-        file_name = self.configuration['path']
-        if file_name.endswith('.gz'):
-            fp = gzip.open(file_name, mode='r')
+        path = self.configuration.path
+        if not os.path.exists(path):
+            raise FileNotFoundError("Path {} does not exist".format(path))
         else:
-            fp = open(file_name, 'r')
-            
+            if os.path.isdir(path):
+                paths = list()
+                for root, _, files in os.walk(path):
+                    paths.append(files)
+            else:
+                paths = [path]
+   
+            for path in paths:
+                fp = self._read_file(path)
+                self._send_lines(fp)
+                self.flush()
+                fp.close()
+
+    def _read_file(self, path: str) -> TextIOWrapper: 
+        if path.endswith('.gz'):
+            return gzip.open(path, mode='r')
+        else:
+            return open(path, 'r')
+
+
+    def _send_lines(self, fp: TextIOWrapper):
         for line in fp:
-            self._poll(0)
             if isinstance(line, bytes):
                 line = line.decode('utf-8')
             line = line.strip()
-            logging.debug("Produced Message %s from Line: %s", self.count, line)
-            self._produce_kafka_message("{}".format(self.count), line)   
+            self._logger.debug("Produced Message %s from Line: %s", self.count, line)
+            self.send('{}'.format(self.count), line)   
             self.count += 1
-        self._flush()
-        fp.close()
