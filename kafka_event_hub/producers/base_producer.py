@@ -14,83 +14,40 @@ __description__ = """
                     """
 from kafka_event_hub.config import BaseConfig
 
+from kafka import KafkaProducer
+
 from confluent_kafka import Producer
 from confluent_kafka.admin import AdminClient, NewPartitions, NewTopic
 
 import logging
 
 
-def basic_callback(err, msg):
-    if err is not None:
-        logging.error('Message delivery failed: %s.', err)
-    else:
-        logging.info('Message delivered to %s [%s].', msg.topic(), msg.partition())
+def callback_success(record_metadata):
+    logging.info("Message delivered to topic %s, parition %s with offset %s.", record_metadata.topic, record_metadata.partition, record_metadata.offset)
 
+def callback_error(excpt):
+    logging.error("An error occured: ", exc_info=excpt)
+    # TODO: Implement error handling if necessary!
 
 class AbstractBaseProducer(object):
 
-    def __init__(self, config: str, config_parser: type(BaseConfig), call_back=None, logger=logging.getLogger(__name__)):
+    def __init__(self, config: str, config_parser: type(BaseConfig), callback_success_param=None, callback_error_param=None, logger=logging.getLogger(__name__)):
         self._logger = logger
         self._configuration = config_parser(config)
-        self._admin = AdminClient(**self._configuration['AdminClient'])
-        self._prepare_topic()
-        self._producer = Producer(**self._configuration['Producer'])
-        self._call_back = basic_callback if call_back is None else call_back
+        self._producer = KafkaProducer(**self.configuration.producer)
+        self._callback_success = callback_success if callback_success_param is None else callback_success_param
+        self._callback_error = callback_error if callback_error_param is None else callback_error_param
+
 
     @property
     def configuration(self):
         return self._configuration
 
-    def _prepare_topic(self):
-        fs = self._admin.create_topics([NewTopic(**self._configuration['Topic'])])
-
-        for topic,f in fs.items():
-            try:
-                f.result()
-                self._logger.info('Topic %s created.', topic)
-            except Exception as e:
-                self._logger.error('Failed to create topic %s: %s', topic, e)
-
-    def initialize(self):
-        """"""
-        pass
-
-    def check_data_source(self):
-        """Check the data source whether new data is available."""
-        pass
+    def send(self, key: bytes, message: bytes):
+        self._producer.send(self.configuration.topic, key, message).add_callback(self._callback_success).add_errback(self._callback_error)
 
     def process(self):
-        """Load data from source and write it into the Kafka topic."""
-        pass
-
-    def update_configuration(self):
-        """Update the configuration if necessary."""
-        self._configuration.store()
-
-    def _produce_kafka_message(self, key: str, value: str, **kwargs):
-        self._producer.produce(self._configuration['Topic']['topic'], key=key.encode('utf-8'),
-                               value=value.encode('utf-8'), callback=self._call_back, **kwargs)
-
-    def _poll(self, timeout=0):
-        self._producer.poll(timeout=timeout)
-
-    def _flush(self, timeout=0):
-        self._producer.flush(timeout)
-
-    def list_topics(self):
-        return self._producer.list_topics()
-
-    def delete_topic(self):
-        """DO NOT USE AS IT CURRENTLY CREATES A SEG FAULT IN THE C CODE"""
-        fs = self._admin.delete_topics(list(self._configuration['Topic']['topic']), operation_timeout=30)
-
-        for topic,f in fs.items():
-            try:
-                f.result()
-                self._logger.info('Topic %s created.', topic)
-            except Exception as e:
-                self._logger.error('Failed to create topic %s: %s', topic, e)
-
-    def __len__(self):
-        return self._producer.__len__()
-
+        raise NotImplementedError("Implement process to enable the behaviour.")
+        
+    def flush(self):
+        self._producer.flush()
