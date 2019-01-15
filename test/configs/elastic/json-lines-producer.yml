@@ -1,6 +1,5 @@
 Producer:
   client_id: json-data-producer
   bootstrap_servers: localhost:9092
-Topics:
-  - json
+Topics: json
 Path: "data/lines/test_data.json"
