@@ -1,15 +1,10 @@
-AdminClient:
-  conf:
-    bootstrap.servers: localhost:9092
-    debug: all
 Consumer:
-  bootstrap.servers: localhost:9092
-  group.id: elastic-consumer-test
-  default.topic.config:
-    auto.offset.reset: earliest
-  debug: all
-Topic:
-  - json
+  bootstrap_servers: localhost:9092
+  client_id: test
+  group_id: elastic-consumer-test
+  auto_offset_reset: earliest
+Topics:
+  - test
 ElasticIndex:
   index: lines-test
   doc_type: _doc

@@ -16,7 +16,6 @@ from kafka_event_hub.utility.producer_utility import current_timestamp, current_
 
 import logging
 import yaml
-from copy import deepcopy
 
 
 class BaseConfig:
@@ -49,10 +48,10 @@ class BaseConfig:
 
     @property
     def processor(self):
-        return self._yaml['Processing']['processorType']
+        return self.configuration['Processing']['processorType']
 
     def __getitem__(self, item):
-        return self._yaml[item]
+        return self.configuration[item]
 
 
 class OAIConfig(BaseConfig):
@@ -81,3 +80,39 @@ class OAIConfig(BaseConfig):
     def processStarttime(self, starttime):
         #todo: check validaty in relation to granularity pattern
         self._processStarttime = starttime
+
+class ConsumerConfig(BaseConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def consumer(self):
+        return self.configuration['Consumer']
+
+    @property
+    def topic(self):
+        return self.configuration['Topics']
+
+
+class ProducerConfig(BaseConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def producer(self):
+        return self.configuration['Producer']
+
+    @property
+    def topic(self):
+        return self.configuration['Topics']
+
+class LineProducerConfig(ProducerConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def path(self):
+        return self.configuration['Path']

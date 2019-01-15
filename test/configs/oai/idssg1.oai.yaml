@@ -22,7 +22,7 @@ OAI:
   setName: null
   setSpec: SWISSBIB-FULL-HSB01
   stoppageTime: '2018-12-25T09:45:03Z'
-  timestampUTC: '2018-12-25T09:45:03Z'
+  timestampUTC: '2019-01-10T09:45:03Z'
   until: null
   url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:
@@ -37,9 +37,9 @@ Processing:
   WebDav:
     incomingDir: '{baseDir}/rero.webdav'
 Producer:
-  bootstrap.servers: localhost:9092
+  bootstrap.servers: localhost:9095
   message.send.max.retries: 100
 Topic:
-  num_partitions: 3
-  replication_factor: 2
+  num_partitions: 1
+  replication_factor: 1
   topic: IDSSG

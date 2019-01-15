@@ -2,16 +2,20 @@ import sys
 import os
 import logging
 
-logging.basicConfig(filename='logs/line_producer.log', filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename='logs/line_producer.log', filemode='w', level=logging.ERROR)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.producers import LineProducer
 from kafka_event_hub.consumers import SimpleConsumer
+from kafka import KafkaAdminClient
 
 class TestLineProducer(object):
 
     def setup_class(self):
-        logging.info("Begin Test")
+
+        self.admin = KafkaAdminClient(bootstrap_servers='localhost:9092')
+        self.admin.delete_topics(['test-lines-gz-v3'])
+        self.admin.delete_topics(['test-lines-v3'])
         self.producer = LineProducer('configs/lines/producer.yml')
         self.producer_gz = LineProducer('configs/lines/producer_gz.yml')
         self.consumer = SimpleConsumer('configs/lines/consumer.yml')
@@ -20,6 +24,10 @@ class TestLineProducer(object):
     def teardown_class(self):
         self.consumer.close()
         self.consumer_gz.close()
+
+        self.admin.delete_topics(['test-lines-gz-v3'])
+        self.admin.delete_topics(['test-lines-v3'])
+
 
     def test_produce(self):
         self.producer.process()

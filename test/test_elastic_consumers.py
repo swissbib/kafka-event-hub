@@ -9,8 +9,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.consumers import SimpleElasticConsumer
 from kafka_event_hub.producers import LineProducer
 
-from confluent_kafka.admin import AdminClient
-
 class TestSimpleElasticConsumer(object):
 
     def setup_class(self):
@@ -19,10 +17,5 @@ class TestSimpleElasticConsumer(object):
 
     def test_consume(self):
         self.producer.process()
-        while True:
-            value = self.consumer.consume()
-            if not value:
-                break
-
-    def teardown_class(self):
-        self.consumer.delete_topic()
+        for _ in range(2):
+            self.consumer.consume(10)
