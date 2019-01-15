@@ -4,6 +4,7 @@ from kafka import KafkaConsumer, TopicPartition
 
 from typing import List
 import logging
+import json
 
 
 class AbstractBaseConsumer(object):
@@ -16,6 +17,7 @@ class AbstractBaseConsumer(object):
         """
         self._configuration = config_class(config)
         self._consumer = KafkaConsumer(**self.configuration.consumer)
+        self._logger.debug(json.dumps(self.configuration.consumer))
         self.subscribe(self.configuration.topic)
         self._logger = logger
 

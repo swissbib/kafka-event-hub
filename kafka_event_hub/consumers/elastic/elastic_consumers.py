@@ -103,7 +103,8 @@ class BulkElasticConsumer(AbstractBaseConsumer):
 
     if result:
       for assignment in self._consumer.assignment():
-        if self._consumer.position(assignment) != self._consumer.committed(assignment):
-          self._consumer.commit(self._consumer.position(assignment))
+        pos = self._consumer.position(assignment)
+        if pos != self._consumer.committed(assignment):
+          self._consumer.commit({assignment: OffsetAndMetadata(pos, "")})
 
     return result
