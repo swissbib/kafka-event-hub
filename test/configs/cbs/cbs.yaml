@@ -1,0 +1,45 @@
+AdminClient:
+  conf:
+    bootstrap.servers: localhost:9092
+CBS:
+  lastOffset: ??
+  networkprefix: idssg1
+Consumer:
+  bootstrap.servers: localhost:9092
+  debug: all
+  default.topic.config:
+    auto.offset.reset: smallest
+  group.id: idssg1.cbs
+Kafka:
+  host: localhost:9092
+  partition: 0
+  topicToUse: HSG1
+OAI:
+  granularity: YYYY-MM-DDThh:mm:ssZ
+  httpproxy: null
+  metadataPrefix: marc21
+  resumptionToken: null
+  setName: null
+  setSpec: SWISSBIB-FULL-HSB01
+  stoppageTime: '2018-12-27T09:33:15Z'
+  timestampUTC: '2018-12-27T09:33:11Z'
+  until: null
+  url: http://aleph.unisg.ch/cgi-bin/OAI
+Processing:
+  Default:
+    baseDir: /swissbib/harvesting
+    deleteDirIncoming: '{baseDir}/deleteOAI'
+    encodeUnicodeAsUTF8: null
+    networkPrefix: IDSSG1
+    processorType: OAI
+    recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+  OAI: null
+  WebDav:
+    incomingDir: '{baseDir}/rero.webdav'
+Producer:
+  bootstrap.servers: localhost:9092
+  message.send.max.retries: 100
+Topic:
+  num_partitions: 3
+  replication_factor: 2
+  topic: IDSSG
