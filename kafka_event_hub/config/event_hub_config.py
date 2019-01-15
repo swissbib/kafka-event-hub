@@ -48,16 +48,16 @@ class BaseConfig:
 
     @property
     def processor(self):
-        return self._yaml['Processing']['processorType']
+        return self.configuration['Processing']['processorType']
 
     def __getitem__(self, item):
-        return self._yaml[item]
+        return self.configuration[item]
 
 
 class OAIConfig(BaseConfig):
 
-    def __init__(self, config_path):
-        super().__init__(config_path=config_path)
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
 
     def update_start_time(self):
         granularity = self._yaml['OAI']['granularity']
@@ -68,3 +68,56 @@ class OAIConfig(BaseConfig):
     def update_stop_time(self):
         self._yaml['OAI']['stoppageTime'] = current_timestamp()
 
+class ConsumerConfig(BaseConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def consumer(self):
+        return self.configuration['Consumer']
+
+    @property
+    def topic(self):
+        return self.configuration['Topics']
+
+
+class ProducerConfig(BaseConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def producer(self):
+        return self.configuration['Producer']
+
+    @property
+    def topic(self):
+        return self.configuration['Topics']
+
+class LineProducerConfig(ProducerConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def path(self):
+        return self.configuration['Path']
+
+
+class ElasticProducerConfig(ProducerConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def elastic_settings(self):
+        return self.configuration['ElasticIndex']
+    
+    @property
+    def scroll(self):
+        return self.configuration['Scroll']
+
+    @property
+    def identifier_key(self):
+        return self.configuration['IdentifierKey']

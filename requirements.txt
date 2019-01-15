@@ -1,5 +1,5 @@
 PyYAML
-confluent-kafka
+kafka-python
 Sickle
 PyMongo
 requests
