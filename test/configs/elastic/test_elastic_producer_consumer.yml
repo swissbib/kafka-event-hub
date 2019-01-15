@@ -1,0 +1,7 @@
+Consumer:
+  client_id: test-elastic-consumer
+  bootstrap_servers: localhost:9092
+  group_id: test-elastic-producer
+  auto_offset_reset: earliest
+Topics: 
+  - test-elastic-producer

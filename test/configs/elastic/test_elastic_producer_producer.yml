@@ -1,0 +1,14 @@
+Producer:
+  client_id: elastic-data-producer
+  bootstrap_servers: localhost:9092
+Topics: test-elastic-producer
+ElasticIndex:
+  index: test-elastic-producer
+  doc_type: doc
+  url: http://localhost:9200
+  timeout: 300
+Scroll:
+  size: 1000
+  query: null
+  scroll: 5m
+  unpack: False
