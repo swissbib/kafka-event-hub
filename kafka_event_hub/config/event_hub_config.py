@@ -57,7 +57,7 @@ class BaseConfig:
 class OAIConfig(BaseConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     def update_start_time(self):
         granularity = self._yaml['OAI']['granularity']
@@ -68,10 +68,11 @@ class OAIConfig(BaseConfig):
     def update_stop_time(self):
         self._yaml['OAI']['stoppageTime'] = current_timestamp()
 
+
 class ConsumerConfig(BaseConfig):
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def consumer(self):
@@ -82,10 +83,27 @@ class ConsumerConfig(BaseConfig):
         return self.configuration['Topics']
 
 
+class ElasticConsumerConfig(ConsumerConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, logger=logger)
+
+    @property
+    def elastic_settings(self):
+        return self.configuration['ElasticIndex']
+
+    @property
+    def id_name(self):
+        try:
+            return self.configuration['IdentifierKey']
+        except KeyError:
+            return '_key'
+
+
 class ProducerConfig(BaseConfig):
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def producer(self):
@@ -95,10 +113,11 @@ class ProducerConfig(BaseConfig):
     def topic(self):
         return self.configuration['Topics']
 
+
 class LineProducerConfig(ProducerConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def path(self):
@@ -108,7 +127,7 @@ class LineProducerConfig(ProducerConfig):
 class ElasticProducerConfig(ProducerConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def elastic_settings(self):

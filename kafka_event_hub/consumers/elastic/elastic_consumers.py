@@ -1,11 +1,10 @@
 from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
-from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.config import ElasticConsumerConfig
 
 from simple_elastic import ElasticIndex
 
-from kafka import TopicPartition, OffsetAndMetadata
+from kafka import OffsetAndMetadata
 
-import time
 import json
 import logging
 
@@ -31,9 +30,9 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
 
   """
   
-  def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
-      super().__init__(config, config_class, logger=logger)
-      self._index = ElasticIndex(**self.configuration['ElasticIndex'])
+  def __init__(self, config, config_class=ElasticConsumerConfig, logger=logging.getLogger(__name__)):
+    super().__init__(config, config_class, logger=logger)
+    self._index = ElasticIndex(**self.configuration.elastic_settings)
 
   def consume(self) -> bool:
     """
@@ -77,20 +76,16 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     doc_type: _doc (default value for elasticsearch 6)
     url: http://localhost:9200
     timeout: 300
-  `key`  name-of-key-value (optional) -> Default will use the key field of the Kafka Message to define the unique _id.
+  IdentifierKey: name-of-key-value (optional, if not specified the Kafka key value will be used.)
   """
 
-  def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
+  def __init__(self, config, config_class=ElasticConsumerConfig, logger=logging.getLogger(__name__)):
     super().__init__(config, config_class, logger=logger)
-    self._index = ElasticIndex(**self.configuration['ElasticIndex'])
-    try:
-      self._key = self.configuration['key']
-    except KeyError:
-      self._key = '_key'
+    self._index = ElasticIndex(**self.configuration.elastic_settings)
+    self._key = self.configuration.id_name
 
   def consume(self) -> bool:
     data = list()
-    current = time.time()
     messages = self._consumer.poll(100, 10000)
 
     for message in messages:
