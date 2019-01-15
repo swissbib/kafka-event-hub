@@ -35,6 +35,9 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
         super().__init__(configuration, OAIConfig)
         self._record_body_regex = re.compile(self.configuration['Processing']['Default']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
 
+    def initialize(self):
+        pass
+
     @property
     def record_body_regex(self):
         return self._record_body_regex
@@ -62,17 +65,12 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
             messages = 0
             for record in records_iter:
                 messages += 1
-                if messages % 1000 == 0:
-                    self._poll()
-                    self._flush()
                 #org = record.header.datestamp
                 #test = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
                 millisecondsSinceEpocUTC = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ')))
                 #zurueck = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(millisecondsSinceEpocUTC)  )
-                self._produce_kafka_message(value=record.raw,
-                                            key=record.header.identifier,
-                                            timestamp=millisecondsSinceEpocUTC
-                                            )
+                self.send(key=record.header.identifier.encode('utf8'),
+                          message=record.raw.encode('utf8'))
 
         except BadArgument as ba:
             self._logger.exception(ba)
@@ -86,5 +84,5 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
     def update_configuration(self):
         self.configuration.update_stop_time()
         self.configuration.update_start_time()
-        super().update_configuration()
+        self._configuration.store()
 
