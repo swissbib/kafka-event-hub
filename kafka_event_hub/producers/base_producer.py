@@ -41,6 +41,10 @@ class AbstractBaseProducer(object):
         return self._configuration
 
     def send(self, key: bytes, message: bytes):
+        """Send message with a key to the Kafka cluster.
+
+        Both key and message should be as bytes.
+        """
         self._producer.send(self.configuration.topic, **{'value': message, 'key': key}).add_callback(self._callback_success).add_errback(self._callback_error)
 
     def process(self):

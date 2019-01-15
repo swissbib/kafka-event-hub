@@ -3,9 +3,12 @@ from kafka_event_hub.config import BaseConfig
 
 from simple_elastic import ElasticIndex
 
+from kafka import TopicPartition, OffsetAndMetadata
+
 import time
 import json
 import logging
+
 
 class SimpleElasticConsumer(AbstractBaseConsumer):
   """
@@ -29,35 +32,37 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
   """
   
   def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
-    super().__init__(config, config_class, logger=logger)
-    self._index = ElasticIndex(**self.configuration['ElasticIndex'], enable_auto_commit=False)
+      super().__init__(config, config_class, logger=logger)
+      self._index = ElasticIndex(**self.configuration['ElasticIndex'])
 
   def consume(self) -> bool:
     """
     Consumes a single message from the subscribed topic and indexes it into the elasticsearch index.
 
-    Returns True if successfull, False otherwise.
+    Returns True if successful, False otherwise.
     """
     message = next(self._consumer)
 
     key = message.key.decode('utf-8')
     value = json.loads(message.value.decode('utf-8'))
-  
+
     self._logger.debug("Key: %s", key)
     self._logger.debug("Value: %s", value)
     result = self._index.index_into(value, key)
-    
+
     if result:
-      next_position = self._consumer.position()
-      self._consumer.commit(next_position)
-    
+      for assignment in self._consumer.assignment():
+        pos = self._consumer.position(assignment)
+        if pos != self._consumer.committed(assignment):
+          self._consumer.commit({assignment: OffsetAndMetadata(pos, "")})
+
     return result
 
 
 class BulkElasticConsumer(AbstractBaseConsumer):
   """
   Will attempt to collect a number of messages and then bulk index them. Collection will either wait some time or collect
-  10'000 messages. 
+  10'000 messages.
 
 
   Consumer:
@@ -72,12 +77,12 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     doc_type: _doc (default value for elasticsearch 6)
     url: http://localhost:9200
     timeout: 300
-  `key`  name-of-key-value (optional) -> Default will use the key field of the Kafka Message to define the unique _id. 
+  `key`  name-of-key-value (optional) -> Default will use the key field of the Kafka Message to define the unique _id.
   """
-  
+
   def __init__(self, config, config_class=BaseConfig, logger=logging.getLogger(__name__)):
     super().__init__(config, config_class, logger=logger)
-    self._index = ElasticIndex(**self.configuration['ElasticIndex'], enable_auto_commit=False)
+    self._index = ElasticIndex(**self.configuration['ElasticIndex'])
     try:
       self._key = self.configuration['key']
     except KeyError:
@@ -91,7 +96,7 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     for message in messages:
       key = message.key.decode('utf-8')
       value = json.loads(message.value.decode('utf-8'))
-        
+
       self._logger.debug("Key: %s", key)
       self._logger.debug("Value: %s", value)
 
@@ -102,7 +107,8 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     result = self._index.bulk(data, self._key)
 
     if result:
-      next_position = self._consumer.position(self.assignment())
-      self._consumer.commit(next_position)
-    
+      for assignment in self._consumer.assignment():
+        if self._consumer.position(assignment) != self._consumer.committed(assignment):
+          self._consumer.commit(self._consumer.position(assignment))
+
     return result

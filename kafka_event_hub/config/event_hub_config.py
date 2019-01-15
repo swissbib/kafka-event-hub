@@ -116,3 +116,21 @@ class LineProducerConfig(ProducerConfig):
     @property
     def path(self):
         return self.configuration['Path']
+
+
+class ElasticProducerConfig(ProducerConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        return super().__init__(config_path, logger=logger)
+
+    @property
+    def elastic_settings(self):
+        return self.configuration['ElasticIndex']
+    
+    @property
+    def scroll(self):
+        return self.configuration['Scroll']
+
+    @property
+    def identifier_key(self):
+        return self.configuration['IdentifierKey']
