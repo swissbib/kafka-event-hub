@@ -1,0 +1,13 @@
+Consumer:
+  bootstrap_servers: localhost:9092
+  client_id: test-bulk
+  group_id: elastic-consumer-bulk-test
+  auto_offset_reset: earliest
+  enable_auto_commit: false
+Topics:
+  - json
+ElasticIndex:
+  index: lines-test
+  doc_type: doc
+  url: http://localhost:9200
+  timeout: 300

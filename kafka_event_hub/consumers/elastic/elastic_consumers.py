@@ -88,16 +88,18 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     data = list()
     messages = self._consumer.poll(100, 10000)
 
-    for message in messages:
-      key = message.key.decode('utf-8')
-      value = json.loads(message.value.decode('utf-8'))
+    if messages:
+      # TODO: Currently probably only works if there is a single partition. needs a more robust implementation.
+      for message in messages[self._consumer.assignment().pop()]:
+        key = message.key.decode('utf-8')
+        value = json.loads(message.value.decode('utf-8'))
 
-      self._logger.debug("Key: %s", key)
-      self._logger.debug("Value: %s", value)
+        self._logger.debug("Key: %s", key)
+        self._logger.debug("Value: %s", value)
 
-      if self._key not in value:
-        value['_key'] = key
-      data.append(value)
+        if self._key not in value:
+          value['_key'] = key
+        data.append(value)
 
     result = self._index.bulk(data, self._key)
 
