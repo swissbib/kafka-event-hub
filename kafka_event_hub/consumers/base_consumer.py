@@ -17,9 +17,9 @@ class AbstractBaseConsumer(object):
         """
         self._configuration = config_class(config)
         self._consumer = KafkaConsumer(**self.configuration.consumer)
-        self._logger.debug(json.dumps(self.configuration.consumer))
         self.subscribe(self.configuration.topic)
         self._logger = logger
+        self._logger.debug(json.dumps(self.configuration.consumer))
 
     @property
     def configuration(self):
