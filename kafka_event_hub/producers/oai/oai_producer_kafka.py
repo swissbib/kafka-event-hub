@@ -27,9 +27,6 @@ class OAIProducerKafka(AbstractBaseProducer):
         #the processing for the configurations only valid for a single data repository
         self.configuration.initialize(configrep)
 
-    def initialize(self):
-        pass
-
 
     def process(self):
 

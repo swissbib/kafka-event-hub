@@ -1,0 +1,15 @@
+OAI:
+
+Processing:
+  Default:
+    stoppageTime: '2019-01-16T12:55:24Z'
+  nebis:
+    incomingDir: '/home/swissbib/temp/testharvesting/incoming'
+    fileNameSuffix:
+    collectedDir:
+    clusteringDir:
+    nebisSrcDir: '/home/swissbib/temp/testharvesting/nebis-src'
+    nebisWorking: '/home/swissbib/temp/testharvesting/nebis-working'
+Producer:
+  client_id: oai-nebis-producer
+Topics: NEBIS

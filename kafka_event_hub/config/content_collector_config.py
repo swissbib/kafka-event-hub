@@ -34,7 +34,7 @@ class ContentCollectorConfig(ProducerConfig):
         self._config_path_rep = configpathrep
         self._loadspecial(configpathrep)
         self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
-        self._processStarttime = current_utc_timestamp(self._yamlmerged['OAI']['granularity'])
+        self._processStarttime = current_utc_timestamp(self.configuration['Processing']['Default']['granularity'])
 
 
 
@@ -62,6 +62,12 @@ class ContentCollectorConfig(ProducerConfig):
     def processStarttime(self):
         return self._processStarttime
 
+    @property
+    def identifier_key(self):
+        return self.configuration['Processing']['Default']['identifierkey']
+
+
+
     @processStarttime.setter
     def processStarttime(self, starttime):
         #todo: check validaty in relation to granularity pattern
@@ -85,6 +91,30 @@ class ContentCollectorConfig(ProducerConfig):
 
 
 class OAIConfig(ContentCollectorConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        super().__init__(config_path=config_path, logger=logger)
+
+
+class FileNebisScpConfig(ContentCollectorConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        super().__init__(config_path=config_path, logger=logger)
+
+    @property
+    def incoming_dir(self):
+        return self.configuration['Processing']['nebis']['incomingDir']
+
+    @property
+    def working_dir(self):
+        return self.configuration['Processing']['nebis']['nebisWorking']
+
+    @property
+    def nebis_src_dir(self):
+        return self.configuration['Processing']['nebis']['nebisSrcDir']
+
+
+class FileReroWebDavConfig(ContentCollectorConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
         super().__init__(config_path=config_path, logger=logger)

@@ -1,6 +1,6 @@
 
 import argparse
-from kafka_event_hub.producers.oai.oai_producer_kafka import OAIProducerKafka
+from kafka_event_hub.producers import OAIProducerKafka, FilePushNebisKafka
 
 
 
