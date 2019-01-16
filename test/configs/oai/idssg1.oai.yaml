@@ -1,9 +1,9 @@
 OAI:
-  setSpec: SWISSBIB-FULL-HSB01
-  stoppageTime: '2019-01-16T11:50:55Z'
-  timestampUTC: '2019-01-16T10:50:43Z'
-  url: http://aleph.unisg.ch/cgi-bin/OAI
   set: SWISSBIB-FULL-HSB01
+  setSpec: SWISSBIB-FULL-HSB01
+  stoppageTime: '2019-01-16T12:55:24Z'
+  timestampUTC: '2019-01-16T11:55:07Z'
+  url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:
   Default:
     networkPrefix: IDSSG1

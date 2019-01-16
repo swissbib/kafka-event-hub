@@ -1,6 +1,6 @@
 
 import argparse
-from kafka_event_hub.producers.oai.oai_producer import OAIProducer
+from kafka_event_hub.producers.oai.oai_producer_kafka import OAIProducerKafka
 
 
 
@@ -12,8 +12,4 @@ parser.add_argument('configrep', action='store')
 args = parser.parse_args()
 producer = globals()[args.type](args.configrep, args.sharedconfig)
 
-#producer.initialize()
-#producer.lookUpData()
-#producer.preProcessData()
 producer.process()
-#producer.postProcessData()
