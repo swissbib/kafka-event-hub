@@ -1,5 +1,7 @@
 
 
+#todo: kann weg wenn alle pipes in der ersten Version implementiert und die Schnittstelle nicht mehr benötigt wird
+
 class DataPreparation(object):
     """
     This type defines a series

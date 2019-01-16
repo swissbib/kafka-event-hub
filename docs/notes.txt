@@ -77,3 +77,13 @@ https://cwiki.apache.org/confluence/display/KAFKA/System+Tools
 Hintergrund: https://github.com/confluentinc/confluent-kafka-python/issues/11
 https://www.virtualbox.org/wiki/Linux_Downloads
 https://tecadmin.net/install-oracle-virtualbox-on-ubuntu/
+
+
+Einstellungen docker daemon in UB
+/etc/docker/daemon.json
+
+{
+  "dns": ["131.152.1.1", "131.152.1.5"]
+
+}
+

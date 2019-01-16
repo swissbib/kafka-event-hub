@@ -91,8 +91,11 @@ RUN pip install -r requirements.txt
 #was machen wir mit den Tests?
 COPY kafka_event_hub /app/kafka_event_hub
 
-VOLUME /in
-ENTRYPOINT ["python3", "run.py", "/in"]
+VOLUME /inrep
+VOLUME /inshare
+#ENTRYPOINT ["python3", "run.py", "/inrep"]
+ENTRYPOINT ["python3"]
+
 #now you can overwrite the --type parameter for the producer / consumer to be used as argument of the docker run command
 # e.g. docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/in kafka-event-hub --type=blabla
 #todo:
@@ -102,4 +105,6 @@ ENTRYPOINT ["python3", "run.py", "/in"]
 CMD ["--type=OAIProducer" ]
 
 #howto start
-#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/in kafka-event-hub
+#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/inrep kafka-event-hub --sharedconfig $(pwd)/test/configs/oai/oai.share.yaml
+
+#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/inrep -v $(pwd)/test/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducer --sharedconfig /inshare /inrep

@@ -110,31 +110,3 @@ class ElasticProducerConfig(ProducerConfig):
         return self.configuration['IdentifierKey']
 
 
-class OAIConfig(ProducerConfig):
-
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path=config_path, logger=logger)
-        #todo: open - do we need a temporarily copy of configuration?
-        #self._nextyaml = deepcopy( self.configuration)
-        self._processStarttime = current_utc_timestamp(self._yaml['OAI']['granularity'])
-
-    def update_start_time(self):
-        granularity = self._yaml['OAI']['granularity']
-        if granularity is not None:
-            granularity = str(granularity)
-        self._yaml['OAI']['timestampUTC'] = self._processStarttime
-
-
-    def update_stop_time(self):
-        self._yaml['OAI']['stoppageTime'] = current_timestamp()
-
-
-
-    @property
-    def processStarttime(self):
-        return self._processStarttime
-
-    @processStarttime.setter
-    def processStarttime(self, starttime):
-        #todo: check validaty in relation to granularity pattern
-        self._processStarttime = starttime

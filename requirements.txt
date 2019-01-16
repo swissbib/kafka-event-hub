@@ -5,3 +5,4 @@ PyMongo
 requests
 simple-elastic
 pytest
+deepmerge

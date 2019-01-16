@@ -1,0 +1,91 @@
+# coding: utf-8
+
+__author__ = 'swissbib - UB Basel, Switzerland, Guenter Hipler'
+__copyright__ = "Copyright 2019, swissbib project"
+__credits__ = []
+__license__ = "GNU General Public License v3.0"
+__version__ = "0.1"
+__maintainer__ = "Guenter Hipler"
+__email__ = "guenter.hipler@unibas.ch"
+__status__ = "in development"
+__description__ = """
+                    """
+
+from kafka_event_hub.utility.producer_utility import current_timestamp, current_utc_timestamp
+from kafka_event_hub.config import ProducerConfig
+import logging
+import yaml
+from deepmerge import always_merger
+
+"""
+actually I'm not sure how to differentiate configurations for different channels in the area of content collector
+for a starter I use the base class for all common affairs the area of conmtent collector and even more
+specialised types for the various pipes   
+"""
+class ContentCollectorConfig(ProducerConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        super().__init__(config_path=config_path, logger=logger)
+
+    def initialize(self, configpathrep):
+
+
+        #todo: we have still a mixture with OAI in config name
+        self._config_path_rep = configpathrep
+        self._loadspecial(configpathrep)
+        self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
+        self._processStarttime = current_utc_timestamp(self._yamlmerged['OAI']['granularity'])
+
+
+
+    def update_start_time(self):
+        granularity = self._yaml['OAI']['granularity']
+        if granularity is not None:
+            #todo: ist es mal nicht typ str??
+            granularity = str(granularity)
+        self.specializedConfiguration['OAI']['timestampUTC'] = self._processStarttime
+
+
+    def update_stop_time(self):
+        self.specializedConfiguration['OAI']['stoppageTime'] = current_timestamp()
+
+    def _loadspecial(self,path):
+        try:
+            with open(path, 'r') as fp:
+                self._yamlspecial = yaml.load(fp)
+        except Exception:
+            self._logger.exception('The config file at %s could not be loaded!', self._config_path)
+            raise Exception
+
+
+    @property
+    def processStarttime(self):
+        return self._processStarttime
+
+    @processStarttime.setter
+    def processStarttime(self, starttime):
+        #todo: check validaty in relation to granularity pattern
+        self._processStarttime = starttime
+
+    @property
+    def configuration(self):
+        if not hasattr(self,"_yamlmerged") or self._yamlmerged is None:
+            return super().configuration
+        else:
+            return self._yamlmerged
+
+    @property
+    def specializedConfiguration(self):
+        return self._yamlspecial
+
+    def store(self):
+        with open(self._config_path_rep, 'w') as fp:
+            yaml.dump(self.specializedConfiguration, fp, default_flow_style=False)
+
+
+
+class OAIConfig(ContentCollectorConfig):
+
+    def __init__(self, config_path, logger=logging.getLogger(__name__)):
+        super().__init__(config_path=config_path, logger=logger)
+

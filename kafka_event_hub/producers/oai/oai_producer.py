@@ -25,32 +25,32 @@ import sys
 import time
 
 
-class OAIProducer(AbstractBaseProducer, DataPreparation):
+class OAIProducer(AbstractBaseProducer):
 
-    def __init__(self, configuration: str):
-        """
+    def __init__(self, configrep: str, configrepshare: str):
 
-        :param configuration: The path to the configuration file.
-        """
-        super().__init__(configuration, OAIConfig)
-        self._record_body_regex = re.compile(self.configuration['Processing']['Default']['recordBodyRegEx'], re.UNICODE | re.DOTALL | re.IGNORECASE)
+        AbstractBaseProducer.__init__(self,configrepshare, OAIConfig)
+        #todo
+        #I have to split it up this way because AbstractBaseProducer doesn't work with specialized configuratiomns so far
+        #until we have to decided to continue I will call an initialized method after initialization so I can do
+        #the processing for the configurations only valid for a single data repository
+        self.configuration.initialize(configrep)
 
     def initialize(self):
         pass
 
-    @property
-    def record_body_regex(self):
-        return self._record_body_regex
 
     def process(self):
         try:
 
+            #todo
+            #what do we do with until and other OAI parameters
             sickle = Sickle(self.configuration['OAI']['url'])
             dic = {}
             if not self.configuration['OAI']['metadataPrefix'] is None:
                 dic['metadataPrefix'] = self.configuration['OAI']['metadataPrefix']
-            if not self.configuration['OAI']['setSpec'] is None:
-                dic['set'] = self.configuration['OAI']['setSpec']
+            if not self.configuration['OAI']['set'] is None:
+                dic['set'] = self.configuration['OAI']['set']
             if not self.configuration['OAI']['timestampUTC'] is None:
                 dic['from'] = transform_from_until(self.configuration['OAI']['timestampUTC'],
                                                    self.configuration['OAI']['granularity'])
@@ -65,12 +65,9 @@ class OAIProducer(AbstractBaseProducer, DataPreparation):
             messages = 0
             for record in records_iter:
                 messages += 1
-                #org = record.header.datestamp
-                #test = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ'))) - time.timezone
-                millisecondsSinceEpocUTC = int(time.mktime(time.strptime(record.header.datestamp, '%Y-%m-%dT%H:%M:%SZ')))
-                #zurueck = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(millisecondsSinceEpocUTC)  )
                 self.send(key=record.header.identifier.encode('utf8'),
                           message=record.raw.encode('utf8'))
+            self.flush()
 
         except BadArgument as ba:
             self._logger.exception(ba)
