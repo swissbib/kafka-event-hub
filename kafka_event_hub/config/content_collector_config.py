@@ -39,7 +39,7 @@ class ContentCollectorConfig(ProducerConfig):
 
 
     def update_start_time(self):
-        granularity = self._yaml['OAI']['granularity']
+        granularity = self.granularity
         if granularity is not None:
             #todo: ist es mal nicht typ str??
             granularity = str(granularity)
@@ -66,6 +66,9 @@ class ContentCollectorConfig(ProducerConfig):
     def identifier_key(self):
         return self.configuration['Processing']['Default']['identifierkey']
 
+    @property
+    def granularity(self):
+        return self.configuration['Processing']['Default']['granularity']
 
 
     @processStarttime.setter
@@ -94,6 +97,22 @@ class OAIConfig(ContentCollectorConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
         super().__init__(config_path=config_path, logger=logger)
+
+    @property
+    def metadata_prefix(self):
+        return self.configuration['OAI']['metadataPrefix']
+
+    @property
+    def oai_set(self):
+        return self.configuration['OAI']['set']
+
+    @property
+    def timestamp_utc(self):
+        return self.configuration['OAI']['timestampUTC']
+
+    @property
+    def oai_until(self):
+        return self.configuration['OAI']['until']
 
 
 class FileNebisScpConfig(ContentCollectorConfig):

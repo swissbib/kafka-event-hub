@@ -28,16 +28,16 @@ class OaiSickleWrapper(object):
     def _initialize(self):
         self.dic = {}
 
-        if not self._oaiconfig['OAI']['metadataPrefix'] is None:
-            self.dic['metadataPrefix'] = self._oaiconfig['OAI']['metadataPrefix']
-        if not self._oaiconfig['OAI']['set'] is None:
-            self.dic['set'] = self._oaiconfig['OAI']['set']
-        if not self._oaiconfig['OAI']['timestampUTC'] is None:
-            self.dic['from'] = transform_from_until(self._oaiconfig['OAI']['timestampUTC'],
-                                               self._oaiconfig['OAI']['granularity'])
-        if not self._oaiconfig['OAI']['until'] is None:
-            self.dic['until'] = transform_from_until(self._oaiconfig['OAI']['until'],
-                                                self._oaiconfig['OAI']['granularity'])
+        if not self._oaiconfig.metadata_prefix is None:
+            self.dic['metadataPrefix'] = self._oaiconfig.metadata_prefix
+        if not self._oaiconfig.oai_set is None:
+            self.dic['set'] = self._oaiconfig.oai_set
+        if not self._oaiconfig.timestamp_utc is None:
+            self.dic['from'] = transform_from_until(self._oaiconfig.timestamp_utc,
+                                               self._oaiconfig.granularity)
+        if not self._oaiconfig.oai_until is None:
+            self.dic['until'] = transform_from_until(self._oaiconfig.oai_until,
+                                                self._oaiconfig.granularity)
 
     def fetch_iter(self):
 
