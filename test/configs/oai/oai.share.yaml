@@ -12,6 +12,12 @@ Processing:
     processorType: OAI
     recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
     identifierkey: .*?<identifier>(.*?)</identifier>.*
+    eMailNotifification: [
+      'guenter.hipler@unibas.ch',
+      'bobobabo@bluewin.ch',
+      'silvia.witzig@unibas.ch',
+      'matthias.edel@unibas.ch',
+      'lionel.walther@unibas.ch']
   OAI: null
   WebDav:
     incomingDir: '{baseDir}/rero.webdav'

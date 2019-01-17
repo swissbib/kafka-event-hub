@@ -1,0 +1,23 @@
+OAI:
+
+Processing:
+  Default:
+    stoppageTime: '2019-01-16T12:55:24Z'
+  nebis:
+    incomingDir: '/home/swissbib/temp/testharvesting/incoming'
+    fileNameSuffix:
+    collectedDir:
+    clusteringDir:
+    nebisSrcDir: '/home/swissbib/temp/testharvesting/nebis-src'
+    nebisWorking: '/home/swissbib/temp/testharvesting/nebis-working'
+  rero:
+    basedirwebdav: '/home/swissbib/temp/testharvesting/rero.webdav'
+    processMode: 'ONLY_NEW_DELIVERD'
+    reroSrcDir: '/home/swissbib/temp/testharvesting/rero-src'
+    reroWorkingDir: '/home/swissbib/temp/testharvesting/rero-working'
+    latestProcDate: '2019_01_10'
+
+
+Producer:
+  client_id: webdav-rero-producer
+Topics: RERO

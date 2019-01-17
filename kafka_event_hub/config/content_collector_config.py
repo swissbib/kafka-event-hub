@@ -138,3 +138,22 @@ class FileReroWebDavConfig(ContentCollectorConfig):
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
         super().__init__(config_path=config_path, logger=logger)
 
+    @property
+    def basedir_webdav(self):
+        return self.configuration['Processing']['rero']['basedirwebdav']
+
+    @property
+    def process_mode(self):
+        return self.configuration['Processing']['rero']['processMode']
+
+    @property
+    def rero_src_dir(self):
+        return self.configuration['Processing']['rero']['reroSrcDir']
+
+    @property
+    def rero_working_dir(self):
+        return self.configuration['Processing']['rero']['reroWorkingDir']
+
+    @property
+    def latest_proc_date(self):
+        return self.configuration['Processing']['rero']['latestProcDate']

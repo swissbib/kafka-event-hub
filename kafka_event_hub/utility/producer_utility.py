@@ -38,14 +38,14 @@ def transform_from_until(value, granularity ='YYYY-MM-DDThh:mm:ssZ'):
             return '{:%Y-%m-%d}'.format(
                 value, '%Y-%m-%d')
 
-def add_end_dir_separator(directory):
+def add_end_dir_separator(directory) -> str:
     if directory[-1:] == sep:
         return directory
     else:
         return directory + sep
 
 
-def remove_end_dir_separator(directory):
+def remove_end_dir_separator(directory) -> str:
     if directory[-1:] == sep:
         return directory[:-1]
     else:
@@ -82,7 +82,15 @@ def move_files(from_dir,to_dir,glob="^.*$"):
     for file in onlyfiles_abs:
         system("mv " + file + space() + to_dir)
 
+
+def cp_file(file,to_dir):
+    system("cp " + file + space() + to_dir)
+
+
 def list_files_absolute_sorted(dir, glob="^.*$"):
     files = [f for f in list_only_files_absolute_path(remove_end_dir_separator(dir)) if re.match(glob, f)]
     return files
 
+def mkdir_if_absent(directory):
+    if not isdir(directory):
+       system("mkdir -p " + directory)
