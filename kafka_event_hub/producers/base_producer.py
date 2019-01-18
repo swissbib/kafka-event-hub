@@ -18,12 +18,14 @@ import logging
 
 
 def callback_success(record_metadata):
-    logging.info("Message delivered to topic %s, parition %s with offset %s.", record_metadata.topic, record_metadata.partition, record_metadata.offset)
+    logging.info("Message delivered to topic %s, parition %s with offset %s.",
+                 record_metadata.topic,
+                 record_metadata.partition,
+                 record_metadata.offset)
 
 
-def callback_error(excpt):
-    logging.error("An error occured: ", exc_info=excpt)
-    # TODO: Implement error handling if necessary!
+def callback_error(exception):
+    logging.error("An error occurred: ", exc_info=exception)
 
 
 class AbstractBaseProducer(object):
