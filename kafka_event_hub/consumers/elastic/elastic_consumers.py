@@ -6,6 +6,7 @@ from simple_elastic import ElasticIndex
 from kafka import OffsetAndMetadata
 
 import json
+from json.decoder import JSONDecodeError
 import logging
 
 
@@ -43,8 +44,13 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
         message = next(self._consumer)
 
         key = message.key.decode('utf-8')
-        value = json.loads(message.value.decode('utf-8'))
-
+        try:
+            value = json.loads(message.value.decode('utf-8'))
+        except JSONDecodeError as ex:
+            value = {
+                'message': message.value.decode('utf-8'),
+                'error': '{}'.format(ex)
+            }
         self._logger.debug("Key: %s", key)
         self._logger.debug("Value: %s", value)
         result = self._index.index_into(value, key)
@@ -80,9 +86,9 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     """
 
     def __init__(self, config, config_class=ElasticConsumerConfig, logger=logging.getLogger(__name__)):
-      super().__init__(config, config_class, logger=logger)
-      self._index = ElasticIndex(**self.configuration.elastic_settings)
-      self._key = self.configuration.id_name
+        super().__init__(config, config_class, logger=logger)
+        self._index = ElasticIndex(**self.configuration.elastic_settings)
+        self._key = self.configuration.id_name
 
     def consume(self) -> bool:
         data = list()
@@ -92,8 +98,13 @@ class BulkElasticConsumer(AbstractBaseConsumer):
             # TODO: Currently probably only works if there is a single partition. needs a more robust implementation.
             for message in messages[self._consumer.assignment().pop()]:
                 key = message.key.decode('utf-8')
-                value = json.loads(message.value.decode('utf-8'))
-
+                try:
+                    value = json.loads(message.value.decode('utf-8'))
+                except JSONDecodeError as ex:
+                    value = {
+                            'message': message.value.decode('utf-8'),
+                            'error': '{}'.format(ex)
+                        }
                 self._logger.debug("Key: %s", key)
                 self._logger.debug("Value: %s", value)
 
@@ -101,7 +112,10 @@ class BulkElasticConsumer(AbstractBaseConsumer):
                     value['_key'] = key
                 data.append(value)
 
-        result = self._index.bulk(data, self._key)
+        if len(data) > 0:
+            result = self._index.bulk(data, self._key)
+        else:
+            result = False
 
         if result:
             for assignment in self._consumer.assignment():

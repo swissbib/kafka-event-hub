@@ -2,15 +2,13 @@ import sys
 import os
 import logging
 import pytest
+from kafka import KafkaAdminClient
 
-logging.basicConfig(filename='logs/test-elastic-consumer.log', filemode='w', level=logging.ERROR)
-
+logging.basicConfig(filename='logs/test-elastic-consumer.log', filemode='w', level=logging.DEBUG)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.consumers import SimpleElasticConsumer, BulkElasticConsumer
 from kafka_event_hub.producers import LineProducer
-
-from kafka import KafkaAdminClient
 
 
 class TestSimpleElasticConsumer(object):
@@ -26,8 +24,7 @@ class TestSimpleElasticConsumer(object):
         self.admin.delete_topics(['json'])
         self.consumer.close()
 
-
-    #@pytest.mark.skip()
+    @pytest.mark.skip()
     def test_consume(self):
         result = self.consumer.consume()
         assert result
