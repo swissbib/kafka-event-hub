@@ -1,5 +1,6 @@
 import os
 import gzip
+import bz2
 
 from typing import TextIO, List
 
@@ -44,6 +45,8 @@ class LineProducer(AbstractBaseProducer):
     def _read_file(path: str) -> TextIO:
         if path.endswith('.gz'):
             return gzip.open(path, mode='r')
+        elif path.endswith('.bz2'):
+            return bz2.open(path, mode='r')
         else:
             return open(path, 'r')
 

@@ -1,5 +1,5 @@
 Producer:
   client_id: test-lines-gz-producer
   bootstrap_servers: localhost:9092
-Topics: test-lines-gz
-Path: "data/lines/test-data.txt.gz"
+Topics: test-lines-bz2
+Path: "data/lines/test-data.txt.bz2"

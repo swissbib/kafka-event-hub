@@ -1,5 +1,5 @@
 Producer:
   client_id: test-lines-producer
   bootstrap_servers: localhost:9092
-Topics: test-lines-v3
+Topics: test-lines
 Path: "data/lines/test-data.txt"

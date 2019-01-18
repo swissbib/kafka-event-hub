@@ -1,0 +1,7 @@
+Consumer:
+  client_id: test-lines-bz2-consumer
+  bootstrap_servers: localhost:9092
+  group_id: test-lines-bz2-consumer
+  auto_offset_reset: earliest
+Topics: 
+  - test-lines-bz2
