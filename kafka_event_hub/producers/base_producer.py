@@ -13,18 +13,18 @@ __description__ = """
 
                     """
 from kafka_event_hub.config import BaseConfig
-
 from kafka import KafkaProducer
-
 import logging
 
 
 def callback_success(record_metadata):
     logging.info("Message delivered to topic %s, parition %s with offset %s.", record_metadata.topic, record_metadata.partition, record_metadata.offset)
 
+
 def callback_error(excpt):
     logging.error("An error occured: ", exc_info=excpt)
     # TODO: Implement error handling if necessary!
+
 
 class AbstractBaseProducer(object):
 
@@ -34,7 +34,6 @@ class AbstractBaseProducer(object):
         self._producer = KafkaProducer(**self.configuration.producer)
         self._callback_success = callback_success if callback_success_param is None else callback_success_param
         self._callback_error = callback_error if callback_error_param is None else callback_error_param
-
 
     @property
     def configuration(self):
