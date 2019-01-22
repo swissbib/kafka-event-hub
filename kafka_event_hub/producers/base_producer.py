@@ -28,13 +28,9 @@ def callback_error(excpt):
 
 class AbstractBaseProducer(object):
 
-    def __init__(self, config: str, config_parser: type(BaseConfig), callback_success_param=None, callback_error_param=None, logger=logging.getLogger(__name__)):
+    def __init__(self, config: str, config_parser: type(BaseConfig), logger=logging.getLogger(__name__)):
         self._logger = logger
         self._configuration = config_parser(config)
-        self._producer = KafkaProducer(**self.configuration.producer)
-        self._callback_success = callback_success if callback_success_param is None else callback_success_param
-        self._callback_error = callback_error if callback_error_param is None else callback_error_param
-
 
     @property
     def configuration(self):
@@ -55,3 +51,9 @@ class AbstractBaseProducer(object):
 
     def close(self):
         self._producer.close()
+
+    def init_kafka(self, callback_success_param=None, callback_error_param=None):
+        self._producer = KafkaProducer(**self.configuration.producer)
+        self._callback_success = callback_success if callback_success_param is None else callback_success_param
+        self._callback_error = callback_error if callback_error_param is None else callback_error_param
+

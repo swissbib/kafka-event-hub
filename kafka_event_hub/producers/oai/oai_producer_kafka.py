@@ -22,10 +22,9 @@ class OAIProducerKafka(AbstractBaseProducer):
 
         AbstractBaseProducer.__init__(self,configrepshare, OAIConfig)
         #todo
-        #I have to split it up this way because AbstractBaseProducer doesn't work with specialized configuratiomns so far
-        #until we have to decided to continue I will call an initialized method after initialization so I can do
-        #the processing for the configurations only valid for a single data repository
+        #Discusson with Jonas how to split up the configuration
         self.configuration.initialize(configrep)
+        self.init_kafka()
 
 
     def process(self):

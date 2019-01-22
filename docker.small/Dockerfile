@@ -107,4 +107,7 @@ CMD ["--type=OAIProducer" ]
 #howto start
 #docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/inrep kafka-event-hub --sharedconfig $(pwd)/test/configs/oai/oai.share.yaml
 
-#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idssg1.oai.yaml:/inrep -v $(pwd)/test/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducer --sharedconfig /inshare /inrep
+#docker run --rm --name=keh --network host -v $(pwd)/test/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/test/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
+
+
+#docker run --rm --name=keh -v $(pwd)/configs/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
