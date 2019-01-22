@@ -33,7 +33,7 @@ class TestElasticProducer(object):
         self.admin.close()
         self.index.delete()
 
-    @pytest.mark.skip()
+    #@pytest.mark.skip()
     def test_produce(self):
         self.producer.process()
         key, message = self.consumer.consume()

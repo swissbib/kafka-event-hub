@@ -13,7 +13,9 @@ __description__ = """
 
                     """
 from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.admin import AdminClient
 from kafka import KafkaProducer
+from kafka.errors import TopicAlreadyExistsError
 import logging
 
 
@@ -33,6 +35,13 @@ class AbstractBaseProducer(object):
     def __init__(self, config: str, config_parser: type(BaseConfig), callback_success_param=None, callback_error_param=None, logger=logging.getLogger(__name__)):
         self._logger = logger
         self._configuration = config_parser(config)
+        self._admin = AdminClient(**self.configuration.admin)
+        try:
+            self._admin.create_topic(**self.configuration.topic)
+            # ValueError is sent due to a bug in kafka-python 1.4.4 (fixed on master branch commit: 2e0ada0
+            # but the topic is already created at that point!
+        except (TopicAlreadyExistsError, ValueError):
+            pass
         self._producer = KafkaProducer(**self.configuration.producer)
         self._callback_success = callback_success if callback_success_param is None else callback_success_param
         self._callback_error = callback_error if callback_error_param is None else callback_error_param
@@ -46,7 +55,7 @@ class AbstractBaseProducer(object):
 
         Both key and message should be as bytes.
         """
-        self._producer.send(self.configuration.topic, **{'value': message, 'key': key})\
+        self._producer.send(self.configuration.topic['name'], **{'value': message, 'key': key})\
             .add_callback(self._callback_success)\
             .add_errback(self._callback_error)
 

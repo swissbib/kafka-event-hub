@@ -4,4 +4,4 @@ Consumer:
   group_id: test-lines-gz-consumer
   auto_offset_reset: earliest
 Topics: 
-  - test-lines-gz-v3
+  - test-lines-gz
