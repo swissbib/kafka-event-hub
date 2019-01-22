@@ -31,7 +31,7 @@ description = 'Swissbib Kafka Event Hub'
 long_description = read('README.md')
 
 
-install_require = ['confluent-kafka', 'PyYAML', 'Sickle', 'PyMongo', 'requests', 'simple-elastic', 'pytest']
+install_require = ['confluent-kafka', 'PyYAML', 'Sickle', 'PyMongo', 'requests', 'simple-elastic', 'deepmerge']
 
 setup(
     name='swissbib_kafka_event_hub',
