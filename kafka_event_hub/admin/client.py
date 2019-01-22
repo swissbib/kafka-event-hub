@@ -22,3 +22,6 @@ class AdminClient(object):
         """
         topic = NewTopic(name, num_partitions, replication_factor, topic_configs=configs)
         return self._instance.create_topics([topic])
+
+    def delete_topic(self, name: str):
+        return self._instance.delete_topics([name])

@@ -23,11 +23,11 @@ class TestLineProducer(object):
         self.consumer.close()
         self.consumer_gz.close()
 
-        self.admin.delete_topics(['test-lines-gz-v3'])
-        self.admin.delete_topics(['test-lines-v3'])
+        self.admin.delete_topics(['test-lines-gz'])
+        self.admin.delete_topics(['test-lines'])
         self.admin.close()
 
-    @pytest.mark.skip()
+    #@pytest.mark.skip()
     def test_produce(self):
         self.producer.process()
         key = None
@@ -61,7 +61,7 @@ class TestLineProducer(object):
         assert key == '4'
         assert message == "a lot of lines now"
 
-    @pytest.mark.skip("Currently way too slow")
+    #@pytest.mark.skip("Currently way too slow")
     def test_produce_gz(self):                
         self.producer_gz.process()
         key = None

@@ -20,7 +20,7 @@ import yaml
 
 class BaseConfig:
     """
-
+        Basic wrapper for the configuration files to configure producers and consumers.
     """
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
         self._config_path = config_path
@@ -45,10 +45,6 @@ class BaseConfig:
     def store(self):
         with open(self._config_path, 'w') as fp:
             yaml.dump(self._yaml, fp, default_flow_style=False)
-
-    @property
-    def processor(self):
-        return self.configuration['Processing']['processorType']
 
     def __getitem__(self, item):
         return self.configuration[item]
@@ -111,7 +107,11 @@ class ProducerConfig(BaseConfig):
 
     @property
     def topic(self):
-        return self.configuration['Topics']
+        return self.configuration['Topic']
+
+    @property
+    def admin(self):
+        return self.configuration['AdminClient']
 
 
 class LineProducerConfig(ProducerConfig):
