@@ -1,0 +1,11 @@
+OAI:
+  set: 73776973736269623D596573
+  timestampUTC: '2019-01-16T20:44:42Z'
+  url: https://www.zora.uzh.ch/cgi/oai2
+  metadataPrefix: oai_dc
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-zora-producer
+Topics: ZORA

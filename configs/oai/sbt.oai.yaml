@@ -6,5 +6,5 @@ Processing:
   Default:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
-  client_id: oai-idsbb-producer
-Topics: IDSBB
+  client_id: oai-sbt-producer
+Topics: IDSSBT

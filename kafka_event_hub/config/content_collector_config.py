@@ -47,7 +47,7 @@ class ContentCollectorConfig(ProducerConfig):
 
 
     def update_stop_time(self):
-        self.specializedConfiguration['OAI']['stoppageTime'] = current_timestamp()
+        self.specializedConfiguration['Processing']["Default"]['stoppageTime'] = current_timestamp()
 
     def _loadspecial(self,path):
         try:

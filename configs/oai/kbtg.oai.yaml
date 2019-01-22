@@ -1,0 +1,10 @@
+OAI:
+  timestampUTC: '2019-01-16T20:44:42Z'
+  url: http://netbiblio.tg.ch/frau-kb4-sru/oai/notices
+  metadataPrefix: marcxml
+Processing:
+  Default:
+    stoppageTime: '2019-01-16T12:55:24Z'
+Producer:
+  client_id: oai-kbtg-producer
+Topics: KBTG

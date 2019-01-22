@@ -1,0 +1,10 @@
+OAI:
+  set: helveticat
+  timestampUTC: '2019-01-16T20:44:42Z'
+  url: https://nb-helveticat.userservices.exlibrisgroup.com/view/oai/41SNL_51_INST/request
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-nationalbibliothek-producer
+Topics: NATIONALBIBLIOTHEK

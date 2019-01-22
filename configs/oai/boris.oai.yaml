@@ -1,0 +1,11 @@
+OAI:
+  set: driver
+  timestampUTC: '2019-01-16T20:44:42Z'
+  url: http://boris.unibe.ch/cgi/oai2
+  metadataPrefix: oai_dc
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-boris-producer
+Topics: BORIS
