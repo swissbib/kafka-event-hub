@@ -53,7 +53,7 @@ class ContentCollectorConfig(ProducerConfig):
         try:
             with open(path, 'r') as fp:
                 self._yamlspecial = yaml.load(fp)
-        except Exception:
+        except Exception as exc:
             self._logger.exception('The config file at %s could not be loaded!', self._config_path)
             raise Exception
 
@@ -100,19 +100,22 @@ class OAIConfig(ContentCollectorConfig):
 
     @property
     def metadata_prefix(self):
-        return self.configuration['OAI']['metadataPrefix']
+        return None if self.configuration['OAI'].get('metadataPrefix') is None \
+            else self.configuration['OAI']['metadataPrefix']
 
     @property
     def oai_set(self):
-        return self.configuration['OAI']['set']
+        return None if self.configuration['OAI'].get('set') is None else self.configuration['OAI']['set']
 
     @property
     def timestamp_utc(self):
-        return self.configuration['OAI']['timestampUTC']
+        return None if self.configuration['OAI'].get('timestampUTC') is None \
+            else self.configuration['OAI']['timestampUTC']
 
     @property
     def oai_until(self):
-        return self.configuration['OAI']['until']
+        return None if self.configuration['OAI'].get('until') is None \
+            or self.configuration['OAI'].get('until') == 'None' else self.configuration['OAI']['until']
 
 
 class FileNebisScpConfig(ContentCollectorConfig):

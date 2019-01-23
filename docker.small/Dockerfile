@@ -111,3 +111,5 @@ CMD ["--type=OAIProducer" ]
 
 
 #docker run --rm --name=keh -v $(pwd)/configs/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
+
+#docker run --rm  -v $(pwd)/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep

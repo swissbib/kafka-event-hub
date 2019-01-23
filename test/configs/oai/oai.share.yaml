@@ -22,5 +22,5 @@ Processing:
   WebDav:
     incomingDir: '{baseDir}/rero.webdav'
 Producer:
-  bootstrap_servers: localhost:9095
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 Topics: oai_sampler_topic

@@ -13,7 +13,8 @@ __description__ = """
                     """
 
 from kafka_event_hub.config.content_collector_config import OAIConfig
-from kafka_event_hub.utility.producer_utility import transform_from_until
+from kafka_event_hub.utility.producer_utility import transform_from_until, is_detailed_granularity, \
+                                                    calculate_day_delta_in_coarse_date
 from sickle import Sickle
 from sickle.oaiexceptions import OAIError, BadArgument
 
@@ -33,8 +34,16 @@ class OaiSickleWrapper(object):
         if not self._oaiconfig.oai_set is None:
             self.dic['set'] = self._oaiconfig.oai_set
         if not self._oaiconfig.timestamp_utc is None:
-            self.dic['from'] = transform_from_until(self._oaiconfig.timestamp_utc,
-                                               self._oaiconfig.granularity)
+            if is_detailed_granularity(self._oaiconfig.granularity):
+                self.dic['from'] = transform_from_until(self._oaiconfig.timestamp_utc,
+                                                   self._oaiconfig.granularity)
+            else:
+                self.dic['from'] = transform_from_until(calculate_day_delta_in_coarse_date(
+                                                    self._oaiconfig.timestamp_utc, -1),
+                                                    self._oaiconfig.granularity)
+
+
+
         if not self._oaiconfig.oai_until is None:
             self.dic['until'] = transform_from_until(self._oaiconfig.oai_until,
                                                 self._oaiconfig.granularity)

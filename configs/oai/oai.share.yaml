@@ -1,8 +1,8 @@
 OAI:
-  httpproxy: null
   metadataPrefix: marc21
-  resumptionToken: null
-  until: null
+  httpproxy: None
+  resumptionToken: None
+  until: None
 Processing:
   Default:
     granularity: YYYY-MM-DDThh:mm:ssZ
@@ -22,5 +22,5 @@ Processing:
   WebDav:
     incomingDir: '{baseDir}/rero.webdav'
 Producer:
-  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka1.swissbib.unibas.ch:9093,sb-uwf3.swissbib.unibas.ch:9094
-Topics: oai_sampler_topic
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9093,sb-uwf3.swissbib.unibas.ch:9094
+Topics: oai_sampler_basic_topic

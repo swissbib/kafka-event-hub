@@ -1,19 +1,12 @@
-Kafka:
-  host: sb-uwf3:7078
-  partition: 0
-  topicToUse: ECOD
 OAI:
-  granularity: 	YYYY-MM-DD
-  httpproxy: null
-  metadataPrefix: oai_dc
-  resumptionToken: null
-  setName: null
-  setSpec:
-  stoppageTime: '2017-07-09T13:10:32Z'
-  timestampUTC: '2017-07-09T11:10:26Z'
-  until: null
+  set: driver
+  timestampUTC: '2019-01-16'
   url: http://www.e-codices.unifr.ch/oai/oai.php
+  metadataPrefix: oai_dc
 Processing:
-  encodeUnicodeAsUTF8: null
-  processorType: OAI
-  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+  Default:
+    granularity: YYYY-MM-DD
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-ecod-producer
+Topics: ECOD

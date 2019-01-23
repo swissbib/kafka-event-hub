@@ -1,7 +1,8 @@
 import re
-from datetime import datetime
 from os import sep, listdir, system
 from os.path import isfile, join, isdir
+from datetime import datetime, timedelta
+
 
 
 
@@ -94,3 +95,9 @@ def list_files_absolute_sorted(dir, glob="^.*$"):
 def mkdir_if_absent(directory):
     if not isdir(directory):
        system("mkdir -p " + directory)
+
+def is_detailed_granularity(granularity_pattern):
+    return True if detailed_granularity_pattern.search(granularity_pattern) else False
+
+def calculate_day_delta_in_coarse_date(timestamp, days :int):
+    return (datetime.strptime(timestamp, "%Y-%m-%d") + timedelta(days=days)).strftime("%Y-%m-%d")
