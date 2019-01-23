@@ -3,12 +3,13 @@ import os
 import logging
 import pytest
 
-logging.basicConfig(filename='logs/line_producer.log', filemode='w', level=logging.ERROR)
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.producers import LineProducer
 from kafka_event_hub.consumers import SimpleConsumer
 from kafka import KafkaAdminClient
+
+logging.basicConfig(filename='logs/line-producer-tests.log', filemode='w', level=logging.DEBUG)
+
 
 class TestLineProducer(object):
 

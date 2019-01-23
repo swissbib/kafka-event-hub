@@ -113,6 +113,14 @@ class ProducerConfig(BaseConfig):
     def admin(self):
         return self.configuration['AdminClient']
 
+    @property
+    def logging(self):
+        return self.configuration['Logging']['path']
+
+    @property
+    def errorlogging(self):
+        return self.configuration['Logging']['errpath']
+
 
 class LineProducerConfig(ProducerConfig):
 

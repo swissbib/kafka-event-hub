@@ -3,14 +3,14 @@ import os
 import logging
 import pytest
 
-logging.basicConfig(filename='logs/elastic-producer.log', filemode='w', level=logging.ERROR)
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.producers import ElasticProducer
 from kafka_event_hub.consumers import SimpleConsumer
 
 from kafka import KafkaAdminClient
 from simple_elastic import ElasticIndex
+
+logging.basicConfig(filename='logs/elastic-producer-tests.log', filemode='w', level=logging.DEBUG)
 
 
 class TestElasticProducer(object):

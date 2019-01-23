@@ -52,6 +52,6 @@ class LineProducer(AbstractBaseProducer):
             if isinstance(line, bytes):
                 line = line.decode('utf-8')
             line = line.strip()
-            self._logger.debug("Produced Message %s from Line: %s", self.count, line)
+            self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
             self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))
             self.count += 1

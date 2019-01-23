@@ -64,11 +64,11 @@ class OAIProducer(AbstractBaseProducer):
                                             eventTime=record.header.datestamp)
 
         except BadArgument as ba:
-            self._logger.exception(ba)
+            self._error_logger.exception(ba)
         except OAIError as oaiError:
-            self._logger.exception(oaiError)
+            self._error_logger.exception(oaiError)
         except Exception as baseException:
-            self._logger.exception(baseException)
+            self._error_logger.exception(baseException)
         else:
             self.update_configuration()
 

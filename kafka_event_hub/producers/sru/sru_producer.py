@@ -59,31 +59,31 @@ class SRUProducer(AbstractBaseProducer):
             records = json.loads(response.text)
             self._record_count += len(records['collection'])
             if len(records['collection']) == 0:
-                self._logger.info('No messages were found with query: %s', self._query)
+                self._error_logger.info('No messages were found with query: %s', self._query)
             else:
-                self._logger.info('%s messages were indexed with query: %s', self._query)
+                self._error_logger.info('%s messages were indexed with query: %s', self._query)
                 for record in records['collection']:
                     self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
             while int(records['numberOfRecords']) > self._record_count:
-                self._logger.debug('Poll response: %s', self._poll(1))
+                self._error_logger.debug('Poll response: %s', self._poll(1))
                 response = requests.get(self._domain + self._db, params=self._params(int(records['startRecord']) + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
                     if len(records['collection']) == 0:
-                        self._logger.info('No messages were found with query: %s', self._query)
+                        self._error_logger.info('No messages were found with query: %s', self._query)
                     else:
-                        self._logger.info('%s messages were indexed with query: %s', self._query)
+                        self._error_logger.info('%s messages were indexed with query: %s', self._query)
                         for record in records['collection']:
                             self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
                 else:
-                    self._logger.error('Could not connect to sru with status code %s. Because of: %s',
-                                       response.status_code, response.text)
+                    self._error_logger.error('Could not connect to sru with status code %s. Because of: %s',
+                                             response.status_code, response.text)
         else:
-            self._logger.error('Could not connect to sru with status code %s. Because of: %s',
-                               response.status_code, response.text)
+            self._error_logger.error('Could not connect to sru with status code %s. Because of: %s',
+                                     response.status_code, response.text)
 
         self._poll(1)
-        self._logger.debug('Flush response: %s', self._flush(5))
+        self._error_logger.debug('Flush response: %s', self._flush(5))
 
 
 
