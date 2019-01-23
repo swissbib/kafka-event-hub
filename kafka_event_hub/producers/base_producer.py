@@ -38,7 +38,7 @@ class AbstractBaseProducer(object):
         error_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._error_logger.addHandler(error_handler)
 
-        self._time_logger = logging.getLogger(self.configuration.topic['name'] + '-times')
+        self._time_logger = logging.getLogger(__name__ + '-times')
         time_handler = logging.FileHandler(self.configuration.logging)
         time_handler.setLevel(logging.INFO)
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))

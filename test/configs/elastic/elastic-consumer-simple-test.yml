@@ -11,3 +11,6 @@ ElasticIndex:
   doc_type: doc
   url: http://localhost:9200
   timeout: 300
+Logging:
+  path: logs/consumer/simple-elastic/times.log
+  errpath: logs/consumer/simple-elastic/error.log
