@@ -12,29 +12,38 @@ __status__ = "in development"
 __description__ = """
 
                     """
-from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.config import ProducerConfig
 from kafka_event_hub.admin import AdminClient
 from kafka import KafkaProducer
 from kafka.errors import TopicAlreadyExistsError
 import logging
 
 
-def callback_success(record_metadata):
-    logging.info("Message delivered to topic %s, parition %s with offset %s.",
-                 record_metadata.topic,
-                 record_metadata.partition,
-                 record_metadata.offset)
-
-
-def callback_error(exception):
-    logging.error("An error occurred: ", exc_info=exception)
-
-
 class AbstractBaseProducer(object):
+    """
+    Accepts an logger handler to log to a specific location.
+    """
 
-    def __init__(self, config: str, config_parser: type(BaseConfig), callback_success_param=None, callback_error_param=None, logger=logging.getLogger(__name__)):
-        self._logger = logger
+    def __init__(self, config: str, config_parser: type(ProducerConfig),
+                 callback_success_param=None,
+                 callback_error_param=None,
+                 **kwargs):
         self._configuration = config_parser(config)
+        self._error_logger = logging.getLogger(__name__)
+        if 'handler' in kwargs and isinstance(kwargs['handler'], logging.Handler):
+            self._error_logger.addHandler(kwargs['handler'])
+
+        error_handler = logging.FileHandler(self.configuration.errorlogging)
+        error_handler.setLevel(logging.ERROR)
+        error_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
+        self._error_logger.addHandler(error_handler)
+
+        self._time_logger = logging.getLogger(__name__ + '-times')
+        time_handler = logging.FileHandler(self.configuration.logging)
+        time_handler.setLevel(logging.INFO)
+        time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
+        self._time_logger.addHandler(time_handler)
+
         self._admin = AdminClient(**self.configuration.admin)
         try:
             self._admin.create_topic(**self.configuration.topic)
@@ -43,8 +52,9 @@ class AbstractBaseProducer(object):
         except (TopicAlreadyExistsError, ValueError):
             pass
         self._producer = KafkaProducer(**self.configuration.producer)
-        self._callback_success = callback_success if callback_success_param is None else callback_success_param
-        self._callback_error = callback_error if callback_error_param is None else callback_error_param
+        self._callback_success = self.callback_success if callback_success_param is None else callback_success_param
+        self._callback_error = self.callback_error if callback_error_param is None else callback_error_param
+        self._time_logger.info("Finished initialization.")
 
     @property
     def configuration(self):
@@ -64,6 +74,17 @@ class AbstractBaseProducer(object):
         
     def flush(self):
         self._producer.flush()
+        self._time_logger.info("Flush callbacks from connection.")
 
     def close(self):
         self._producer.close()
+        self._time_logger.info("Close connection to broker.")
+
+    def callback_success(self, record_metadata):
+        self._error_logger.info("Message delivered to topic %s, parition %s with offset %s.",
+                     record_metadata.topic,
+                     record_metadata.partition,
+                     record_metadata.offset)
+
+    def callback_error(self, exception):
+        self._error_logger.error("An error occurred: ", exc_info=exception)

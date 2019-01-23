@@ -8,6 +8,9 @@ Topic:
 Producer:
   client_id: elastic-data-producer
   bootstrap_servers: localhost:9092
+Logging:
+  path: logs/producer/elastic/times.log
+  errpath: logs/producer/elastic/error.log
 ElasticIndex:
   index: test-elastic-producer
   doc_type: doc

@@ -5,3 +5,6 @@ Consumer:
   auto_offset_reset: earliest
 Topics: 
   - test-lines-gz
+Logging:
+  path: logs/consumer/linesgz/times.log
+  errpath: logs/consumer/linesgz/error.log

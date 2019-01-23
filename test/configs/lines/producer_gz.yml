@@ -8,4 +8,7 @@ Topic:
   name: test-lines-gz
   num_partitions: 3
   replication_factor: 1
+Logging:
+  path: logs/producer/linesgz/times.log
+  errpath: logs/producer/linesgz/error.log
 Path: "data/lines/test-data.txt.gz"

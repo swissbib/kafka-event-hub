@@ -46,6 +46,14 @@ class BaseConfig:
         with open(self._config_path, 'w') as fp:
             yaml.dump(self._yaml, fp, default_flow_style=False)
 
+    @property
+    def logging(self):
+        return self.configuration['Logging']['path']
+
+    @property
+    def errorlogging(self):
+        return self.configuration['Logging']['errpath']
+
     def __getitem__(self, item):
         return self.configuration[item]
 
