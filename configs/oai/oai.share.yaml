@@ -1,3 +1,6 @@
+AdminClient:
+  client_id: oai_share_basic_admin
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9093,sb-uwf3.swissbib.unibas.ch:9094
 OAI:
   metadataPrefix: marc21
   httpproxy: None
@@ -21,6 +24,15 @@ Processing:
   OAI: null
   WebDav:
     incomingDir: '{baseDir}/rero.webdav'
+
 Producer:
   bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9093,sb-uwf3.swissbib.unibas.ch:9094
-Topics: oai_sampler_basic_topic
+
+Topic:
+  name: should_not_be_used_from_share
+  num_partitions: 3
+  replication_factor: 1
+
+Logging:
+  path: logs/producer/json/times.log
+  errpath: logs/producer/json/error.log

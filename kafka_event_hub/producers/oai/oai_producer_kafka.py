@@ -20,11 +20,7 @@ class OAIProducerKafka(AbstractBaseProducer):
 
     def __init__(self, configrep: str, configrepshare: str):
 
-        AbstractBaseProducer.__init__(self,configrepshare, OAIConfig)
-        #todo
-        #Discusson with Jonas how to split up the configuration
-        self.configuration.initialize(configrep)
-        self.init_kafka()
+        AbstractBaseProducer.__init__(self,configrepshare, OAIConfig, configrep)
 
 
     def process(self):

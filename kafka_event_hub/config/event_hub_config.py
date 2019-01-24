@@ -16,17 +16,27 @@ from kafka_event_hub.utility.producer_utility import current_timestamp, current_
 
 import logging
 import yaml
+from deepmerge import always_merger
 
 
 class BaseConfig:
     """
         Basic wrapper for the configuration files to configure producers and consumers.
     """
-    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+    def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):
         self._config_path = config_path
         self._yaml = None
         self._logger = logger
         self._load()
+
+        self._config_path_rep = config_path_special
+        if not config_path_special is None:
+            self._loadspecial(config_path_special)
+            self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
+        else:
+            self._yamlmerged = self._yaml
+            self._yamlspecial = self._yaml
+
 
     def _load(self):
         try:
@@ -35,6 +45,15 @@ class BaseConfig:
         except Exception:
             self._logger.exception('The config file at %s could not be loaded!', self._config_path)
             raise Exception
+
+    def _loadspecial(self,path):
+        try:
+            with open(path, 'r') as fp:
+                self._yamlspecial = yaml.load(fp)
+        except Exception as exc:
+            self._logger.exception('The config file at %s could not be loaded!', self._config_path)
+            raise Exception
+
 
     @property
     def configuration(self):
@@ -91,8 +110,8 @@ class ElasticConsumerConfig(ConsumerConfig):
 
 class ProducerConfig(BaseConfig):
 
-    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        super().__init__(config_path, logger=logger)
+    def __init__(self, config_path: str, config_path_special: str = None,  logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
 
     @property
     def producer(self):

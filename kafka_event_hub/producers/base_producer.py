@@ -25,11 +25,11 @@ class AbstractBaseProducer(object):
     """
 
     def __init__(self, config: str, config_parser: type(ProducerConfig),
-                 config_special=None,
+                 config_special: str=None,
                  callback_success_param=None,
                  callback_error_param=None,
                  **kwargs):
-        self._configuration = config_parser(config)
+        self._configuration = config_parser(config, config_special)
         self._error_logger = logging.getLogger(__name__)
         if 'handler' in kwargs and isinstance(kwargs['handler'], logging.Handler):
             self._error_logger.addHandler(kwargs['handler'])
@@ -45,6 +45,7 @@ class AbstractBaseProducer(object):
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._time_logger.addHandler(time_handler)
 
+        self._init_kafka(callback_success_param,callback_error_param)
 
     @property
     def configuration(self):
@@ -80,7 +81,7 @@ class AbstractBaseProducer(object):
         self._error_logger.error("An error occurred: ", exc_info=exception)
 
 
-    def init_kafka(self, callback_success_param=None, callback_error_param=None):
+    def _init_kafka(self, callback_success_param=None, callback_error_param=None):
         self._admin = AdminClient(**self.configuration.admin)
         try:
             self._admin.create_topic(**self.configuration.topic)

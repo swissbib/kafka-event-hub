@@ -15,7 +15,6 @@ from kafka_event_hub.utility.producer_utility import current_timestamp, current_
 from kafka_event_hub.config import ProducerConfig
 import logging
 import yaml
-from deepmerge import always_merger
 
 """
 actually I'm not sure how to differentiate configurations for different channels in the area of content collector
@@ -24,18 +23,12 @@ specialised types for the various pipes
 """
 class ContentCollectorConfig(ProducerConfig):
 
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path=config_path, logger=logger)
-
-    def initialize(self, configpathrep):
-
-
-        #todo: we have still a mixture with OAI in config name
-        self._config_path_rep = configpathrep
-        self._loadspecial(configpathrep)
-        self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
+    def __init__(self, config_path: str, config_path_special: str=None,logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special,logger=logger)
         self._processStarttime = current_utc_timestamp(self.configuration['Processing']['Default']['granularity'])
 
+    def initialize(self, configpathrep):
+        pass
 
 
     def update_start_time(self):
@@ -49,13 +42,6 @@ class ContentCollectorConfig(ProducerConfig):
     def update_stop_time(self):
         self.specializedConfiguration['Processing']["Default"]['stoppageTime'] = current_timestamp()
 
-    def _loadspecial(self,path):
-        try:
-            with open(path, 'r') as fp:
-                self._yamlspecial = yaml.load(fp)
-        except Exception as exc:
-            self._logger.exception('The config file at %s could not be loaded!', self._config_path)
-            raise Exception
 
 
     @property
@@ -95,8 +81,8 @@ class ContentCollectorConfig(ProducerConfig):
 
 class OAIConfig(ContentCollectorConfig):
 
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path=config_path, logger=logger)
+    def __init__(self, config_path: str, config_path_special: str= None, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
 
     @property
     def metadata_prefix(self):

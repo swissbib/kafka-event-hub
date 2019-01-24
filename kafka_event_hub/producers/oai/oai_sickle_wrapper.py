@@ -16,7 +16,7 @@ from kafka_event_hub.config.content_collector_config import OAIConfig
 from kafka_event_hub.utility.producer_utility import transform_from_until, is_detailed_granularity, \
                                                     calculate_day_delta_in_coarse_date
 from sickle import Sickle
-from sickle.oaiexceptions import OAIError, BadArgument
+from sickle.oaiexceptions import OAIError, BadArgument, NoRecordsMatch
 
 
 class OaiSickleWrapper(object):
@@ -69,6 +69,9 @@ class OaiSickleWrapper(object):
             #self._logger.exception(oaiError)
             #todo: implement logging
             print(str(oaiError))
+        except NoRecordsMatch as noRecordsmatch:
+            #todo implement logging
+            print(str(noRecordsmatch))
         except Exception as baseException:
             #todo: implement logging
             print(str(baseException))
