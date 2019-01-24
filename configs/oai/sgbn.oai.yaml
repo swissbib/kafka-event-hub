@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-sgbn-producer
 OAI:
   set: SWISSBIB-FULL-OAI
   timestampUTC: '2019-01-16T20:44:42Z'
@@ -7,4 +9,5 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-sgbn-producer
-Topics: SGBN
+Topic:
+  name: SGBN

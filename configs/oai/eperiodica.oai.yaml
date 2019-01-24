@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-eperiodica-producer
 OAI:
   timestampUTC: '2019-01-16T20:44:42Z'
   url: http://www.e-periodica.ch/oai/dataprovider
@@ -7,4 +9,5 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-eperiodica-producer
-Topics: EPERIODICA
+Topic:
+  name: EPERIODICA

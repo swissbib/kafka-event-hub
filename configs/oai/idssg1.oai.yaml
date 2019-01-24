@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-idssg-producer
 OAI:
   set: SWISSBIB-FULL-HSB01
   timestampUTC: '2019-01-16T20:44:42Z'
@@ -7,4 +9,5 @@ Processing:
     stoppageTime: '2019-01-16T12:55:24Z'
 Producer:
   client_id: oai-idssg-producer
-Topics: IDSSG
+Topic:
+  name: IDSSG

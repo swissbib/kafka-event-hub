@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-edoc-producer
 OAI:
   set: full_text_no_thesis
   timestampUTC: '2019-01-16T20:44:42Z'
@@ -8,4 +10,6 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-edoc-producer
-Topics: EDOC
+Topic:
+  name: EDOC
+

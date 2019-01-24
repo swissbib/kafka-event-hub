@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-hemu-producer
 OAI:
   set: marcxml
   timestampUTC: '2019-01-16T20:44:42Z'
@@ -8,4 +10,5 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-hemu-producer
-Topics: HEMU
+Topic:
+  name: HEMU

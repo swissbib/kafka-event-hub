@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-posters-producer
 OAI:
   set: chccsa
   timestampUTC: '2019-01-16T20:44:42Z'
@@ -7,4 +9,5 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-posters-producer
-Topics: POSTERS
+Topic:
+  name: POSTERS

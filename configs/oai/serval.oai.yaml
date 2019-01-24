@@ -1,3 +1,5 @@
+AdminClient:
+  client_id: oai-admin-serval-producer
 OAI:
   timestampUTC: '2019-01-16'
   url: http://serval.unil.ch/oaiprovider
@@ -8,4 +10,5 @@ Processing:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-serval-producer
-Topics: SERVAL
+Topic:
+  name: SERVAL

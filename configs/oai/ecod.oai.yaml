@@ -1,18 +1,14 @@
 AdminClient:
   client_id: oai-admin-ecod-producer
-
 OAI:
   metadataPrefix: oai_dc
   timestampUTC: '2019-01-24'
   url: http://www.e-codices.unifr.ch/oai/oai.php
-
 Processing:
   Default:
     granularity: YYYY-MM-DD
-    stoppageTime: '2019-01-24T17:52:25Z'
-
+    stoppageTime: '2019-01-24T18:06:09Z'
 Producer:
   client_id: oai-ecod-producer
-
 Topic:
   name: ECOD
