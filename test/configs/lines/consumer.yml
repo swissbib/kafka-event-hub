@@ -4,4 +4,7 @@ Consumer:
   group_id: test-lines-gz-consumer
   auto_offset_reset: earliest
 Topics: 
-  - test-lines-v3
+  - test-lines
+Logging:
+  path: logs/consumer/lines/times.log
+  errpath: logs/consumer/lines/error.log

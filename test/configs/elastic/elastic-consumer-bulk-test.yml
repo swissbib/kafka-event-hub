@@ -1,7 +1,7 @@
 Consumer:
   bootstrap_servers: localhost:9092
-  client_id: test
-  group_id: elastic-consumer-test
+  client_id: test-bulk
+  group_id: elastic-consumer-bulk-test
   auto_offset_reset: earliest
   enable_auto_commit: false
 Topics:
@@ -12,5 +12,5 @@ ElasticIndex:
   url: http://localhost:9200
   timeout: 300
 Logging:
-  path: logs/consumer/simple-elastic/times.log
-  errpath: logs/consumer/simple-elastic/error.log
+  path: logs/consumer/bulk-elastic/times.log
+  errpath: logs/consumer/bulk-elastic/error.log

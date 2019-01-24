@@ -1,5 +1,14 @@
+AdminClient:
+  client_id: admin-test-lines-producer
+  bootstrap_servers: localhost:9092
 Producer:
   client_id: json-data-producer
   bootstrap_servers: localhost:9092
-Topics: json
+Topic:
+  name: json
+  num_partitions: 3
+  replication_factor: 1
+Logging:
+  path: logs/producer/json/times.log
+  errpath: logs/producer/json/error.log
 Path: "data/lines/test_data.json"

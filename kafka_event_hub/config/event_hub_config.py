@@ -20,7 +20,7 @@ import yaml
 
 class BaseConfig:
     """
-
+        Basic wrapper for the configuration files to configure producers and consumers.
     """
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
         self._config_path = config_path
@@ -47,18 +47,21 @@ class BaseConfig:
             yaml.dump(self._yaml, fp, default_flow_style=False)
 
     @property
-    def processor(self):
-        return self.configuration['Processing']['processorType']
+    def logging(self):
+        return self.configuration['Logging']['path']
+
+    @property
+    def errorlogging(self):
+        return self.configuration['Logging']['errpath']
 
     def __getitem__(self, item):
         return self.configuration[item]
 
 
-
 class ConsumerConfig(BaseConfig):
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def consumer(self):
@@ -69,10 +72,27 @@ class ConsumerConfig(BaseConfig):
         return self.configuration['Topics']
 
 
+class ElasticConsumerConfig(ConsumerConfig):
+
+    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, logger=logger)
+
+    @property
+    def elastic_settings(self):
+        return self.configuration['ElasticIndex']
+
+    @property
+    def id_name(self):
+        try:
+            return self.configuration['IdentifierKey']
+        except KeyError:
+            return '_key'
+
+
 class ProducerConfig(BaseConfig):
 
     def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def producer(self):
@@ -80,12 +100,17 @@ class ProducerConfig(BaseConfig):
 
     @property
     def topic(self):
-        return self.configuration['Topics']
+        return self.configuration['Topic']
+
+    @property
+    def admin(self):
+        return self.configuration['AdminClient']
+
 
 class LineProducerConfig(ProducerConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def path(self):
@@ -95,7 +120,7 @@ class LineProducerConfig(ProducerConfig):
 class ElasticProducerConfig(ProducerConfig):
 
     def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        return super().__init__(config_path, logger=logger)
+        super().__init__(config_path, logger=logger)
 
     @property
     def elastic_settings(self):
@@ -108,5 +133,3 @@ class ElasticProducerConfig(ProducerConfig):
     @property
     def identifier_key(self):
         return self.configuration['IdentifierKey']
-
-

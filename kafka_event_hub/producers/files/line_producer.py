@@ -1,8 +1,7 @@
 import os
 import gzip
-import logging
 
-from io import TextIOWrapper
+from typing import TextIO, List
 
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 from kafka_event_hub.config import LineProducerConfig
@@ -26,33 +25,33 @@ class LineProducer(AbstractBaseProducer):
             self.close()
             raise FileNotFoundError("Path {} does not exist".format(path))
         else:
+            paths: List[str] = []
             if os.path.isdir(path):
-                paths = list()
                 for root, _, files in os.walk(path):
-                    paths.append(files)
+                    paths.extend(files)
             else:
-                paths = [path]
+                paths.append(path)
    
             for path in paths:
                 fp = self._read_file(path)
                 self._send_lines(fp)
-                self.flush()
                 fp.close()
-        
-            self.close()
 
-    def _read_file(self, path: str) -> TextIOWrapper: 
+        self.flush()
+        self.close()
+
+    @staticmethod
+    def _read_file(path: str) -> TextIO:
         if path.endswith('.gz'):
             return gzip.open(path, mode='r')
         else:
             return open(path, 'r')
 
-
-    def _send_lines(self, fp: TextIOWrapper):
+    def _send_lines(self, fp: TextIO):
         for line in fp:
             if isinstance(line, bytes):
                 line = line.decode('utf-8')
             line = line.strip()
-            self._logger.debug("Produced Message %s from Line: %s", self.count, line)
-            self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))   
+            self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
+            self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))
             self.count += 1
