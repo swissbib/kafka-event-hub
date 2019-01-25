@@ -1,0 +1,38 @@
+version: 1
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+loggers:
+  abn:
+    level: DEBUG
+    handlers: [abn]
+    propagate: no
+  abn_summary:
+    level: info
+    handlers: [abn_summary]
+    propagate: no
+  consoleLogger:
+    level: INFO
+    handlers: [console]
+root:
+  level: DEBUG
+  handlers: [console]
+
+handlers:
+  console:
+    class : logging.StreamHandler
+    formatter: simple
+    level   : INFO
+    stream  : ext://sys.stdout
+  abn:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/abn_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  abn_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/abn_summary.log
+    maxBytes: 1024
+    backupCount: 3

@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-ecod-producer
 OAI:
   metadataPrefix: oai_dc
-  timestampUTC: '2019-01-24'
+  timestampUTC: '2019-01-25'
   url: http://www.e-codices.unifr.ch/oai/oai.php
 Processing:
   Default:

@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-edoc-producer
 OAI:
   set: full_text_no_thesis
-  timestampUTC: '2019-01-16T20:44:42Z'
+  timestampUTC: '2019-01-25T01:01:01Z'
   url: http://edoc.unibas.ch/cgi/oai2
   metadataPrefix: oai_dc
 Processing:

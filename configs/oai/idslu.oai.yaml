@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-idslu-producer
 OAI:
   set: SWISSBIB-FULL-OAI
-  timestampUTC: '2019-01-16T20:44:42Z'
+  timestampUTC: '2019-01-25T01:01:01Z'
   url: http://ilu.zhbluzern.ch/OAI
 Processing:
   Default:

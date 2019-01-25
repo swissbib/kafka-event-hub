@@ -93,6 +93,9 @@ COPY kafka_event_hub /app/kafka_event_hub
 
 VOLUME /inrep
 VOLUME /inshare
+VOLUME /logpath
+VOLUME /logconfigpath
+
 #ENTRYPOINT ["python3", "run.py", "/inrep"]
 ENTRYPOINT ["python3"]
 
@@ -113,3 +116,5 @@ CMD ["--type=OAIProducer" ]
 #docker run --rm --name=keh -v $(pwd)/configs/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
 
 #docker run --rm  -v $(pwd)/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
+
+#docker run --rm  -v $(pwd)/logs/producer/json:/logpath -v $(pwd)/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep

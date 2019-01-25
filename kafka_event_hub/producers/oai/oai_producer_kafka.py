@@ -16,6 +16,11 @@ from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 from kafka_event_hub.config import OAIConfig
 from kafka_event_hub.producers.oai.oai_sickle_wrapper import OaiSickleWrapper
 
+from  logging import config
+import logging
+import yaml
+
+
 class OAIProducerKafka(AbstractBaseProducer):
 
     def __init__(self, configrep: str, configrepshare: str):
@@ -24,6 +29,22 @@ class OAIProducerKafka(AbstractBaseProducer):
 
 
     def process(self):
+
+        #self.mylogger = logging.getLogger("bla")
+
+        with open('logs/producer/oai/oai.config.yaml', 'r') as f:
+            log_cfg = yaml.safe_load(f.read())
+            logging.config.dictConfig(log_cfg)
+            self.my_logger = logging.getLogger('simpleExample')
+            self.my_console_logger = logging.getLogger("consoleLogger")
+        #config.dictConfig().fileConfig("logs/producer/oai/oai.config.yaml")
+
+
+        self.my_logger.error("jetzt geht es los")
+
+        self.my_console_logger.info("jetzt auf die Konsole")
+
+        self._error_logger.error("my first logging message with python")
 
         oai_sickle = OaiSickleWrapper(self.configuration)
         messages = 0
