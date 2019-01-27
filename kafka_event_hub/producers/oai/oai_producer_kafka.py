@@ -19,6 +19,9 @@ from kafka_event_hub.producers.oai.oai_sickle_wrapper import OaiSickleWrapper
 from  logging import config
 import logging
 import yaml
+from os.path import basename
+import re
+from datetime import datetime
 
 
 class OAIProducerKafka(AbstractBaseProducer):
@@ -26,25 +29,11 @@ class OAIProducerKafka(AbstractBaseProducer):
     def __init__(self, configrep: str, configrepshare: str):
 
         AbstractBaseProducer.__init__(self,configrepshare, OAIConfig, configrep)
-
+        self._init_logging(configrep)
 
     def process(self):
 
-        #self.mylogger = logging.getLogger("bla")
 
-        with open('logs/producer/oai/oai.config.yaml', 'r') as f:
-            log_cfg = yaml.safe_load(f.read())
-            logging.config.dictConfig(log_cfg)
-            self.my_logger = logging.getLogger('simpleExample')
-            self.my_console_logger = logging.getLogger("consoleLogger")
-        #config.dictConfig().fileConfig("logs/producer/oai/oai.config.yaml")
-
-
-        self.my_logger.error("jetzt geht es los")
-
-        self.my_console_logger.info("jetzt auf die Konsole")
-
-        self._error_logger.error("my first logging message with python")
 
         oai_sickle = OaiSickleWrapper(self.configuration)
         messages = 0
@@ -60,4 +49,14 @@ class OAIProducerKafka(AbstractBaseProducer):
         self.configuration.update_stop_time()
         self.configuration.update_start_time()
         self._configuration.store()
+
+    def _init_logging(self, configreppath: str):
+        shortcut = re.compile('(^.*?)\..*',re.DOTALL).search(basename(configreppath))
+        self._shortcut_source_name = shortcut.group(1) if shortcut else "default"
+
+        with open(self.configuration.logs_config, 'r') as f:
+            log_cfg = yaml.safe_load(f.read())
+            logging.config.dictConfig(log_cfg)
+            self.source_logger = logging.getLogger(self._shortcut_source_name)
+            self.source_logger_summary = logging.getLogger(self._shortcut_source_name + '_summary')
 

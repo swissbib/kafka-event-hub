@@ -73,6 +73,12 @@ class ContentCollectorConfig(ProducerConfig):
     def specializedConfiguration(self):
         return self._yamlspecial
 
+    @property
+    def logs_config(self):
+        return self.configuration['Logging']['config']
+
+
+
     def store(self):
         with open(self._config_path_rep, 'w') as fp:
             yaml.dump(self.specializedConfiguration, fp, default_flow_style=False)

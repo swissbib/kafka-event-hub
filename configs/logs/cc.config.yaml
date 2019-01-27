@@ -8,12 +8,15 @@ loggers:
     handlers: [abn]
     propagate: no
   abn_summary:
-    level: info
-    handlers: [abn_summary]
-    propagate: no
-  consoleLogger:
     level: INFO
-    handlers: [console]
+    handlers: [abn_summary]
+  idsbb:
+    level: DEBUG
+    handlers: [idsbb]
+    propagate: no
+  idsbb_summary:
+    level: INFO
+    handlers: [idsbb_summary]
 root:
   level: DEBUG
   handlers: [console]
@@ -34,5 +37,17 @@ handlers:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
     filename: logpath/abn_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  idsbb:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/ids_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  idsbb_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/idsbb_summary.log
     maxBytes: 1024
     backupCount: 3
