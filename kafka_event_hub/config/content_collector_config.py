@@ -109,6 +109,10 @@ class OAIConfig(ContentCollectorConfig):
         return None if self.configuration['OAI'].get('until') is None \
             or self.configuration['OAI'].get('until') == 'None' else self.configuration['OAI']['until']
 
+    @property
+    def oai_verb(self):
+        return 'ListRecords' if self.configuration['OAI'].get('verb') is None \
+            or self.configuration['OAI'].get('verb') == 'None' else self.configuration['OAI']['verb']
 
 class FileNebisScpConfig(ContentCollectorConfig):
 

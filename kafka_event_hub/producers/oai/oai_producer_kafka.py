@@ -36,9 +36,9 @@ class OAIProducerKafka(AbstractBaseProducer):
 
         try:
 
-            self.source_logger_summary.info('Start Harvesting datasource {SOURCE} {STARTTIME}'.format(
+            self.source_logger_summary.info('\n\n\n\nStart Harvesting datasource {SOURCE} {STARTTIME}'.format(
                 SOURCE=self._shortcut_source_name,
-                STARTTIME=current_timestamp
+                STARTTIME=current_timestamp()
             ))
 
             oai_sickle = OaiSickleWrapper(self.configuration,
@@ -57,14 +57,14 @@ class OAIProducerKafka(AbstractBaseProducer):
 
             self.source_logger_summary.info('STOP Harvesting datasource {SOURCE} {STOPTIME}'.format(
                 SOURCE=self._shortcut_source_name,
-                STOPTIME=current_timestamp
+                STOPTIME=current_timestamp()
             ))
 
         except Exception as baseException:
             self.source_logger.error('Exception während des Harvestingprozesses:  {MESSAGE}'.format(
                 MESSAGE=str(baseException)))
         else:
-            self.source_logger_summary.error('Keine Exception im Baisworkflow Harvesting der source {SOURCE}:'.format(
+            self.source_logger_summary.error('Keine Exception im Basisworkflow Harvesting der source {SOURCE}'.format(
                 SOURCE=self._shortcut_source_name))
 
         self.update_configuration()

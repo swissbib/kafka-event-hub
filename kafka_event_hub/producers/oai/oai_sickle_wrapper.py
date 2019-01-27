@@ -49,6 +49,7 @@ class OaiSickleWrapper(object):
         if not self._oaiconfig.oai_until is None:
             self.dic['until'] = transform_from_until(self._oaiconfig.oai_until,
                                                 self._oaiconfig.granularity)
+        self.dic['verb'] = self._oaiconfig.oai_verb
 
         self._summary_logger.info('verwendete URL Adresse: {ADRESSE}?{PARAMS}'.format(
             ADRESSE=self._oaiconfig['OAI']['url'],

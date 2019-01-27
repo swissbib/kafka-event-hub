@@ -2,11 +2,11 @@ AdminClient:
   client_id: oai-admin-idssg-producer
 OAI:
   set: SWISSBIB-FULL-HSB01
-  timestampUTC: '2019-01-25T01:01:01Z'
+  timestampUTC: '2019-01-27T19:43:50Z'
   url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:
   Default:
-    stoppageTime: '2019-01-16T12:55:24Z'
+    stoppageTime: '2019-01-27T20:44:38Z'
 Producer:
   client_id: oai-idssg-producer
 Topic:

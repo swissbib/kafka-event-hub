@@ -6,6 +6,7 @@ OAI:
   httpproxy: None
   resumptionToken: None
   until: None
+  verb: ListRecords
 Processing:
   Default:
     granularity: YYYY-MM-DDThh:mm:ssZ
