@@ -17,13 +17,18 @@ from kafka_event_hub.utility.producer_utility import transform_from_until, is_de
                                                     calculate_day_delta_in_coarse_date
 from sickle import Sickle
 from sickle.oaiexceptions import OAIError, BadArgument, NoRecordsMatch
+from logging import Logger
 
 
 class OaiSickleWrapper(object):
 
-    def __init__(self, configuration: type(OAIConfig)):
+    def __init__(self, configuration: type(OAIConfig),
+                 summary_logger: Logger,
+                 exception_logger: Logger):
 
         self._oaiconfig = configuration
+        self._summary_logger = summary_logger
+        self._exception_logger = exception_logger
         self._initialize()
 
     def _initialize(self):
@@ -41,12 +46,15 @@ class OaiSickleWrapper(object):
                 self.dic['from'] = transform_from_until(calculate_day_delta_in_coarse_date(
                                                     self._oaiconfig.timestamp_utc, -1),
                                                     self._oaiconfig.granularity)
-
-
-
         if not self._oaiconfig.oai_until is None:
             self.dic['until'] = transform_from_until(self._oaiconfig.oai_until,
                                                 self._oaiconfig.granularity)
+
+        self._summary_logger.info('verwendete URL Adresse: {ADRESSE}?{PARAMS}'.format(
+            ADRESSE=self._oaiconfig['OAI']['url'],
+            PARAMS='&'.join('{}={}'.format(key, value) for key, value in self.dic.items())
+        ))
+
 
     def fetch_iter(self):
 
@@ -63,18 +71,21 @@ class OaiSickleWrapper(object):
 
 
         except BadArgument as ba:
-            #todo: implement logging
-            print(str(ba))
+            self._exception_logger.error("bad argument exception {EXCEPTION}".format(
+                EXCEPTION=str(ba)
+            ))
         except OAIError as oaiError:
-            #self._logger.exception(oaiError)
-            #todo: implement logging
-            print(str(oaiError))
+            self._exception_logger.error("OAIError exception {EXCEPTION}".format(
+                EXCEPTION=str(oaiError)
+            ))
         except NoRecordsMatch as noRecordsmatch:
-            #todo implement logging
-            print(str(noRecordsmatch))
+            self._summary_logger.error("no records matched {EXCEPTION}".format(
+                EXCEPTION=str(noRecordsmatch)
+            ))
         except Exception as baseException:
-            #todo: implement logging
-            print(str(baseException))
+            self._summary_logger.error("base exception occured - not directly related to OAI {EXCEPTION}".format(
+                EXCEPTION=str(baseException)
+            ))
         else:
             print("oai fetching finished successfully")
             #todo: make better logging

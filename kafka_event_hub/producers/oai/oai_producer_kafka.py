@@ -21,7 +21,7 @@ import logging
 import yaml
 from os.path import basename
 import re
-from datetime import datetime
+from kafka_event_hub.utility.producer_utility import current_timestamp
 
 
 class OAIProducerKafka(AbstractBaseProducer):
@@ -34,14 +34,39 @@ class OAIProducerKafka(AbstractBaseProducer):
     def process(self):
 
 
+        try:
 
-        oai_sickle = OaiSickleWrapper(self.configuration)
-        messages = 0
-        for record in oai_sickle.fetch_iter():
-            messages += 1
-            self.send(key=record.header.identifier.encode('utf8'),
-                      message=record.raw.encode('utf8'))
-        self.flush()
+            self.source_logger_summary.info('Start Harvesting datasource {SOURCE} {STARTTIME}'.format(
+                SOURCE=self._shortcut_source_name,
+                STARTTIME=current_timestamp
+            ))
+
+            oai_sickle = OaiSickleWrapper(self.configuration,
+                                          self.source_logger_summary,
+                                          self.source_logger)
+            messages = 0
+            for record in oai_sickle.fetch_iter():
+                messages += 1
+                self.send(key=record.header.identifier.encode('utf8'),
+                          message=record.raw.encode('utf8'))
+            self.flush()
+
+            self.source_logger_summary.info('Anzahl der nach Kafka gesendeten messages: {ANZAHL}'.format(
+                ANZAHL=messages
+            ))
+
+            self.source_logger_summary.info('STOP Harvesting datasource {SOURCE} {STOPTIME}'.format(
+                SOURCE=self._shortcut_source_name,
+                STOPTIME=current_timestamp
+            ))
+
+        except Exception as baseException:
+            self.source_logger.error('Exception während des Harvestingprozesses:  {MESSAGE}'.format(
+                MESSAGE=str(baseException)))
+        else:
+            self.source_logger_summary.error('Keine Exception im Baisworkflow Harvesting der source {SOURCE}:'.format(
+                SOURCE=self._shortcut_source_name))
+
         self.update_configuration()
 
 

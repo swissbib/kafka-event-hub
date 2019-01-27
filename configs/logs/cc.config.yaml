@@ -17,6 +17,154 @@ loggers:
   idsbb_summary:
     level: INFO
     handlers: [idsbb_summary]
+  alex:
+    level: DEBUG
+    handlers: [alex]
+    propagate: no
+  alex_summary:
+    level: INFO
+    handlers: [alex_summary]
+  alexrepo:
+    level: DEBUG
+    handlers: [alexrepo]
+    propagate: no
+  alexrepo_summary:
+    level: INFO
+    handlers: [alexrepo_summary]
+  bgr:
+    level: DEBUG
+    handlers: [bgr]
+    propagate: no
+  bgr_summary:
+    level: INFO
+    handlers: [bgr_summary]
+  boris:
+    level: DEBUG
+    handlers: [boris]
+    propagate: no
+  boris_summary:
+    level: INFO
+    handlers: [boris_summary]
+  ecod:
+    level: DEBUG
+    handlers: [ecod]
+    propagate: no
+  ecod_summary:
+    level: INFO
+    handlers: [ecod_summary]
+  edoc:
+    level: DEBUG
+    handlers: [edoc]
+    propagate: no
+  edoc_summary:
+    level: INFO
+    handlers: [edoc_summary]
+  eperiodica:
+    level: DEBUG
+    handlers: [eperiodica]
+    propagate: no
+  eperiodica_summary:
+    level: INFO
+    handlers: [eperiodica_summary]
+  ethresearch:
+    level: DEBUG
+    handlers: [ethresearch]
+    propagate: no
+  ethresearch_summary:
+    level: INFO
+    handlers: [ethresearch_summary]
+  hemu:
+    level: DEBUG
+    handlers: [hemu]
+    propagate: no
+  hemu_summary:
+    level: INFO
+    handlers: [hemu_summary]
+  idslu:
+    level: DEBUG
+    handlers: [idslu]
+    propagate: no
+  idslu_summary:
+    level: INFO
+    handlers: [idslu_summary]
+  idssg:
+    level: DEBUG
+    handlers: [idssg]
+    propagate: no
+  idssg_summary:
+    level: INFO
+    handlers: [idssg_summary]
+  kbtg:
+    level: DEBUG
+    handlers: [kbtg]
+    propagate: no
+  kbtg_summary:
+    level: INFO
+    handlers: [kbtg_summary]
+  libib:
+    level: DEBUG
+    handlers: [libib]
+    propagate: no
+  libib_summary:
+    level: INFO
+    handlers: [libib_summary]
+  nb:
+    level: DEBUG
+    handlers: [nb]
+    propagate: no
+  nb_summary:
+    level: INFO
+    handlers: [nb_summary]
+  posters:
+    level: DEBUG
+    handlers: [posters]
+    propagate: no
+  posters_summary:
+    level: INFO
+    handlers: [posters_summary]
+  sbt:
+    level: DEBUG
+    handlers: [sbt]
+    propagate: no
+  sbt_summary:
+    level: INFO
+    handlers: [sbt_summary]
+  serval:
+    level: DEBUG
+    handlers: [serval]
+    propagate: no
+  serval_summary:
+    level: INFO
+    handlers: [serval_summary]
+  sgbn:
+    level: DEBUG
+    handlers: [sgbn]
+    propagate: no
+  sgbn_summary:
+    level: INFO
+    handlers: [sgbn_summary]
+  vaud_lib:
+    level: DEBUG
+    handlers: [vaud_lib]
+    propagate: no
+  vaud_lib_summary:
+    level: INFO
+    handlers: [vaud_lib]
+  vaud_school:
+    level: DEBUG
+    handlers: [vaud_school]
+    propagate: no
+  vaud_school_summary:
+    level: INFO
+    handlers: [vaud_school_summary]
+  zora:
+    level: DEBUG
+    handlers: [zora]
+    propagate: no
+  zora_summary:
+    level: INFO
+    handlers: [zora_summary]
+
 root:
   level: DEBUG
   handlers: [console]
@@ -49,5 +197,257 @@ handlers:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
     filename: logpath/idsbb_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  alex:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/alex_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  alex_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/alex_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  alexrepo:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/alexrepo_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  alexrepo_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/alexrepo_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  bgr:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/bgr_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  bgr_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/bgr_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  boris:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/boris_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  boris_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/boris_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  ecod:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/ecod_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  ecod_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/ecod_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  edod:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/edod_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  edod_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/edod_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  eperiodica:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/eperiodica_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  eperiodica_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/eperiodica_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  ethresearch:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/ethresearch_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  ethresearch_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/ethresearch_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  hemu:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/hemu_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  hemu_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/hemu_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  idslu:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/idslu_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  idslu_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/idslu_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  idssg:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/idssg_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  idssg_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/idssg_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  kbtg:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/kbtg_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  kbtg_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/kbtg_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  libib:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/libib_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  libib_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/libib_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  nb:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/nb_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  nb_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/nb_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  posters:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/posters_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  posters_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/posters_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  sbt:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/sbt_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  sbt_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/sbt_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  serval:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/serval_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  serval_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/serval_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  sgbn:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/sgbn_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  sgbn_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/sgbn_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  vaud_lib:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/vaud_lib_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  vaud_lib_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/vaud_lib_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  vaud_school:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/vaud_school_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  vaud_school_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/vaud_school_summary.log
+    maxBytes: 1024
+    backupCount: 3
+  zora:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/zora_issues.log
+    maxBytes: 1024
+    backupCount: 3
+  zora_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: zora_summary.log
     maxBytes: 1024
     backupCount: 3
