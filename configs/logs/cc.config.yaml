@@ -190,7 +190,7 @@ handlers:
   idsbb:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/ids_issues.log
+    filename: logpath/idsbb_issues.log
     maxBytes: 10000000
     backupCount: 3
   idsbb_summary:
