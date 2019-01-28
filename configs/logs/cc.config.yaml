@@ -3,6 +3,15 @@ formatters:
   simple:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 loggers:
+
+  default:
+    level: DEBUG
+    handlers: [default]
+    propagate: no
+  default_summary:
+    level: INFO
+    handlers: [default_summary]
+    propagate: no
   abn:
     level: DEBUG
     handlers: [abn]
@@ -10,6 +19,7 @@ loggers:
   abn_summary:
     level: INFO
     handlers: [abn_summary]
+    propagate: no
   idsbb:
     level: DEBUG
     handlers: [idsbb]
@@ -17,6 +27,7 @@ loggers:
   idsbb_summary:
     level: INFO
     handlers: [idsbb_summary]
+    propagate: no
   alex:
     level: DEBUG
     handlers: [alex]
@@ -24,6 +35,7 @@ loggers:
   alex_summary:
     level: INFO
     handlers: [alex_summary]
+    propagate: no
   alexrepo:
     level: DEBUG
     handlers: [alexrepo]
@@ -31,6 +43,7 @@ loggers:
   alexrepo_summary:
     level: INFO
     handlers: [alexrepo_summary]
+    propagate: no
   bgr:
     level: DEBUG
     handlers: [bgr]
@@ -38,6 +51,7 @@ loggers:
   bgr_summary:
     level: INFO
     handlers: [bgr_summary]
+    propagate: no
   boris:
     level: DEBUG
     handlers: [boris]
@@ -45,6 +59,7 @@ loggers:
   boris_summary:
     level: INFO
     handlers: [boris_summary]
+    propagate: no
   ecod:
     level: DEBUG
     handlers: [ecod]
@@ -52,6 +67,7 @@ loggers:
   ecod_summary:
     level: INFO
     handlers: [ecod_summary]
+    propagate: no
   edoc:
     level: DEBUG
     handlers: [edoc]
@@ -59,6 +75,7 @@ loggers:
   edoc_summary:
     level: INFO
     handlers: [edoc_summary]
+    propagate: no
   eperiodica:
     level: DEBUG
     handlers: [eperiodica]
@@ -66,6 +83,7 @@ loggers:
   eperiodica_summary:
     level: INFO
     handlers: [eperiodica_summary]
+    propagate: no
   ethresearch:
     level: DEBUG
     handlers: [ethresearch]
@@ -73,6 +91,7 @@ loggers:
   ethresearch_summary:
     level: INFO
     handlers: [ethresearch_summary]
+    propagate: no
   hemu:
     level: DEBUG
     handlers: [hemu]
@@ -80,6 +99,7 @@ loggers:
   hemu_summary:
     level: INFO
     handlers: [hemu_summary]
+    propagate: no
   idslu:
     level: DEBUG
     handlers: [idslu]
@@ -87,6 +107,7 @@ loggers:
   idslu_summary:
     level: INFO
     handlers: [idslu_summary]
+    propagate: no
   idssg:
     level: DEBUG
     handlers: [idssg]
@@ -94,6 +115,7 @@ loggers:
   idssg_summary:
     level: INFO
     handlers: [idssg_summary]
+    propagate: no
   kbtg:
     level: DEBUG
     handlers: [kbtg]
@@ -101,6 +123,7 @@ loggers:
   kbtg_summary:
     level: INFO
     handlers: [kbtg_summary]
+    propagate: no
   libib:
     level: DEBUG
     handlers: [libib]
@@ -108,6 +131,7 @@ loggers:
   libib_summary:
     level: INFO
     handlers: [libib_summary]
+    propagate: no
   nb:
     level: DEBUG
     handlers: [nb]
@@ -115,6 +139,7 @@ loggers:
   nb_summary:
     level: INFO
     handlers: [nb_summary]
+    propagate: no
   posters:
     level: DEBUG
     handlers: [posters]
@@ -122,6 +147,7 @@ loggers:
   posters_summary:
     level: INFO
     handlers: [posters_summary]
+    propagate: no
   sbt:
     level: DEBUG
     handlers: [sbt]
@@ -129,6 +155,7 @@ loggers:
   sbt_summary:
     level: INFO
     handlers: [sbt_summary]
+    propagate: no
   serval:
     level: DEBUG
     handlers: [serval]
@@ -136,6 +163,7 @@ loggers:
   serval_summary:
     level: INFO
     handlers: [serval_summary]
+    propagate: no
   sgbn:
     level: DEBUG
     handlers: [sgbn]
@@ -143,6 +171,7 @@ loggers:
   sgbn_summary:
     level: INFO
     handlers: [sgbn_summary]
+    propagate: no
   vaud_lib:
     level: DEBUG
     handlers: [vaud_lib]
@@ -150,6 +179,7 @@ loggers:
   vaud_lib_summary:
     level: INFO
     handlers: [vaud_lib]
+    propagate: no
   vaud_school:
     level: DEBUG
     handlers: [vaud_school]
@@ -157,6 +187,7 @@ loggers:
   vaud_school_summary:
     level: INFO
     handlers: [vaud_school_summary]
+    propagate: no
   zora:
     level: DEBUG
     handlers: [zora]
@@ -164,6 +195,7 @@ loggers:
   zora_summary:
     level: INFO
     handlers: [zora_summary]
+    propagate: no
 
 root:
   level: DEBUG
@@ -449,5 +481,17 @@ handlers:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
     filename: zora_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+  default:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/default_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  default_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: default_summary.log
     maxBytes: 10000000
     backupCount: 3

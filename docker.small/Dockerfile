@@ -96,6 +96,9 @@ VOLUME /inshare
 VOLUME /logpath
 VOLUME /logconfigpath
 
+WORKDIR /
+
+
 #ENTRYPOINT ["python3", "run.py", "/inrep"]
 ENTRYPOINT ["python3"]
 
@@ -118,3 +121,6 @@ CMD ["--type=OAIProducer" ]
 #docker run --rm  -v $(pwd)/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
 
 #docker run --rm  -v $(pwd)/logs/producer/json:/logpath -v $(pwd)/configs/oai/idsbb.oai.yaml:/inrep -v $(pwd)/configs/oai/oai.share.yaml:/inshare kafka-event-hub run.py --type=OAIProducerKafka --sharedconfig /inshare /inrep
+
+#Start mit logging
+#docker container run --rm      -v $(pwd)/logpath:/logpath -v $(pwd)/configs/oai:/inrep -v $(pwd)/configs/logs:/logconfigpath -v $(pwd)/configs/oai:/inshare kafka-event-hub app/run.py --type=OAIProducerKafka --sharedconfig /inshare/cc.share.yaml /inrep/idsbb.oai.yaml
