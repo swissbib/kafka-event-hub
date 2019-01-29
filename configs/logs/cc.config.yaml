@@ -178,7 +178,7 @@ loggers:
     propagate: no
   vaud_lib_summary:
     level: INFO
-    handlers: [vaud_lib]
+    handlers: [vaud_lib_summary]
     propagate: no
   vaud_school:
     level: DEBUG
