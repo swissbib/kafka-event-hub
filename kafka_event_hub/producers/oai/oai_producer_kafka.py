@@ -64,7 +64,7 @@ class OAIProducerKafka(AbstractBaseProducer):
             self.source_logger.error('Exception während des Harvestingprozesses:  {MESSAGE}'.format(
                 MESSAGE=str(baseException)))
         else:
-            self.source_logger_summary.error('Keine Exception im Basisworkflow Harvesting der source {SOURCE}'.format(
+            self.source_logger_summary.info('Keine Exception im Basisworkflow Harvesting der source {SOURCE}'.format(
                 SOURCE=self._shortcut_source_name))
 
         self.update_configuration()
