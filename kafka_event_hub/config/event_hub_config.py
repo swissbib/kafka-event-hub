@@ -16,17 +16,27 @@ from kafka_event_hub.utility.producer_utility import current_timestamp, current_
 
 import logging
 import yaml
+from deepmerge import always_merger
 
 
 class BaseConfig:
     """
-
+        Basic wrapper for the configuration files to configure producers and consumers.
     """
-    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
+    def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):
         self._config_path = config_path
         self._yaml = None
         self._logger = logger
         self._load()
+
+        self._config_path_rep = config_path_special
+        if not config_path_special is None:
+            self._loadspecial(config_path_special)
+            self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
+        else:
+            self._yamlmerged = self._yaml
+            self._yamlspecial = self._yaml
+
 
     def _load(self):
         try:
@@ -35,6 +45,15 @@ class BaseConfig:
         except Exception:
             self._logger.exception('The config file at %s could not be loaded!', self._config_path)
             raise Exception
+
+    def _loadspecial(self,path):
+        try:
+            with open(path, 'r') as fp:
+                self._yamlspecial = yaml.load(fp)
+        except Exception as exc:
+            self._logger.exception('The config file at %s could not be loaded!', self._config_path)
+            raise Exception
+
 
     @property
     def configuration(self):
@@ -47,26 +66,15 @@ class BaseConfig:
             yaml.dump(self._yaml, fp, default_flow_style=False)
 
     @property
-    def processor(self):
-        return self.configuration['Processing']['processorType']
+    def logging(self):
+        return self.configuration['Logging']['path']
+
+    @property
+    def errorlogging(self):
+        return self.configuration['Logging']['errpath']
 
     def __getitem__(self, item):
         return self.configuration[item]
-
-
-class OAIConfig(BaseConfig):
-
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path, logger=logger)
-
-    def update_start_time(self):
-        granularity = self._yaml['OAI']['granularity']
-        if granularity is not None:
-            granularity = str(granularity)
-        self._yaml['OAI']['timestampUTC'] = current_utc_timestamp(granularity)
-
-    def update_stop_time(self):
-        self._yaml['OAI']['stoppageTime'] = current_timestamp()
 
 
 class ConsumerConfig(BaseConfig):
@@ -102,8 +110,8 @@ class ElasticConsumerConfig(ConsumerConfig):
 
 class ProducerConfig(BaseConfig):
 
-    def __init__(self, config_path: str, logger=logging.getLogger(__name__)):
-        super().__init__(config_path, logger=logger)
+    def __init__(self, config_path: str, config_path_special: str = None,  logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
 
     @property
     def producer(self):
@@ -111,7 +119,11 @@ class ProducerConfig(BaseConfig):
 
     @property
     def topic(self):
-        return self.configuration['Topics']
+        return self.configuration['Topic']
+
+    @property
+    def admin(self):
+        return self.configuration['AdminClient']
 
 
 class LineProducerConfig(ProducerConfig):

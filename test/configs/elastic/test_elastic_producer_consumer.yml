@@ -5,3 +5,6 @@ Consumer:
   auto_offset_reset: earliest
 Topics: 
   - test-elastic-producer
+Logging:
+  path: logs/consumer/simple/times.log
+  errpath: logs/consumer/simple/error.log

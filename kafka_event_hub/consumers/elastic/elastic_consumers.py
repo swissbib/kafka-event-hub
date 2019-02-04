@@ -51,8 +51,6 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
                 'message': message.value.decode('utf-8'),
                 'error': '{}'.format(ex)
             }
-        self._logger.debug("Key: %s", key)
-        self._logger.debug("Value: %s", value)
         result = self._index.index_into(value, key)
 
         if result:
@@ -60,7 +58,7 @@ class SimpleElasticConsumer(AbstractBaseConsumer):
                 pos = self._consumer.position(assignment)
                 if pos != self._consumer.committed(assignment):
                     self._consumer.commit({assignment: OffsetAndMetadata(pos, "")})
-
+        self._time_logger.info("Consumed and indexed one message.")
         return result
 
 
@@ -92,8 +90,9 @@ class BulkElasticConsumer(AbstractBaseConsumer):
 
     def consume(self) -> bool:
         data = list()
+        self._time_logger.info("Poll for new messages.")
         messages = self._consumer.poll(100, 10000)
-
+        self._time_logger.info("Consumed %d messages.", len(messages))
         if messages:
             # TODO: Currently probably only works if there is a single partition. needs a more robust implementation.
             for message in messages[self._consumer.assignment().pop()]:
@@ -101,21 +100,25 @@ class BulkElasticConsumer(AbstractBaseConsumer):
                 try:
                     value = json.loads(message.value.decode('utf-8'))
                 except JSONDecodeError as ex:
+                    self._error_logger.error("Failed to JSONDecode message: %s", message.value.decode('utf-8'))
                     value = {
                             'message': message.value.decode('utf-8'),
                             'error': '{}'.format(ex)
                         }
-                self._logger.debug("Key: %s", key)
-                self._logger.debug("Value: %s", value)
-
                 if self._key not in value:
                     value['_key'] = key
                 data.append(value)
 
         if len(data) > 0:
+            self._time_logger.info("Indexing %d messages.", len(data))
             result = self._index.bulk(data, self._key)
+            if result:
+                self._time_logger.info("Indexed messages.")
+            else:
+                self._error_logger.error("Failed to index messages.")
         else:
             result = False
+            self._error_logger.error("No messages to index consumed.")
 
         if result:
             for assignment in self._consumer.assignment():

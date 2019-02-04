@@ -1,0 +1,13 @@
+AdminClient:
+  client_id: oai-admin-nationalbibliothek-producer
+OAI:
+  set: helveticat
+  timestampUTC: '2019-01-28T01:01:01Z'
+  url: https://nb-helveticat.userservices.exlibrisgroup.com/view/oai/41SNL_51_INST/request
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-nationalbibliothek-producer
+Topic:
+  name: NATIONALBIBLIOTHEK

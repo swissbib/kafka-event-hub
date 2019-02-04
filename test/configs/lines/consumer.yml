@@ -3,5 +3,8 @@ Consumer:
   bootstrap_servers: localhost:9092
   group_id: test-lines-gz-consumer
   auto_offset_reset: earliest
-Topics: 
+Topics:
   - test-lines
+Logging:
+  path: logs/consumer/lines/times.log
+  errpath: logs/consumer/lines/error.log

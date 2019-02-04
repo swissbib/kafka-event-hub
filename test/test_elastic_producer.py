@@ -3,7 +3,7 @@ import os
 import logging
 import pytest
 
-logging.basicConfig(filename='logs/elastic-producer.log', filemode='w', level=logging.ERROR)
+logging.basicConfig(filename='logs/elastic-producer-tests.log', filemode='w', level=logging.DEBUG)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.producers import ElasticProducer
@@ -33,7 +33,7 @@ class TestElasticProducer(object):
         self.admin.close()
         self.index.delete()
 
-    @pytest.mark.skip()
+    #@pytest.mark.skip()
     def test_produce(self):
         self.producer.process()
         key, message = self.consumer.consume()

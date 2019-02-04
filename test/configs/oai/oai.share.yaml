@@ -1,0 +1,26 @@
+OAI:
+  httpproxy: null
+  metadataPrefix: marc21
+  resumptionToken: null
+  until: null
+Processing:
+  Default:
+    granularity: YYYY-MM-DDThh:mm:ssZ
+    baseDir: /swissbib/harvesting
+    deleteDirIncoming: '{baseDir}/deleteOAI'
+    encodeUnicodeAsUTF8: null
+    processorType: OAI
+    recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+    identifierkey: .*?<identifier>(.*?)</identifier>.*
+    eMailNotifification: [
+      'guenter.hipler@unibas.ch',
+      'bobobabo@bluewin.ch',
+      'silvia.witzig@unibas.ch',
+      'matthias.edel@unibas.ch',
+      'lionel.walther@unibas.ch']
+  OAI: null
+  WebDav:
+    incomingDir: '{baseDir}/rero.webdav'
+Producer:
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+Topics: oai_sampler_topic

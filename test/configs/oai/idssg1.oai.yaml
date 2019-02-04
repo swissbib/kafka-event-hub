@@ -1,19 +1,12 @@
-Kafka:
-  host: localhost:9092
-  partition: 0
-  topicToUse: HSG1
 OAI:
-  granularity: YYYY-MM-DDThh:mm:ssZ
-  httpproxy: null
-  metadataPrefix: marc21
-  resumptionToken: null
-  setName: null
+  set: SWISSBIB-FULL-HSB01
   setSpec: SWISSBIB-FULL-HSB01
-  stoppageTime: '2018-07-05T20:51:36Z'
-  timestampUTC: '2018-07-05T18:51:32Z'
-  until: 2018-03-30T18:47:9Z
+  stoppageTime: '2019-01-16T21:44:45Z'
+  timestampUTC: '2019-01-16T20:44:42Z'
   url: http://aleph.unisg.ch/cgi-bin/OAI
 Processing:
-  encodeUnicodeAsUTF8: null
-  processorType: OAI
-  recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+  Default:
+    stoppageTime: '2019-01-16T12:55:24Z'
+Producer:
+  client_id: oai-idssg-producer
+Topics: IDSSG

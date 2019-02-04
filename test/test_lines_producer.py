@@ -3,13 +3,14 @@ import os
 import logging
 import pytest
 
-logging.basicConfig(filename='logs/line_producer.log', filemode='w', level=logging.ERROR)
+logging.basicConfig(filename='logs/line-producer-tests.log', filemode='w', level=logging.DEBUG)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.producers import LineProducer
 from kafka_event_hub.consumers import SimpleConsumer
 from kafka import KafkaAdminClient
 from kafka.errors import UnknownTopicOrPartitionError
+
 
 class TestLineProducer(object):
 
@@ -40,7 +41,7 @@ class TestLineProducer(object):
             pass
         self.admin.close()
 
-    @pytest.mark.skip()
+    #@pytest.mark.skip()
     def test_produce(self):
         self.producer.process()
         key = None
@@ -74,7 +75,7 @@ class TestLineProducer(object):
         assert key == '4'
         assert message == "a lot of lines now"
 
-    @pytest.mark.skip("Currently way too slow")
+    #@pytest.mark.skip("Currently way too slow")
     def test_produce_gz(self):                
         self.producer_gz.process()
         key = None

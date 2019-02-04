@@ -1,0 +1,14 @@
+AdminClient:
+  client_id: oai-admin-serval-producer
+OAI:
+  timestampUTC: '2019-01-28'
+  url: http://serval.unil.ch/oaiprovider
+  metadataPrefix: mods
+Processing:
+  Default:
+    granularity: YYYY-MM-DD
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-serval-producer
+Topic:
+  name: SERVAL

@@ -1,7 +1,16 @@
+AdminClient:
+  client_id: admin-test-elastic-prodcuer
+  bootstrap_servers: localhost:9092
+Topic:
+  name: test-elastic-producer
+  num_partitions: 3
+  replication_factor: 1
 Producer:
   client_id: elastic-data-producer
   bootstrap_servers: localhost:9092
-Topics: test-elastic-producer
+Logging:
+  path: logs/producer/elastic/times.log
+  errpath: logs/producer/elastic/error.log
 ElasticIndex:
   index: test-elastic-producer
   doc_type: doc

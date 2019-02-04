@@ -1,0 +1,14 @@
+AdminClient:
+  client_id: oai-admin-ethresearch-producer
+OAI:
+  timestampUTC: '2019-01-28T01:01:01Z'
+  url: http://research-collection.ethz.ch/oai/doi
+  metadataPrefix: qdc
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: oai-ethresearch-producer
+Topic:
+  name: ETHRESEARCH
+

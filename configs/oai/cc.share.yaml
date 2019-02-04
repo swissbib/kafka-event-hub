@@ -1,0 +1,40 @@
+AdminClient:
+  client_id: oai_share_basic_admin
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
+OAI:
+  metadataPrefix: marc21
+  httpproxy: None
+  resumptionToken: None
+  until: None
+  verb: ListRecords
+Processing:
+  Default:
+    granularity: YYYY-MM-DDThh:mm:ssZ
+    baseDir: /swissbib/harvesting
+    deleteDirIncoming: '{baseDir}/deleteOAI'
+    encodeUnicodeAsUTF8: null
+    processorType: OAI
+    recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+    identifierkey: .*?<identifier>(.*?)</identifier>.*
+    eMailNotifification: [
+      'guenter.hipler@unibas.ch',
+      'bobobabo@bluewin.ch',
+      'silvia.witzig@unibas.ch',
+      'matthias.edel@unibas.ch',
+      'lionel.walther@unibas.ch']
+  OAI: null
+  WebDav:
+    incomingDir: '{baseDir}/rero.webdav'
+
+Producer:
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
+
+Topic:
+  name: should_not_be_used_from_share
+  num_partitions: 3
+  replication_factor: 1
+
+Logging:
+  path: logpath/times.log
+  errpath: logpath/error.log
+  config: logconfigpath/cc.config.yaml

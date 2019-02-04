@@ -1,3 +1,6 @@
 from kafka_event_hub.config.event_hub_config import BaseConfig, \
-    OAIConfig, ProducerConfig, LineProducerConfig, ConsumerConfig, \
+    ProducerConfig, LineProducerConfig, ConsumerConfig, \
     ElasticConsumerConfig, ElasticProducerConfig
+from kafka_event_hub.config.content_collector_config import OAIConfig, \
+    FileNebisScpConfig, FileReroWebDavConfig
+
