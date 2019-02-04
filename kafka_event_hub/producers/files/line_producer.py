@@ -37,6 +37,8 @@ class LineProducer(AbstractBaseProducer):
                 self._send_lines(fp)
                 fp.close()
 
+        self._time_logger.info("Produced a total of %s messages.", self.count)
+
         self.flush()
         self.close()
 

@@ -80,7 +80,6 @@ class AbstractBaseProducer(object):
     def callback_error(self, exception):
         self._error_logger.error("An error occurred: ", exc_info=exception)
 
-
     def _init_kafka(self, callback_success_param=None, callback_error_param=None):
         self._admin = AdminClient(**self.configuration.admin)
         try:
