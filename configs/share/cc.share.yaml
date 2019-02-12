@@ -1,6 +1,6 @@
 AdminClient:
   client_id: oai_share_basic_admin
-  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 OAI:
   metadataPrefix: marc21
   httpproxy: None
@@ -10,7 +10,7 @@ OAI:
 Processing:
   Default:
     granularity: YYYY-MM-DDThh:mm:ssZ
-    baseDir: /swissbib/harvesting
+    baseDir: /home/swissbib/temp/testharvesting
     deleteDirIncoming: '{baseDir}/deleteOAI'
     encodeUnicodeAsUTF8: null
     processorType: OAI
@@ -22,12 +22,12 @@ Processing:
       'silvia.witzig@unibas.ch',
       'matthias.edel@unibas.ch',
       'lionel.walther@unibas.ch']
-  OAI: null
-  WebDav: null
-  FILEPUSH: null
+  OAI: None
+  WebDav: None
+  FILEPUSH: None
 
 Producer:
-  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
 Topic:
   name: should_not_be_used_from_share

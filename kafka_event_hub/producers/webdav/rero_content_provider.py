@@ -19,19 +19,23 @@ from kafka_event_hub.utility.producer_utility import list_files_absolute_sorted,
 import re
 from datetime import datetime, timedelta
 import gzip
+from logging import Logger
 
 class ReroContentProvider(object):
 
-    def __init__(self, config : type (FileReroWebDavConfig)):
+    def __init__(self, config : type (FileReroWebDavConfig),
+                 source_logger: type (Logger) =None
+                 ):
         assert isinstance(config, FileReroWebDavConfig)
         self._config = config
         self.p_processONLY_NEW_DELIVERD = re.compile("^ONLY_NEW_DELIVERD$", re.UNICODE | re.DOTALL | re.IGNORECASE)
         #next two modes are not used so far
         self.p_processSPECIFIC = re.compile("(.*?)##(.*?)##$")
         self.p_processFROM_UNTIL = re.compile("^(.*?)UNTIL(.*?)$")
-        self.pIterSingleRecord = re.compile('<record><header.*?>.*?</metadata></record>',re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.pIterSingleRecord = re.compile(self._config.single_record_iterator,re.UNICODE | re.DOTALL | re.IGNORECASE)
         self._number_delete_records = 0
         self._number_update_records = 0
+        self.source_logger = source_logger
 
 
 
@@ -53,9 +57,21 @@ class ReroContentProvider(object):
                     content_available = True if len(files_sorted) else False
                     for file in files_sorted:
                         cp_file(file, self._config.rero_working_dir)
+                    if not self.source_logger is None:
+                        self.source_logger.info('rero provided a directory for date: {DATE}'.format(
+                            DATE=stringDateProc
+                        ))
+
+                    #now update the config already with the date which provides content
+                    #the updated (specialized) config will be serialized later
+                    self._config.update_latest_proc_date(stringDateProc)
                 except Exception as baseException:
-                    #todo make better logging
-                    print(str(baseException))
+                    if not self.source_logger is None:
+                        self.source_logger.error('Error while looking for available content: {MESSAGE}'.format(
+                            MESSAGE=str(baseException)
+                        ))
+                    else:
+                        print(str(baseException))
 
                 dateProc = datetime.strptime(stringDateProc,"%Y_%m_%d")
                 dateProc = dateProc + timedelta(days=1)
@@ -66,7 +82,12 @@ class ReroContentProvider(object):
 
 
         else:
-            raise Exception(str)
+            message = 'couldn\'t evaluate regex p_processONLY_NEW_DELIVERD - config error?\n'
+            if not self.source_logger is None:
+                self.source_logger.error(message)
+            else:
+                print(message)
+            raise Exception(message)
 
     def provide_deletes(self):
         all_deletes = list_files_absolute_sorted(self._config.rero_working_dir,".*delete.*\.xml.gz")

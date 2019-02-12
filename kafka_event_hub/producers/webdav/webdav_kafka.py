@@ -27,13 +27,16 @@ class WebDavReroKafka(AbstractBaseProducer):
     def __init__(self, configrep: str, configrepshare: str):
 
         AbstractBaseProducer.__init__(self,configrepshare, FileReroWebDavConfig, configrep)
-        self.contentprovider = ReroContentProvider(self.configuration)
-        self.contentprovider.initialize_dirs()
-        self._initialize()
+
         logComponenents = init_logging(configrep, self.configuration)
         self._shortcut_source_name = logComponenents['shortcut_source_name']
         self.source_logger_summary = logComponenents['source_logger_summary']
         self.source_logger = logComponenents['source_logger']
+
+        self.contentprovider = ReroContentProvider(self.configuration,
+                                                   source_logger=self.source_logger)
+        self.contentprovider.initialize_dirs()
+        self._initialize()
 
 
     def process(self):
@@ -45,7 +48,7 @@ class WebDavReroKafka(AbstractBaseProducer):
                     self.send(key=identifier_key.encode('utf8'),
                               message=delete.encode('utf8'))
                     number_messages +=1
-                    if number_messages % 100 == 0:
+                    if number_messages % 1000 == 0:
                         self.flush()
 
                 number_messages = 0
@@ -82,7 +85,8 @@ class WebDavReroKafka(AbstractBaseProducer):
                     SOURCE=self._shortcut_source_name))
 
 
-        move_files(self.configuration.rero_working_dir,self.configuration.rero_src_dir)
+            move_files(self.configuration.rero_working_dir,self.configuration.rero_src_dir)
+
         self.update_configuration()
 
 
@@ -91,8 +95,6 @@ class WebDavReroKafka(AbstractBaseProducer):
         self.p_identifier_key = re.compile(self.configuration.identifier_key,re.UNICODE | re.DOTALL | re.MULTILINE)
 
     def update_configuration(self):
-        #todo
-        #make rero special things
+
         self.configuration.update_stop_time()
-        self.configuration.update_start_time()
         self._configuration.store()
