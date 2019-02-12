@@ -30,7 +30,7 @@ class AbstractBaseProducer(object):
                  callback_error_param=None,
                  **kwargs):
         self._configuration = config_parser(config, config_special)
-        self._error_logger = logging.getLogger(__name__)
+        self._error_logger = logging.getLogger(self.configuration.logger_name + '-errors')
         if 'handler' in kwargs and isinstance(kwargs['handler'], logging.Handler):
             self._error_logger.addHandler(kwargs['handler'])
 
@@ -39,7 +39,7 @@ class AbstractBaseProducer(object):
         error_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._error_logger.addHandler(error_handler)
 
-        self._time_logger = logging.getLogger(__name__ + '-times')
+        self._time_logger = logging.getLogger(self.configuration.logger_name + '-summary')
         time_handler = logging.FileHandler(self.configuration.logging)
         time_handler.setLevel(logging.INFO)
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
@@ -65,14 +65,14 @@ class AbstractBaseProducer(object):
         
     def flush(self):
         self._producer.flush()
-        self._time_logger.info("Flush callbacks from connection.")
+        self._time_logger.info("All messages from the broker received.")
 
     def close(self):
         self._producer.close()
-        self._time_logger.info("Close connection to broker.")
+        self._time_logger.info("End process.")
 
     def callback_success(self, record_metadata):
-        self._error_logger.info("Message delivered to topic %s, parition %s with offset %s.",
+        self._error_logger.info("Message delivered to topic %s, partition %s with offset %s.",
                      record_metadata.topic,
                      record_metadata.partition,
                      record_metadata.offset)
@@ -91,4 +91,4 @@ class AbstractBaseProducer(object):
         self._producer = KafkaProducer(**self.configuration.producer)
         self._callback_success = self.callback_success if callback_success_param is None else callback_success_param
         self._callback_error = self.callback_error if callback_error_param is None else callback_error_param
-        self._time_logger.info("Finished initialization.")
+        self._time_logger.info("Initialization Completed. Begin processing.")

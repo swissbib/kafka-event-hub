@@ -5,3 +5,7 @@ Consumer:
   auto_offset_reset: earliest
 Topics: 
   - test-lines-bz2
+Logging:
+  name: consumer-lines-bz2-test
+  path: logs/consumer/lines-bz2/times.log
+  errpath: logs/consumer/lines-bz2/error.log

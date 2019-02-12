@@ -6,5 +6,6 @@ Consumer:
 Topics:
   - test-lines
 Logging:
+  name: consumer-lines-test
   path: logs/consumer/lines/times.log
   errpath: logs/consumer/lines/error.log

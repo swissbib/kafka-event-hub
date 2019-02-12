@@ -63,10 +63,11 @@ class SRUProducer(AbstractBaseProducer):
             else:
                 self._error_logger.info('%s messages were indexed with query: %s', self._query)
                 for record in records['collection']:
-                    self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
+                    self.send(record['fields'][0]['001'].encode('utf-8'),
+                              json.dumps(record, ensure_ascii=False).encode('utf-8'))
             while int(records['numberOfRecords']) > self._record_count:
-                self._error_logger.debug('Poll response: %s', self._poll(1))
-                response = requests.get(self._domain + self._db, params=self._params(int(records['startRecord']) + len(records['collection'])))
+                response = requests.get(self._domain + self._db,
+                                        params=self._params(int(records['startRecord']) + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
                     if len(records['collection']) == 0:
@@ -74,7 +75,8 @@ class SRUProducer(AbstractBaseProducer):
                     else:
                         self._error_logger.info('%s messages were indexed with query: %s', self._query)
                         for record in records['collection']:
-                            self._produce_kafka_message(record['fields'][0]['001'], json.dumps(record, ensure_ascii=False))
+                            self.send(record['fields'][0]['001'].encode('utf-8'),
+                                      json.dumps(record, ensure_ascii=False).encode('utf-8'))
                 else:
                     self._error_logger.error('Could not connect to sru with status code %s. Because of: %s',
                                              response.status_code, response.text)
@@ -82,9 +84,8 @@ class SRUProducer(AbstractBaseProducer):
             self._error_logger.error('Could not connect to sru with status code %s. Because of: %s',
                                      response.status_code, response.text)
 
-        self._poll(1)
-        self._error_logger.debug('Flush response: %s', self._flush(5))
-
+        self.flush()
+        self.close()
 
 
 

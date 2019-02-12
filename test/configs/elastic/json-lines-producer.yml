@@ -9,6 +9,7 @@ Topic:
   num_partitions: 3
   replication_factor: 1
 Logging:
+  name: producer-json-data-test
   path: logs/producer/json/times.log
   errpath: logs/producer/json/error.log
 Path: "data/lines/test_data.json"

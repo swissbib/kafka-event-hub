@@ -30,13 +30,12 @@ class BaseConfig:
         self._load()
 
         self._config_path_rep = config_path_special
-        if not config_path_special is None:
+        if config_path_special is not None:
             self._loadspecial(config_path_special)
             self._yamlmerged = always_merger.merge(self._yaml, self._yamlspecial)
         else:
             self._yamlmerged = self._yaml
             self._yamlspecial = self._yaml
-
 
     def _load(self):
         try:
@@ -72,6 +71,10 @@ class BaseConfig:
     @property
     def errorlogging(self):
         return self.configuration['Logging']['errpath']
+
+    @property
+    def logger_name(self):
+        return self.configuration['Logging']['name']
 
     def __getitem__(self, item):
         return self.configuration[item]

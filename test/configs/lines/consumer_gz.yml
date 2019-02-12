@@ -6,5 +6,6 @@ Consumer:
 Topics:
   - test-lines-gz
 Logging:
-  path: logs/consumer/linesgz/times.log
-  errpath: logs/consumer/linesgz/error.log
+  name: consumer-lines-gz-test
+  path: logs/consumer/lines-gz/times.log
+  errpath: logs/consumer/lines-gz/error.log

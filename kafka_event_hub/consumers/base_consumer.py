@@ -15,7 +15,7 @@ class AbstractBaseConsumer(object):
         self._configuration = config_class(config)
         self._consumer = KafkaConsumer(**self.configuration.consumer)
 
-        self._error_logger = logging.getLogger(__name__)
+        self._error_logger = logging.getLogger(self.configuration.logger_name + '-errors')
         if 'handler' in kwargs and isinstance(kwargs['handler'], logging.Handler):
             self._error_logger.addHandler(kwargs['handler'])
 
@@ -24,7 +24,7 @@ class AbstractBaseConsumer(object):
         error_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._error_logger.addHandler(error_handler)
 
-        self._time_logger = logging.getLogger(__name__ + '-times')
+        self._time_logger = logging.getLogger(self.configuration.logger_name + '-summary')
         time_handler = logging.FileHandler(self.configuration.logging)
         time_handler.setLevel(logging.INFO)
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))

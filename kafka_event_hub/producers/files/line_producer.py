@@ -13,7 +13,7 @@ class LineProducer(AbstractBaseProducer):
     Reads a text file or a directory of text files and sends each line as a message into kafka.
     The key is the line count across all files.
 
-    Can handle gzip compressed files.
+    Can handle gzip and bz2 compressed files.
     """
 
     def __init__(self, config: str):
@@ -38,7 +38,7 @@ class LineProducer(AbstractBaseProducer):
                 self._send_lines(fp)
                 fp.close()
 
-        self._time_logger.info("Produced a total of %s messages.", self.count)
+        self._time_logger.info("Producer published %s messages to topic %s.", self.count, self.configuration.topic['name'])
 
         self.flush()
         self.close()
@@ -57,6 +57,6 @@ class LineProducer(AbstractBaseProducer):
             if isinstance(line, bytes):
                 line = line.decode('utf-8')
             line = line.strip()
-            self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
+            # self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
             self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))
             self.count += 1

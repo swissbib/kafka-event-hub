@@ -1,5 +1,15 @@
-Producer:
-  client_id: test-lines-gz-producer
+AdminClient:
+  client_id: admin-test-lines-bz2
   bootstrap_servers: localhost:9092
-Topics: test-lines-bz2
+Producer:
+  client_id: test-lines-bz2-producer
+  bootstrap_servers: localhost:9092
+Topic:
+  name: test-lines-bz2
+  num_partitions: 3
+  replication_factor: 1
+Logging:
+  name: producer-lines-bz2-test
+  path: logs/producer/lines-bz2/times.log
+  errpath: logs/producer/lines-bz2/error.log
 Path: "data/lines/test-data.txt.bz2"

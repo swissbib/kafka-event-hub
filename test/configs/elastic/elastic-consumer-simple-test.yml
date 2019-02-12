@@ -12,5 +12,6 @@ ElasticIndex:
   url: http://localhost:9200
   timeout: 300
 Logging:
+  name: consumer-simple-test
   path: logs/consumer/simple-elastic/times.log
   errpath: logs/consumer/simple-elastic/error.log
