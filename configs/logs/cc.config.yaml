@@ -196,6 +196,23 @@ loggers:
     level: INFO
     handlers: [zora_summary]
     propagate: no
+  rero:
+    level: DEBUG
+    handlers: [rero]
+    propagate: no
+  rero_summary:
+    level: INFO
+    handlers: [rero_summary]
+    propagate: no
+
+  nebis:
+    level: DEBUG
+    handlers: [nebis]
+    propagate: no
+  nebis_summary:
+    level: INFO
+    handlers: [nebis_summary]
+    propagate: no
 
 root:
   level: DEBUG
@@ -483,6 +500,31 @@ handlers:
     filename: zora_summary.log
     maxBytes: 10000000
     backupCount: 3
+  rero:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/rero_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  rero_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: rero_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+  nebis:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logpath/rero_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  nebis_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: rero_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+
   default:
     class : logging.handlers.RotatingFileHandler
     formatter: simple

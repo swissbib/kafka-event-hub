@@ -23,8 +23,8 @@ Processing:
       'matthias.edel@unibas.ch',
       'lionel.walther@unibas.ch']
   OAI: null
-  WebDav:
-    incomingDir: '{baseDir}/rero.webdav'
+  WebDav: null
+  FILEPUSH: null
 
 Producer:
   bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
@@ -37,4 +37,4 @@ Topic:
 Logging:
   path: logpath/times.log
   errpath: logpath/error.log
-  config: logconfigpath/cc.config.yaml
+  config: configs/logs/cc.config.yaml

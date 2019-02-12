@@ -1,0 +1,23 @@
+AdminClient:
+  client_id: webdav-admin-ecod-producer
+Processing:
+  Default:
+    stoppageTime: '2019-01-24T18:06:09Z'
+Producer:
+  client_id: webdav-rero-producer
+Topic:
+  name: RERO
+WebDav:
+  incomingDir: '{baseDir}/rero.webdav -- was ist damit incomingDir: LATEST_PROCESSING'
+
+  fileNameSuffix: 'brauchen wir das ??'
+  collectedDir: 'brauchen wir das ??'
+  clusteringDir: 'brauchen wir das ??'
+  nebisSrcDir: 'brauchen wir das ??'
+  nebisWorking: 'brauchen wir das ??'
+
+  reroWorking: 'brauchen wir das ??'
+  reroSrcDir: 'brauchen wir das ??'
+  fileProcessorType:  'brauchen wir das ?? - sicher nicht'
+  storeLatestProc: 2019_01_20
+

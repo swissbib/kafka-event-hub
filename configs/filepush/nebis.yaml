@@ -1,0 +1,8 @@
+FILEPUSH:
+  incomingDir: '{basedir}/incoming</incomingDir'
+  fileNameSuffix: 'tar.gz - brauchen wir das??'
+  collectedDir: '{basedir}/nebis-collected'
+  clusteringDir: '{basedir}/nebis-clustering'
+  nebisSrcDir: '{basedir}/nebis-src'
+  nebisWorking: '{basedir}/nebis-working'
+  'ich sollte noch wissen, wie datacleaner heisst':
