@@ -22,9 +22,11 @@ Processing:
       'silvia.witzig@unibas.ch',
       'matthias.edel@unibas.ch',
       'lionel.walther@unibas.ch']
+    deletedPattern: 'status="deleted'
+    headerPattern: '<header.*?>.*?</header>'
   OAI: None
   WebDav: None
-  FILEPUSH: None
+  Filepush: None
 
 Producer:
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094

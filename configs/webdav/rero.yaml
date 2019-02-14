@@ -1,5 +1,5 @@
 AdminClient:
-  client_id: webdav-admin-ecod-producer
+  client_id: webdav-admin-rero-producer
 Processing:
   Default:
     recordBodyRegEx: <record><header.*?>.*?</metadata></record>

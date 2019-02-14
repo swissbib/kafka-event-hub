@@ -1,8 +1,25 @@
-FILEPUSH:
-  incomingDir: '{basedir}/incoming</incomingDir'
+AdminClient:
+  client_id: webdav-admin-nebis-producer
+Processing:
+  Default:
+    recordBodyRegEx: <record><header.*?>.*?</metadata></record>
+    stoppageTime: '2019-02-12T22:45:06Z'
+
+Producer:
+  client_id: webdav-nebis-producer
+Topic:
+  name: NEBIS
+
+Filepush:
+  incomingDir: '{basedir}/incoming'
   fileNameSuffix: 'tar.gz - brauchen wir das??'
   collectedDir: '{basedir}/nebis-collected'
   clusteringDir: '{basedir}/nebis-clustering'
   nebisSrcDir: '{basedir}/nebis-src'
   nebisWorking: '{basedir}/nebis-working'
-  'ich sollte noch wissen, wie datacleaner heisst':
+
+Datacleaner:
+  prepareDeleted: '(<record>.*?</header>).*?</metadata>(</record>)'
+  marcRecord: '(<record>.*?<metadata.*?>).*?(<leader>.*?)</record>'
+  recordBody: '<ListRecords>(.*?)</ListRecords>'
+

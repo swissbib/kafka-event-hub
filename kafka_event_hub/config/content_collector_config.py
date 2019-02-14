@@ -84,6 +84,14 @@ class ContentCollectorConfig(ProducerConfig):
         return self.configuration['Processing']['Default']['baseDir']
 
 
+    @property
+    def deleted_pattern(self):
+        return self.configuration['Processing']['Default']['deletedPattern']
+
+    @property
+    def header_pattern(self):
+        return self.configuration['Processing']['Default']['headerPattern']
+
 
     def replace_base_dir(self, defined_dir: str):
         return  re.sub(self.p_basedir_pattern,self.basedir,defined_dir)
@@ -132,15 +140,27 @@ class FileNebisScpConfig(ContentCollectorConfig):
 
     @property
     def incoming_dir(self):
-        return self.configuration['Processing']['nebis']['incomingDir']
+        return self.replace_base_dir(self.configuration['Filepush']['incomingDir'])
 
     @property
     def working_dir(self):
-        return self.configuration['Processing']['nebis']['nebisWorking']
+        return self.replace_base_dir(self.configuration['Filepush']['nebisWorking'])
 
     @property
     def nebis_src_dir(self):
-        return self.configuration['Processing']['nebis']['nebisSrcDir']
+        return self.replace_base_dir(self.configuration['Filepush']['nebisSrcDir'])
+
+    @property
+    def nebis_prepare_deleted(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['prepareDeleted'])
+
+    @property
+    def nebis_marc_record(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['marcRecord'])
+
+    @property
+    def nebis_record_body(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['recordBody'])
 
 
 class FileReroWebDavConfig(ContentCollectorConfig):
