@@ -1,20 +1,17 @@
 AdminClient:
-  client_id: webdav-admin-nebis-producer
+  client_id: filepush-admin-nebis-producer
 Processing:
   Default:
     recordBodyRegEx: <record><header.*?>.*?</metadata></record>
     stoppageTime: '2019-02-12T22:45:06Z'
 
 Producer:
-  client_id: webdav-nebis-producer
+  client_id: filepush-nebis-producer
 Topic:
   name: NEBIS
 
 Filepush:
-  incomingDir: '{basedir}/incoming'
-  fileNameSuffix: 'tar.gz - brauchen wir das??'
-  collectedDir: '{basedir}/nebis-collected'
-  clusteringDir: '{basedir}/nebis-clustering'
+  incomingDir: '{basedir}/incomingnebis'
   nebisSrcDir: '{basedir}/nebis-src'
   nebisWorking: '{basedir}/nebis-working'
 

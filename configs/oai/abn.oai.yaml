@@ -2,11 +2,11 @@ AdminClient:
   client_id: oai-admin-abn-producer
 OAI:
   set: SWISSBIB-FULL-OAI
-  timestampUTC: '2019-01-28T01:01:01Z'
+  timestampUTC: '2019-02-14T01:01:01Z'
   url: http://aleph.ag.ch/OAI
 Processing:
   Default:
-    stoppageTime: '2019-01-20T12:55:24Z'
+    stoppageTime: '2019-02-14T01Z'
 Producer:
   client_id: oai-idsabn-producer
 Topic:

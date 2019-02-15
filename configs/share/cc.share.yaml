@@ -1,6 +1,6 @@
 AdminClient:
   client_id: oai_share_basic_admin
-  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
 OAI:
   metadataPrefix: marc21
   httpproxy: None
@@ -10,7 +10,7 @@ OAI:
 Processing:
   Default:
     granularity: YYYY-MM-DDThh:mm:ssZ
-    baseDir: /home/swissbib/temp/testharvesting
+    baseDir: /basedir
     deleteDirIncoming: '{baseDir}/deleteOAI'
     encodeUnicodeAsUTF8: null
     processorType: OAI
@@ -29,7 +29,7 @@ Processing:
   Filepush: None
 
 Producer:
-  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
 
 Topic:
   name: should_not_be_used_from_share
@@ -37,6 +37,6 @@ Topic:
   replication_factor: 1
 
 Logging:
-  path: logpath/times.log
-  errpath: logpath/error.log
-  config: configs/logs/cc.config.yaml
+  path: /logpath/times.log
+  errpath: /logpath/error.log
+  config: /logconfigpath/cc.config.yaml

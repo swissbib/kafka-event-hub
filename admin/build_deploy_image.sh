@@ -24,6 +24,16 @@ ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/logs} ]  &&  mkdir -
         touch ${TARGET}/logs/producer/json/times.log && touch ${TARGET}/logs/producer/json/error.log"
 
 
+echo "create other required dirs"
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/rero-src} ]  &&  mkdir -p ${TARGET}/rero-src"
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/rero-working} ]  &&  mkdir -p ${TARGET}/rero-working"
+
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/incomingnebis} ]  &&  mkdir -p ${TARGET}/incomingnebis"
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/nebis-src} ]  &&  mkdir -p ${TARGET}/nebis-src"
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "[ ! -d ${TARGET/nebis-working} ]  &&  mkdir -p ${TARGET}/nebis-working"
+
+
+
 echo "cp config and admin scripts on target host"
 scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
 

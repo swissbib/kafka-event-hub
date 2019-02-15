@@ -95,6 +95,8 @@ VOLUME /inrep
 VOLUME /inshare
 VOLUME /logpath
 VOLUME /logconfigpath
+VOLUME /basedir
+
 
 WORKDIR /
 
