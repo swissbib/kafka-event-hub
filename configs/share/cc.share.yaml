@@ -37,6 +37,7 @@ Topic:
   replication_factor: 1
 
 Logging:
+  name: default-cc-not-used
   path: /basedir/logs/times.log
   errpath: /basedir/logs/error.log
   config: /basedir/configs/logs/cc.config.yaml
