@@ -10,7 +10,7 @@ OAI:
 Processing:
   Default:
     granularity: YYYY-MM-DDThh:mm:ssZ
-    baseDir: /swissbib/harvesting
+    baseDir: /basedir
     deleteDirIncoming: '{baseDir}/deleteOAI'
     encodeUnicodeAsUTF8: null
     processorType: OAI
@@ -22,9 +22,11 @@ Processing:
       'silvia.witzig@unibas.ch',
       'matthias.edel@unibas.ch',
       'lionel.walther@unibas.ch']
-  OAI: null
-  WebDav:
-    incomingDir: '{baseDir}/rero.webdav'
+    deletedPattern: 'status="deleted'
+    headerPattern: '<header.*?>.*?</header>'
+  OAI: None
+  WebDav: None
+  Filepush: None
 
 Producer:
   bootstrap_servers: sb-uka1.swissbib.unibas.ch:9092,sb-uka2.swissbib.unibas.ch:9092,sb-uwf3.swissbib.unibas.ch:9092
@@ -35,6 +37,6 @@ Topic:
   replication_factor: 1
 
 Logging:
-  path: logpath/times.log
-  errpath: logpath/error.log
-  config: logconfigpath/cc.config.yaml
+  path: /logpath/times.log
+  errpath: /logpath/error.log
+  config: /logconfigpath/cc.config.yaml

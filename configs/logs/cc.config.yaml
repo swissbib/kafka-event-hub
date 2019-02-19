@@ -196,6 +196,23 @@ loggers:
     level: INFO
     handlers: [zora_summary]
     propagate: no
+  rero:
+    level: DEBUG
+    handlers: [rero]
+    propagate: no
+  rero_summary:
+    level: INFO
+    handlers: [rero_summary]
+    propagate: no
+
+  nebis:
+    level: DEBUG
+    handlers: [nebis]
+    propagate: no
+  nebis_summary:
+    level: INFO
+    handlers: [nebis_summary]
+    propagate: no
 
 root:
   level: DEBUG
@@ -210,288 +227,313 @@ handlers:
   abn:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/abn_issues.log
+    filename: /logpath/abn_issues.log
     maxBytes: 10000000
     backupCount: 3
   abn_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/abn_summary.log
+    filename: /logpath/abn_summary.log
     maxBytes: 10000000
     backupCount: 3
   idsbb:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idsbb_issues.log
+    filename: /logpath/idsbb_issues.log
     maxBytes: 10000000
     backupCount: 3
   idsbb_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idsbb_summary.log
+    filename: /logpath/idsbb_summary.log
     maxBytes: 10000000
     backupCount: 3
   alex:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/alex_issues.log
+    filename: /logpath/alex_issues.log
     maxBytes: 10000000
     backupCount: 3
   alex_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/alex_summary.log
+    filename: /logpath/alex_summary.log
     maxBytes: 10000000
     backupCount: 3
   alexrepo:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/alexrepo_issues.log
+    filename: /logpath/alexrepo_issues.log
     maxBytes: 10000000
     backupCount: 3
   alexrepo_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/alexrepo_summary.log
+    filename: /logpath/alexrepo_summary.log
     maxBytes: 10000000
     backupCount: 3
   bgr:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/bgr_issues.log
+    filename: /logpath/bgr_issues.log
     maxBytes: 10000000
     backupCount: 3
   bgr_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/bgr_summary.log
+    filename: /logpath/bgr_summary.log
     maxBytes: 10000000
     backupCount: 3
   boris:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/boris_issues.log
+    filename: /logpath/boris_issues.log
     maxBytes: 10000000
     backupCount: 3
   boris_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/boris_summary.log
+    filename: /logpath/boris_summary.log
     maxBytes: 10000000
     backupCount: 3
   ecod:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/ecod_issues.log
+    filename: /logpath/ecod_issues.log
     maxBytes: 10000000
     backupCount: 3
   ecod_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/ecod_summary.log
+    filename: /logpath/ecod_summary.log
     maxBytes: 10000000
     backupCount: 3
   edoc:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/edoc_issues.log
+    filename: /logpath/edoc_issues.log
     maxBytes: 10000000
     backupCount: 3
   edoc_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/edoc_summary.log
+    filename: /logpath/edoc_summary.log
     maxBytes: 10000000
     backupCount: 3
   eperiodica:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/eperiodica_issues.log
+    filename: /logpath/eperiodica_issues.log
     maxBytes: 10000000
     backupCount: 3
   eperiodica_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/eperiodica_summary.log
+    filename: /logpath/eperiodica_summary.log
     maxBytes: 10000000
     backupCount: 3
   ethresearch:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/ethresearch_issues.log
+    filename: /logpath/ethresearch_issues.log
     maxBytes: 10000000
     backupCount: 3
   ethresearch_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/ethresearch_summary.log
+    filename: /logpath/ethresearch_summary.log
     maxBytes: 10000000
     backupCount: 3
   hemu:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/hemu_issues.log
+    filename: /logpath/hemu_issues.log
     maxBytes: 10000000
     backupCount: 3
   hemu_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/hemu_summary.log
+    filename: /logpath/hemu_summary.log
     maxBytes: 10000000
     backupCount: 3
   idslu:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idslu_issues.log
+    filename: /logpath/idslu_issues.log
     maxBytes: 10000000
     backupCount: 3
   idslu_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idslu_summary.log
+    filename: /logpath/idslu_summary.log
     maxBytes: 10000000
     backupCount: 3
   idssg:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idssg_issues.log
+    filename: /logpath/idssg_issues.log
     maxBytes: 10000000
     backupCount: 3
   idssg_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/idssg_summary.log
+    filename: /logpath/idssg_summary.log
     maxBytes: 10000000
     backupCount: 3
   kbtg:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/kbtg_issues.log
+    filename: /logpath/kbtg_issues.log
     maxBytes: 10000000
     backupCount: 3
   kbtg_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/kbtg_summary.log
+    filename: /logpath/kbtg_summary.log
     maxBytes: 10000000
     backupCount: 3
   libib:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/libib_issues.log
+    filename: /logpath/libib_issues.log
     maxBytes: 10000000
     backupCount: 3
   libib_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/libib_summary.log
+    filename: /logpath/libib_summary.log
     maxBytes: 10000000
     backupCount: 3
   nb:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/nb_issues.log
+    filename: /logpath/nb_issues.log
     maxBytes: 10000000
     backupCount: 3
   nb_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/nb_summary.log
+    filename: /logpath/nb_summary.log
     maxBytes: 10000000
     backupCount: 3
   posters:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/posters_issues.log
+    filename: /logpath/posters_issues.log
     maxBytes: 10000000
     backupCount: 3
   posters_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/posters_summary.log
+    filename: /logpath/posters_summary.log
     maxBytes: 10000000
     backupCount: 3
   sbt:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/sbt_issues.log
+    filename: /logpath/sbt_issues.log
     maxBytes: 10000000
     backupCount: 3
   sbt_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/sbt_summary.log
+    filename: /logpath/sbt_summary.log
     maxBytes: 10000000
     backupCount: 3
   serval:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/serval_issues.log
+    filename: /logpath/serval_issues.log
     maxBytes: 10000000
     backupCount: 3
   serval_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/serval_summary.log
+    filename: /logpath/serval_summary.log
     maxBytes: 10000000
     backupCount: 3
   sgbn:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/sgbn_issues.log
+    filename: /logpath/sgbn_issues.log
     maxBytes: 10000000
     backupCount: 3
   sgbn_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/sgbn_summary.log
+    filename: /logpath/sgbn_summary.log
     maxBytes: 10000000
     backupCount: 3
   vaud_lib:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/vaud_lib_issues.log
+    filename: /logpath/vaud_lib_issues.log
     maxBytes: 10000000
     backupCount: 3
   vaud_lib_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/vaud_lib_summary.log
+    filename: /logpath/vaud_lib_summary.log
     maxBytes: 10000000
     backupCount: 3
   vaud_school:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/vaud_school_issues.log
+    filename: /logpath/vaud_school_issues.log
     maxBytes: 10000000
     backupCount: 3
   vaud_school_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/vaud_school_summary.log
+    filename: /logpath/vaud_school_summary.log
     maxBytes: 10000000
     backupCount: 3
   zora:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/zora_issues.log
+    filename: /logpath/zora_issues.log
     maxBytes: 10000000
     backupCount: 3
   zora_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: zora_summary.log
+    filename: /logpath/zora_summary.log
     maxBytes: 10000000
     backupCount: 3
+  rero:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /logpath/rero_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  rero_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /logpath/rero_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+  nebis:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /logpath/nebis_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  nebis_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /logpath/nebis_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+
   default:
     class : logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: logpath/default_issues.log
+    filename: /logpath/default_issues.log
     maxBytes: 10000000
     backupCount: 3
   default_summary:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
-    filename: default_summary.log
+    filename: /logpath/default_summary.log
     maxBytes: 10000000
     backupCount: 3

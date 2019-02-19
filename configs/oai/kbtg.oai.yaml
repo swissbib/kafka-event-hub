@@ -1,7 +1,7 @@
 AdminClient:
   client_id: oai-admin-kbtg-producer
 OAI:
-  timestampUTC: '2019-01-28T01:01:01Z'
+  timestampUTC: '2019-02-14T01:01:01Z'
   url: http://netbiblio.tg.ch/frau-kb4-sru/oai/notices
   metadataPrefix: marcxml
 Processing:

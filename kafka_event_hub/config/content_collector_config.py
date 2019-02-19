@@ -15,6 +15,7 @@ from kafka_event_hub.utility.producer_utility import current_timestamp, current_
 from kafka_event_hub.config import ProducerConfig
 import logging
 import yaml
+import re
 
 """
 actually I'm not sure how to differentiate configurations for different channels in the area of content collector
@@ -26,6 +27,7 @@ class ContentCollectorConfig(ProducerConfig):
     def __init__(self, config_path: str, config_path_special: str=None,logger=logging.getLogger(__name__)):
         super().__init__(config_path, config_path_special,logger=logger)
         self._processStarttime = current_utc_timestamp(self.configuration['Processing']['Default']['granularity'])
+        self.p_basedir_pattern = re.compile('{basedir}', re.IGNORECASE)
 
     def initialize(self, configpathrep):
         pass
@@ -77,6 +79,23 @@ class ContentCollectorConfig(ProducerConfig):
     def logs_config(self):
         return self.configuration['Logging']['config']
 
+    @property
+    def basedir(self):
+        return self.configuration['Processing']['Default']['baseDir']
+
+
+    @property
+    def deleted_pattern(self):
+        return self.configuration['Processing']['Default']['deletedPattern']
+
+    @property
+    def header_pattern(self):
+        return self.configuration['Processing']['Default']['headerPattern']
+
+
+    def replace_base_dir(self, defined_dir: str):
+        return  re.sub(self.p_basedir_pattern,self.basedir,defined_dir)
+
 
 
     def store(self):
@@ -116,43 +135,69 @@ class OAIConfig(ContentCollectorConfig):
 
 class FileNebisScpConfig(ContentCollectorConfig):
 
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path=config_path, logger=logger)
+    def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
 
     @property
     def incoming_dir(self):
-        return self.configuration['Processing']['nebis']['incomingDir']
+        return self.replace_base_dir(self.configuration['Filepush']['incomingDir'])
 
     @property
     def working_dir(self):
-        return self.configuration['Processing']['nebis']['nebisWorking']
+        return self.replace_base_dir(self.configuration['Filepush']['nebisWorking'])
 
     @property
     def nebis_src_dir(self):
-        return self.configuration['Processing']['nebis']['nebisSrcDir']
+        return self.replace_base_dir(self.configuration['Filepush']['nebisSrcDir'])
+
+    @property
+    def nebis_prepare_deleted(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['prepareDeleted'])
+
+    @property
+    def nebis_marc_record(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['marcRecord'])
+
+    @property
+    def nebis_record_body(self):
+        return self.replace_base_dir(self.configuration['Datacleaner']['recordBody'])
 
 
 class FileReroWebDavConfig(ContentCollectorConfig):
 
-    def __init__(self, config_path, logger=logging.getLogger(__name__)):
-        super().__init__(config_path=config_path, logger=logger)
+    def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
+
 
     @property
     def basedir_webdav(self):
-        return self.configuration['Processing']['rero']['basedirwebdav']
+        return self.replace_base_dir( self.configuration['WebDav']['basedirwebdav'])
 
     @property
     def process_mode(self):
-        return self.configuration['Processing']['rero']['processMode']
+        return self.configuration['WebDav']['processMode']
+
+    @property
+    def single_record_iterator(self):
+        #todo: kann ich diese property mit recordBodyRegEx, die bisher in test verwendet wird
+        #vereinheitlichen? dort fuer cleansing. jezt ein enig ein durcheinander!
+        return self.configuration['WebDav']['singleRecordIterator']
+
+
 
     @property
     def rero_src_dir(self):
-        return self.configuration['Processing']['rero']['reroSrcDir']
+        return self.replace_base_dir(self.configuration['WebDav']['srcDir'])
 
     @property
     def rero_working_dir(self):
-        return self.configuration['Processing']['rero']['reroWorkingDir']
+        return self.replace_base_dir( self.configuration['WebDav']['workingDir'])
 
     @property
     def latest_proc_date(self):
-        return self.configuration['Processing']['rero']['latestProcDate']
+        return str(self.configuration['WebDav']['latestProcDate'])
+
+
+    def update_latest_proc_date(self, value):
+        self.specializedConfiguration['WebDav']['latestProcDate'] = value
+
