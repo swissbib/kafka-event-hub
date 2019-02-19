@@ -7,7 +7,7 @@ from  logging import config
 import logging
 
 
-def init_logging(configreppath: str, ccfg = type(CCFG)) -> dict:
+def init_logging(configreppath: str, ccfg: type(CCFG)) -> dict:
     shortcut = re.compile('(^.*?)\..*',re.DOTALL).search(basename(configreppath))
     shortcut_source_name = shortcut.group(1) if shortcut else "default"
 
