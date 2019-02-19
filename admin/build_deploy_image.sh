@@ -2,7 +2,7 @@
 
 
 EVENT_HUB_BASE=/home/swissbib/environment/code/swissbib.repositories/kafka-event-hub
-TARGET=/swissbib/harvesting/docker.images
+TARGET=/swissbib/harvesting/docker.cc
 
 cd $EVENT_HUB_BASE
 
@@ -38,3 +38,5 @@ echo "cp config and admin scripts on target host"
 scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
 
 rm kafka-event-hub.tar
+
+ssh harvester@sb-ucoai2.swissbib.unibas.ch "rm ${TARGET}/kafka-event-hub.tar"

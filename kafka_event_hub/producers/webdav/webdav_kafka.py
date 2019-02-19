@@ -42,6 +42,12 @@ class WebDavReroKafka(AbstractBaseProducer):
     def process(self):
         if self.contentprovider.is_content_available():
             try:
+
+                self.source_logger_summary.info('\n\n\n\nStart webdav_kafka {SOURCE} {STARTTIME}'.format(
+                    SOURCE=self._shortcut_source_name,
+                    STARTTIME=current_timestamp()
+                ))
+
                 number_messages = 0
                 for delete in self.contentprovider.provide_deletes():
                     identifier_key = self.p_identifier_key.search(delete).group(1)
