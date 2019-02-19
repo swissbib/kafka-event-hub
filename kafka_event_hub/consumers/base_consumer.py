@@ -1,4 +1,4 @@
-from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.config import ConsumerConfig
 from kafka import KafkaConsumer, TopicPartition
 from typing import List
 import logging
@@ -6,7 +6,7 @@ import logging
 
 class AbstractBaseConsumer(object):
 
-    def __init__(self, config: str, config_class: type(BaseConfig), **kwargs):
+    def __init__(self, config: str, config_class: type(ConsumerConfig), **kwargs):
         """
 
         Consumer configs:
@@ -34,7 +34,7 @@ class AbstractBaseConsumer(object):
         self.subscribe(self.configuration.topic)
 
     @property
-    def configuration(self):
+    def configuration(self) -> ConsumerConfig:
         return self._configuration
 
     def assign(self, topic: TopicPartition):

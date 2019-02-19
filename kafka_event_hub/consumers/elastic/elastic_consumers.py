@@ -86,7 +86,11 @@ class BulkElasticConsumer(AbstractBaseConsumer):
     def __init__(self, config, config_class=ElasticConsumerConfig, logger=logging.getLogger(__name__)):
         super().__init__(config, config_class, logger=logger)
         self._index = ElasticIndex(**self.configuration.elastic_settings)
-        self._key = self.configuration.id_name
+        self._key = self.configuration.key
+
+    @property
+    def configuration(self) -> ElasticConsumerConfig:
+        return self.configuration
 
     def consume(self) -> bool:
         data = list()
@@ -111,7 +115,8 @@ class BulkElasticConsumer(AbstractBaseConsumer):
                 data.append(value)
 
         if len(data) > 0:
-            result = self._index.bulk(data, self._key)
+            result = self._index.bulk(data, self._key, op_type=self.configuration.op_type,
+                                      upsert=self.configuration.upsert)
             self._time_logger.info("Success! Indexed %d messages.", len(data))
         else:
             result = False

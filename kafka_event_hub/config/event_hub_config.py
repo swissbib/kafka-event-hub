@@ -104,11 +104,25 @@ class ElasticConsumerConfig(ConsumerConfig):
         return self.configuration['ElasticIndex']
 
     @property
-    def id_name(self):
+    def key(self):
         try:
             return self.configuration['IdentifierKey']
         except KeyError:
             return '_key'
+
+    @property
+    def op_type(self):
+        try:
+            return self.configuration['Bulk']['op_type']
+        except KeyError:
+            return 'index'
+
+    @property
+    def upsert(self):
+        try:
+            return self.configuration['Bulk']['upsert']
+        except KeyError:
+            return False
 
 
 class ProducerConfig(BaseConfig):
@@ -154,4 +168,7 @@ class ElasticProducerConfig(ProducerConfig):
 
     @property
     def identifier_key(self):
-        return self.configuration['IdentifierKey']
+        try:
+            return self.configuration['Bulk']['key']
+        except KeyError:
+            return '_id'
