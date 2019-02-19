@@ -90,7 +90,7 @@ class BulkElasticConsumer(AbstractBaseConsumer):
 
     @property
     def configuration(self) -> ElasticConsumerConfig:
-        return self.configuration
+        return super().configuration
 
     def consume(self) -> bool:
         data = list()
