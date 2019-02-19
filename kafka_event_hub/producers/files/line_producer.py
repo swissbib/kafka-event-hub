@@ -30,7 +30,7 @@ class LineProducer(AbstractBaseProducer):
             if os.path.isdir(path):
                 for root, _, files in os.walk(path):
                     for file in files:
-                        paths.append(root + file)
+                        paths.append(root + '/' + file)
             else:
                 paths.append(path)
    
