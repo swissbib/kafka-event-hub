@@ -32,7 +32,7 @@ for repo in ${repos}; do
     echo $$ >${LOCKFILE}
   fi
 
-  $DOCKER_BASE/admin/start_cc_container.sh $repo
+  $DOCKER_BASE/admin/start_cc_container.sh $repo >> /swissbib/harvesting/docker.cc/start_cc_container.log
   rm ${LOCKFILE}
 
 done
