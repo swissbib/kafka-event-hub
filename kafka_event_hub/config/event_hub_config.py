@@ -19,6 +19,10 @@ import yaml
 from deepmerge import always_merger
 
 
+class ConfigException(Exception):
+    pass
+
+
 class BaseConfig:
     """
         Basic wrapper for the configuration files to configure producers and consumers.
@@ -172,3 +176,26 @@ class ElasticProducerConfig(ProducerConfig):
             return self.configuration['Bulk']['key']
         except KeyError:
             return '_id'
+
+
+class SRUProducerConfig(ProducerConfig):
+
+    def __init__(self, config_path: str):
+        super().__init__(config_path)
+
+    @property
+    def database(self):
+        database = self.configuration['SRU']['database']
+        if database in ['defaultdb', 'bbdb', 'jusdb']:
+            return database
+        else:
+            raise ConfigException("Config for at SRU.schema is invalid!")
+
+    @property
+    def schema(self):
+        schema = self.configuration['SRU']['schema']
+        if schema in ['marc/xml', 'dc/xml', 'marc/json']:
+            return schema
+        else:
+            raise ConfigException("Config for at SRU.schema is invalid!")
+

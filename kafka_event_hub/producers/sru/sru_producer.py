@@ -1,5 +1,5 @@
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
-from kafka_event_hub.config import BaseConfig
+from kafka_event_hub.config import SRUProducerConfig
 
 import requests
 import json
@@ -18,9 +18,8 @@ class SRUProducer(AbstractBaseProducer):
     }
 
     def __init__(self, configuration: str):
-        super().__init__(configuration, BaseConfig)
+        super().__init__(configuration, SRUProducerConfig)
         self._search = list()
-        self._db = self.configuration['SRU']['database']
         self._schema = self._schemas[self.configuration['SRU']['schema']]
         self._max_records = self.configuration['SRU']['max_records']
         self._query = ''
@@ -34,7 +33,7 @@ class SRUProducer(AbstractBaseProducer):
             'maximumRecords': self._max_records,
             'startRecord': start_record,
             'recordPacking': 'XML',
-            'availableDBs': self._db
+            'availableDBs': self.configuration.database
         }
 
     def add_simple_and_query(self, name, relation, value):
@@ -66,7 +65,7 @@ class SRUProducer(AbstractBaseProducer):
                     self.send(record['fields'][0]['001'].encode('utf-8'),
                               json.dumps(record, ensure_ascii=False).encode('utf-8'))
             while int(records['numberOfRecords']) > self._record_count:
-                response = requests.get(self._domain + self._db,
+                response = requests.get(self._domain + self.configuration.database,
                                         params=self._params(int(records['startRecord']) + len(records['collection'])))
                 if response.ok:
                     records = json.loads(response.text)
