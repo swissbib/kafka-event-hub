@@ -44,8 +44,7 @@ class AbstractBaseProducer(object):
         time_handler.setLevel(logging.INFO)
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._time_logger.addHandler(time_handler)
-
-        self._init_kafka(callback_success_param,callback_error_param)
+        self._init_kafka(callback_success_param, callback_error_param)
 
     @property
     def configuration(self):

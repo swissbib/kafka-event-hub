@@ -1,6 +1,7 @@
 import os
 import gzip
 import bz2
+import time
 
 from typing import TextIO, List
 
@@ -21,6 +22,7 @@ class LineProducer(AbstractBaseProducer):
         self.count = 0
 
     def process(self):
+
         path = self.configuration.path
         if not os.path.exists(path):
             self.close()
@@ -35,11 +37,15 @@ class LineProducer(AbstractBaseProducer):
                 paths.append(path)
    
             for path in paths:
+                now = time.time()
+                self._time_logger.info("Producer begins sending messages for file {}!".format(path))
                 fp = self._read_file(path)
                 self._send_lines(fp)
                 fp.close()
-
-        self._time_logger.info("Producer published %s messages to topic %s.", self.count, self.configuration.topic['name'])
+                then = time.time()
+                amount = (then - now)
+                self._time_logger.info("Producer published {} messages to topic {} in {} seconds.".
+                                       format(self.count, self.configuration.topic['name'], amount))
 
         self.flush()
         self.close()
@@ -58,6 +64,6 @@ class LineProducer(AbstractBaseProducer):
             if isinstance(line, bytes):
                 line = line.decode('utf-8')
             line = line.strip()
-            # self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
+            self._error_logger.debug("Produced Message %s from Line: %s", self.count, line)
             self.send('{}'.format(self.count).encode('utf8'), line.encode('utf-8'))
             self.count += 1
