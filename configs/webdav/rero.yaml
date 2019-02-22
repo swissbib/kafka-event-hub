@@ -9,8 +9,8 @@ Producer:
 Topic:
   name: RERO
 WebDav:
-  basedirwebdav: '{basedir}/../rero.webdav'
-  latestProcDate: '2019_01_16'
+  basedirwebdav: '/webdav'
+  latestProcDate: '2019_02_16'
   processMode: ONLY_NEW_DELIVERD
   singleRecordIterator: <record><header.*?>.*?</metadata></record>
   srcDir: '{basedir}/rero-src'

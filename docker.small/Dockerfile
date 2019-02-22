@@ -91,14 +91,8 @@ RUN pip install -r requirements.txt
 #was machen wir mit den Tests?
 COPY kafka_event_hub /app/kafka_event_hub
 
-VOLUME /inrep
-VOLUME /inshare
-VOLUME /logpath
-VOLUME /logconfigpath
 VOLUME /basedir
-
-
-WORKDIR /
+VOLUME /webdav
 
 
 #ENTRYPOINT ["python3", "run.py", "/inrep"]
