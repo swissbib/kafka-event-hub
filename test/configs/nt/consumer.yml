@@ -1,0 +1,17 @@
+Consumer:
+  client_id: test-sorted-n-triples-consumer
+  bootstrap_servers: localhost:9092
+  group_id: test-sorted-n-triples-consumer
+  auto_offset_reset: earliest
+  enable_auto_commit: false
+Topics:
+  - test-sorted-nt-resource
+ElasticIndex:
+  index: nt-resource-test
+  doc_type: nt-resource
+  url: http://localhost:9200
+  timeout: 300
+Logging:
+  name: consumer-sorted-ntriples
+  path: logs/consumer/nt/summary.log
+  errpath: logs/consumer/nt/error.log
