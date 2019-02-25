@@ -6,8 +6,8 @@ import pytest
 logging.basicConfig(filename='logs/line-producer-tests.log', filemode='w', level=logging.DEBUG)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from kafka_event_hub.producers import LineProducer
-from kafka_event_hub.consumers import SimpleConsumer
+from kafka_event_hub.producers import LineProducer, SortedNTriplesCollectorProducer
+from kafka_event_hub.consumers import SimpleConsumer, BulkElasticConsumer
 from kafka import KafkaAdminClient
 from kafka.errors import UnknownTopicOrPartitionError
 
@@ -22,6 +22,9 @@ class TestLineProducer(object):
         self.consumer = SimpleConsumer('configs/lines/consumer.yml')
         self.consumer_gz = SimpleConsumer('configs/lines/consumer_gz.yml')
         self.consumer_bz2 = SimpleConsumer('configs/lines/consumer_bz2.yml')
+
+        self.ntriples_producer = SortedNTriplesCollectorProducer('configs/nt/producer.yml')
+        self.ntriples_consumer = BulkElasticConsumer('configs/nt/consumer.yml')
 
     def teardown_class(self):
         self.consumer.close()
@@ -39,7 +42,15 @@ class TestLineProducer(object):
             self.admin.delete_topics(['test-lines-bz2'])
         except UnknownTopicOrPartitionError:
             pass
+        try:
+            self.admin.delete_topics(['test-sorted-nt-resource'])
+        except UnknownTopicOrPartitionError:
+            pass
         self.admin.close()
+
+    def test_ntriples_producer(self):
+        self.ntriples_producer.process()
+        assert self.ntriples_consumer.consume()
 
     #@pytest.mark.skip()
     def test_produce(self):

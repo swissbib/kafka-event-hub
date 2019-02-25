@@ -4,7 +4,7 @@ import logging
 import pytest
 from kafka import KafkaAdminClient
 
-logging.basicConfig(filename='logs/elastic-consumer-tests.log', filemode='w', level=logging.DEBUG)
+# logging.basicConfig(filename='logs/elastic-consumer-tests.log', filemode='w', level=logging.DEBUG)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from kafka_event_hub.consumers import SimpleElasticConsumer, BulkElasticConsumer

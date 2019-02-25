@@ -1,0 +1,63 @@
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingInput> <http://de.dbpedia.org/resource/Gamecontroller> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingMedia> <http://de.dbpedia.org/resource/Blu-ray_Disc> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingMedia> <http://de.dbpedia.org/resource/DVD-ROM> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Microsoft_Windows> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/PlayStation_3> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Wii_U> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Xbox_360> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/gameArtist> <http://de.dbpedia.org/resource/Eurocom_(Softwareunternehmen)> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/gameModus> "Einzelspieler" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/genre> <http://de.dbpedia.org/resource/Ego-Shooter> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/language> <http://de.dbpedia.org/resource/Deutsche_Sprache> .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/systemRequirements> "*CPU:  Intel Core 2 Duo E6600 oder AMD Phenom X3 8750 Prozessor oder besser" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/systemRequirements> "* Festplattenspeicher: 10 GB" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/systemRequirements> "*Grafikkarte: NVIDIA 8800GT 512 MB / ATI Radeon HD 3870 512 MB oder besser" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/systemRequirements> "*OS:WindowsXP, Vista, 7" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/systemRequirements> "*RAM: 2 GB" .
+<http://de.dbpedia.org/resource/007_Legends> <http://dbpedia.org/ontology/usk> "16"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://de.dbpedia.org/resource/007_Legends> <http://purl.org/dc/elements/1.1/publisher> "Activision" .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Software> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/VideoGame> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Work> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q386724> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q7397> .
+<http://de.dbpedia.org/resource/007_Legends> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q7889> .
+<http://de.dbpedia.org/resource/007_Legends> <http://xmlns.com/foaf/0.1/name> "007 Legends"@de .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingInput> <http://de.dbpedia.org/resource/Gamecontroller> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingInput> <http://de.dbpedia.org/resource/Maus_(Computer)> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingInput> <http://de.dbpedia.org/resource/Tastatur> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingMedia> <http://de.dbpedia.org/resource/CD-ROM> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingMedia> <http://de.dbpedia.org/resource/DVD> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingMedia> <http://de.dbpedia.org/resource/Nintendo_GameCube> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Game_Boy_Advance> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/GameCube> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/MacOS> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Microsoft_Windows> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/PlayStation_2> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/computingPlatform> <http://de.dbpedia.org/resource/Xbox> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/gameArtist> <http://de.dbpedia.org/resource/Eurocom_(Softwareunternehmen)> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/gameArtist> <http://de.dbpedia.org/resource/Gearbox_Software> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/gameArtist> <http://de.dbpedia.org/resource/JV_Games> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/gameArtist> <http://de.dbpedia.org/resource/Savage_Entertainment> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/gameModus> "Einzelspieler,Mehrspieler" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/genre> <http://de.dbpedia.org/resource/Ego-Shooter> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/language> <http://de.dbpedia.org/resource/Deutsche_Sprache> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/latestReleaseDate> "2002-11-18"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/systemRequirements> "*CPU: 500 MHz" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/systemRequirements> "*Grafik: 32 MB" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/systemRequirements> "*HDD: 675 MB" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/systemRequirements> "*OS:Windows 98/2000/ME/XP" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/systemRequirements> "*RAM: 128 MB" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://dbpedia.org/ontology/usk> "16"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://purl.org/dc/elements/1.1/publisher> "Electronic Arts" .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Software> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/VideoGame> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Work> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q386724> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q7397> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.wikidata.org/entity/Q7889> .
+<http://de.dbpedia.org/resource/007:_Nightfire> <http://xmlns.com/foaf/0.1/name> "007 - Nightfire"@de .
