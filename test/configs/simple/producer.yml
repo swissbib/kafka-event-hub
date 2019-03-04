@@ -1,0 +1,14 @@
+AdminClient:
+  client_id: test-simple
+  bootstrap_servers: localhost:9092
+Producer:
+  client_id: test-simple
+  bootstrap_servers: localhost:9092
+Topic:
+  name: test-simple
+  num_partitions: 1
+  replication_factor: 0
+Logging:
+  name: test-simple
+  path: logs/producer/simple/summary.log
+  errpath: logs/producer/simple/error.log
