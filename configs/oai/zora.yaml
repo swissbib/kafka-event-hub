@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-zora-producer
 OAI:
   set: 73776973736269623D596573
-  timestampUTC: '2019-02-14T01:01:01Z'
+  timestampUTC: '2019-05-16T01:01:01Z'
   url: https://www.zora.uzh.ch/cgi/oai2
   metadataPrefix: oai_dc
 Processing:
@@ -11,4 +11,4 @@ Processing:
 Producer:
   client_id: oai-zora-producer
 Topic:
-  name: ZORA
+  name: cc-zora

@@ -7,7 +7,7 @@ Processing:
 Producer:
   client_id: webdav-rero-producer
 Topic:
-  name: RERO
+  name: cc-rero
 WebDav:
   basedirwebdav: '/webdav'
   latestProcDate: '2019_02_16'

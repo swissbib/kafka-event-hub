@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-boris-producer
 OAI:
   set: driver
-  timestampUTC: '2019-02-14T01:01:01Z'
+  timestampUTC: '2019-05-16T01:01:01Z'
   url: http://boris.unibe.ch/cgi/oai2
   metadataPrefix: oai_dc
 Processing:
@@ -11,5 +11,5 @@ Processing:
 Producer:
   client_id: oai-boris-producer
 Topic:
-  name: BORIS
+  name: cc-boris
 

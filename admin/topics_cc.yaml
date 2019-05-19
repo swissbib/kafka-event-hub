@@ -1,0 +1,33 @@
+defaults:
+    partitions: 4
+    replicationFactor: 1
+    configurations:
+        - retention.ms=158400000 # 2 days
+#      - cleanup.policy=compact ??
+topics:
+    - name: cc-abn
+    - name: cc-alex
+    - name: cc-alexrepo
+    - name: cc-bgr
+    - name: cc-boris
+    - name: cc-ecod
+    - name: cc-edoc
+    - name: cc-eperiodica
+    - name: cc-ethresearch
+    - name: cc-hemu
+    - name: cc-idsbb
+    - name: cc-idslu
+    - name: cc-idssg
+    - name: cc-kbtg
+    - name: cc-libib
+    - name: cc-nb
+    - name: cc-posters
+    - name: cc-sbt
+    - name: cc-serval
+    - name: cc-sgbn
+    - name: cc-vaud
+    - name: cc-zora
+    - name: cc-nebis
+    - name: cc-rero
+
+

@@ -8,7 +8,7 @@ Processing:
 Producer:
   client_id: filepush-nebis-producer
 Topic:
-  name: NEBIS
+  name: cc-nebis
 
 Filepush:
   incomingDir: '{basedir}/incomingnebis'

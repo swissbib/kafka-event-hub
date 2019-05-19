@@ -2,12 +2,13 @@ AdminClient:
   client_id: oai-admin-posters-producer
 OAI:
   set: chccsa
-  timestampUTC: '2019-02-14T01:01:01Z'
-  url: https://nb-helveticat.userservices.exlibrisgroup.com/view/oai/41SNL_53_INST/request
+  timestampUTC: '2019-05-16T01:01:01Z'
+  url: 'https://nb-helveticat.userservices.exlibrisgroup.com/view/oai/41SNL_53_INST/request'
+
 Processing:
   Default:
     stoppageTime: '2019-01-20T12:55:24Z'
 Producer:
   client_id: oai-posters-producer
 Topic:
-  name: POSTERS
+  name: cc-posters
