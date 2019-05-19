@@ -6,6 +6,7 @@ from simple_elastic import ElasticIndex
 from kafka import OffsetAndMetadata
 
 import json
+import time
 from json.decoder import JSONDecodeError
 import logging
 
@@ -94,9 +95,7 @@ class BulkElasticConsumer(AbstractBaseConsumer):
 
     def consume(self) -> bool:
         data = list()
-        # self._time_logger.info("Poll for new messages.")
         messages = self._consumer.poll(100, 10000)
-        # self._time_logger.info("Consumed %d messages.", len(messages))
         if messages:
             # TODO: Only works if there is a single partition per consumer. As soon as the number of consumers is lower
             # TODO: or higher than the number of partitions this fails.
@@ -105,7 +104,7 @@ class BulkElasticConsumer(AbstractBaseConsumer):
                 try:
                     value = json.loads(message.value.decode('utf-8'))
                 except JSONDecodeError as ex:
-                    self._error_logger.error("Failed to JSONDecode message: %s", message.value.decode('utf-8'))
+                    self._error_logger.error("Failed to JSONDecode message: {}.".format(message.value.decode('utf-8')))
                     value = {
                             'message': message.value.decode('utf-8'),
                             'error': '{}'.format(ex)
@@ -113,11 +112,14 @@ class BulkElasticConsumer(AbstractBaseConsumer):
                 if self._key not in value:
                     value['_key'] = key
                 data.append(value)
-
+        now = time.time()
         if len(data) > 0:
             result = self._index.bulk(data, self._key, op_type=self.configuration.op_type,
                                       upsert=self.configuration.upsert)
-            self._time_logger.info("Success! Indexed %d messages.", len(data))
+            then = time.time()
+            amount = then - now
+            self._time_logger.info("Success! Indexed {} messages to {} in {} seconds."
+                                   .format(len(data), self._index.index, amount))
         else:
             result = False
 

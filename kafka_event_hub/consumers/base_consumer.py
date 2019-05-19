@@ -23,13 +23,15 @@ class AbstractBaseConsumer(object):
         error_handler.setLevel(logging.ERROR)
         error_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._error_logger.addHandler(error_handler)
+        self._error_logger.propagate = False
 
         self._time_logger = logging.getLogger(self.configuration.logger_name + '-summary')
         time_handler = logging.FileHandler(self.configuration.logging)
         time_handler.setLevel(logging.INFO)
         time_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
         self._time_logger.addHandler(time_handler)
-        self._time_logger.info("Initialized Consumer.")
+        self._time_logger.propagate = False
+        self._time_logger.info("Initialized Consumer {}.".format(self.configuration.consumer['client_id']))
 
         self.subscribe(self.configuration.topic)
 
@@ -45,7 +47,7 @@ class AbstractBaseConsumer(object):
 
     def subscribe(self, topics: List[str]):
         self._consumer.subscribe(topics)
-        self._time_logger.info("Subscribed to topics: %s", topics)
+        self._time_logger.info("Subscribed to topics: {}".format(topics))
 
     def unsubscribe(self):
         self._consumer.unsubscribe()
