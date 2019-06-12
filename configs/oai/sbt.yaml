@@ -3,7 +3,7 @@ AdminClient:
 OAI:
   set: SWISSBIB-FULL-OAI
   timestampUTC: '2019-05-16T01:01:01Z'
-  url: http://aleph.unibas.ch/OAI
+  url: http://aleph.sbt.ti.ch/OAI
 Processing:
   Default:
     stoppageTime: '2019-01-20T12:55:24Z'
