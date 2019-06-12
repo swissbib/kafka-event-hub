@@ -1,0 +1,43 @@
+AdminClient:
+  client_id: oai_share_basic_admin
+  bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+OAI:
+  metadataPrefix: marc21
+  httpproxy: None
+  resumptionToken: None
+  until: None
+  verb: ListRecords
+Processing:
+  Default:
+    granularity: YYYY-MM-DDThh:mm:ssZ
+    baseDir: /basedir
+    deleteDirIncoming: '{baseDir}/deleteOAI'
+    encodeUnicodeAsUTF8: null
+    processorType: OAI
+    recordBodyRegEx: .*?(<marc:record.*?</marc:record>).*?</metadata></record>
+    identifierkey: .*?<identifier>(.*?)</identifier>.*
+    eMailNotifification: [
+      'guenter.hipler@unibas.ch',
+      'bobobabo@bluewin.ch',
+      'silvia.witzig@unibas.ch',
+      'matthias.edel@unibas.ch',
+      'lionel.walther@unibas.ch']
+    deletedPattern: 'status="deleted'
+    headerPattern: '<header.*?>.*?</header>'
+  OAI: None
+  WebDav: None
+  Filepush: None
+
+Producer:
+  bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+
+Topic:
+  name: should_not_be_used_from_share
+  num_partitions: 4
+  replication_factor: 1
+
+Logging:
+  name: default-cc-not-used
+  path: /basedir/logs/times.log
+  errpath: /basedir/logs/error.log
+  config: /basedir/configs/logs/cc.config.yaml
