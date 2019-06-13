@@ -34,10 +34,11 @@ class EduZemKafka(AbstractBaseProducer):
         self.source_logger_summary = logComponenents['source_logger_summary']
         self.source_logger = logComponenents['source_logger']
 
+        self.last_project_id = self.configuration.last_project_id
+        self.active = True if self.last_project_id is None else False
 
 
     def processCompany(self, company):
-
 
         jsonCompany = json.loads(requests.get(self.base_url + company["company"], headers=self.headers).text)
         privacyCompany = {}
@@ -88,13 +89,22 @@ class EduZemKafka(AbstractBaseProducer):
 
                 projectId = self.getProjectId(project["self"])
 
+                if not self.active:
+                    if projectId == str(self.last_project_id):
+                        #next id should be used
+                        self.active = True
+                        continue
+                    else:
+                        self.source_logger_summary.info('\nFetched projectid  {ID} passed'.format(
+                            ID=projectId,
+                            STARTTIME=current_timestamp()
+                        ))
+                        continue
+
+
                 fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
                 #fullproject = requests.get(self.base_url + "/v1/projects/997065",headers=self.headers)
                 fp = json.loads(fullproject.text)
-
-                if self.active is False:
-                    continue
-
 
 
                 if "companies" in fp:

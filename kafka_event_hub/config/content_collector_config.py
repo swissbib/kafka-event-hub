@@ -146,6 +146,12 @@ class EduConfig(ContentCollectorConfig):
     def auth_token(self):
         return self.configuration['EDU']['token']
 
+    @property
+    def last_project_id(self):
+        return None if self.configuration['EDU'].get('lastproject') is None \
+            else self.configuration['EDU'].get('lastproject')
+
+
 
 
 
