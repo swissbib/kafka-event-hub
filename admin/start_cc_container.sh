@@ -25,6 +25,14 @@ then
     echo "used docker command"
     echo "docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=FilePushNebisKafka --sharedconfig /basedir/configs/share/cc.share.yaml /basedir/configs/filepush/$1.yaml"
     docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=FilePushNebisKafka --sharedconfig /basedir/configs/share/cc.share.yaml /basedir/configs/filepush/$1.yaml
+elif [ $1 == 'zem' ]
+then
+
+    echo "start zem edu process"
+    echo "used docker command"
+    echo "docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=EduZemKafka --sharedconfig /basedir/configs/share/edu.share.yaml /basedir/configs/eduplatform/$1.yaml"
+    docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=EduZemKafka --sharedconfig /basedir/configs/share/edu.share.yaml /basedir/configs/eduplatform/$1.yaml
+
 
 else
 

@@ -1,2 +1,2 @@
-from kafka_event_hub.producers.oai.oai_producer_kafka import OAIProducerKafka
-from kafka_event_hub.producers.oai.oai_producer_file import OAIProducerFile
+from kafka_event_hub.producers.eduplatform.edu_zem_kafka import EduZemKafka
+from kafka_event_hub.producers.eduplatform.edu_zem_file import EduZem

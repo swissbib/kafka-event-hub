@@ -13,21 +13,20 @@ __description__ = """
 import requests
 import json
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
-#geht das??
-from kafka_event_hub.config import OAIConfig
-
+from kafka_event_hub.config import EduConfig
+from kafka_event_hub.utility.producer_utility import current_timestamp
 from kafka_event_hub.config.config_utility import init_logging
 
 
 
 
-class EduZem(AbstractBaseProducer):
+class EduZemKafka(AbstractBaseProducer):
 
     def __init__(self, configrep: str, configrepshare: str):
-        AbstractBaseProducer.__init__(self,configrepshare, OAIConfig, configrep)
+        AbstractBaseProducer.__init__(self,configrepshare, EduConfig, configrep)
 
-        self.headers = {'Authorization': 'Bearer   Qku1tQ6fhUDADQSu4k5fZxA1KBHWPS'}
-        self.base_url = "https://api.marketcircle.net"
+        self.headers = {'Authorization': "Bearer  " + self.configuration.auth_token}
+        self.base_url = self.configuration.base_url
         self.active = True
 
         logComponenents = init_logging(configrep, self.configuration)
@@ -38,6 +37,7 @@ class EduZem(AbstractBaseProducer):
 
 
     def processCompany(self, company):
+
 
         jsonCompany = json.loads(requests.get(self.base_url + company["company"], headers=self.headers).text)
         privacyCompany = {}
@@ -56,16 +56,29 @@ class EduZem(AbstractBaseProducer):
         return False
 
 
-    def getProjectId(self, url):
-        #todo: fetch project id
-        pass
+    def getProjectId(self, url: str):
+
+        # example for the URL: '/v1/projects/700037' and we are looking for the project number
+        projectid = url[url.rfind("/") + 1:]
+        self.source_logger_summary.info('\nFetching project id:{PROJECTID} {CURRENTTIME}'.format(
+            PROJECTID=projectid,
+            CURRENTTIME=current_timestamp()
+        ))
+
+
+        return projectid
 
     def process(self):
 
+
+        self.source_logger_summary.info('\n\n\n\nStart Edu zem {SOURCE} {STARTTIME}'.format(
+            SOURCE=self._shortcut_source_name,
+            STARTTIME=current_timestamp()
+        ))
+
+
         response = requests.get(self.base_url + "/v1/projects",headers=self.headers)
 
-        kurse_serialized = open("zem1.json","w")
-        kurse_serialized.write("[\n")
 
         if response.ok:
             text = response.text
@@ -83,7 +96,6 @@ class EduZem(AbstractBaseProducer):
                     continue
 
 
-                #set = fp
 
                 if "companies" in fp:
                     for company in fp["companies"]:
@@ -122,12 +134,17 @@ class EduZem(AbstractBaseProducer):
 
 
                 self.send(key=projectId.encode('utf8'),
-                          message=fp.encode('utf8'))
+                          message=json.dumps(fp).encode('utf8'))
+
+        self.source_logger_summary.info('\n\n\n\nFinished Edu zem {SOURCE} {STARTTIME}'.format(
+            SOURCE=self._shortcut_source_name,
+            STARTTIME=current_timestamp()
+        ))
 
 
-            #kurse_serialized.write("\n]")
-            #kurse_serialized.close()
 
 if __name__ == '__main__':
-    zem = EduZem()
-    zem.process()
+    #zem = EduZemKafka()
+    #zem.process()
+    pass
+

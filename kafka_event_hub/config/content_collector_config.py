@@ -133,6 +133,22 @@ class OAIConfig(ContentCollectorConfig):
         return 'ListRecords' if self.configuration['OAI'].get('verb') is None \
             or self.configuration['OAI'].get('verb') == 'None' else self.configuration['OAI']['verb']
 
+
+class EduConfig(ContentCollectorConfig):
+    def __init__(self, config_path: str, config_path_special: str= None, logger=logging.getLogger(__name__)):
+        super().__init__(config_path, config_path_special, logger=logger)
+
+    @property
+    def base_url(self):
+        return self.configuration['EDU']['url']
+
+    @property
+    def auth_token(self):
+        return self.configuration['EDU']['token']
+
+
+
+
 class FileNebisScpConfig(ContentCollectorConfig):
 
     def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):

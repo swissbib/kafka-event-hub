@@ -20,6 +20,14 @@ loggers:
     level: INFO
     handlers: [abn_summary]
     propagate: no
+  zem:
+    level: DEBUG
+    handlers: [zem]
+    propagate: no
+  zem_summary:
+    level: INFO
+    handlers: [zem_summary]
+    propagate: no
   idsbb:
     level: DEBUG
     handlers: [idsbb]
@@ -524,6 +532,20 @@ handlers:
     filename: /basedir/logs/nebis_summary.log
     maxBytes: 10000000
     backupCount: 3
+
+  zem:
+    class : logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /basedir/logs/zem_issues.log
+    maxBytes: 10000000
+    backupCount: 3
+  zem_summary:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: /basedir/logs/zem_summary.log
+    maxBytes: 10000000
+    backupCount: 3
+
 
   default:
     class : logging.handlers.RotatingFileHandler

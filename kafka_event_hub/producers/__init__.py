@@ -6,4 +6,6 @@ from kafka_event_hub.producers.oai import OAIProducerFile
 from kafka_event_hub.producers.filePush import FilePushNebisKafka
 from kafka_event_hub.producers.webdav import WebDavReroKafka
 from kafka_event_hub.producers.simple import SimpleProducer
+from kafka_event_hub.producers.eduplatform.edu_zem_kafka import EduZemKafka
+from kafka_event_hub.producers.eduplatform.edu_zem_file import EduZem
 

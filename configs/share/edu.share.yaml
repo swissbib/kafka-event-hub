@@ -33,7 +33,7 @@ Producer:
 
 Topic:
   name: should_not_be_used_from_share
-  num_partitions: 4
+  num_partitions: 3
   replication_factor: 1
 
 Logging:
