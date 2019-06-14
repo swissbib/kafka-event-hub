@@ -14,13 +14,17 @@ import requests
 import json
 
 
-class EduZem():
+class EduZemFile():
 
     def __init__(self):
-        self.headers = {'Authorization': 'Bearer   Qku1tQ6fhUDADQSu4k5fZxA1KBHWPS'}
-        self.base_url = "https://api.marketcircle.net"
 
-        self.active = True
+        self.headers = {'Authorization': 'Bearer   JSkHJv4grIvfi80AzVCOOUVzRTb47b'}
+        self.base_url = "https://api.marketcircle.net"
+        self.last_project_id = 862000
+
+        self.filename = "/home/swissbib/environment/code/swissbib.repositories/kafka-event-hub/data/zem4.json"
+
+        self.active = True if self.last_project_id is None else False
 
 
     def processCompany(self, company):
@@ -42,33 +46,47 @@ class EduZem():
         return False
 
 
+    def getProjectId(self, url: str):
 
+        # example for the URL: '/v1/projects/700037' and we are looking for the project number
+        projectid = url[url.rfind("/") + 1:]
+
+        return projectid
 
     def process(self):
 
+
+
         response = requests.get(self.base_url + "/v1/projects",headers=self.headers)
 
-        kurse_serialized = open("zem1.json","w")
+        kurse_serialized = open(self.filename,"w")
         kurse_serialized.write("[\n")
+
 
         if response.ok:
             text = response.text
             projects = json.loads(text)
 
             for project in projects:
-                #naechstes projekt in zem1.json: '/v1/projects/770000'
+
+                projectId = self.getProjectId(project["self"])
+
+                if not self.active:
+                    if projectId == str(self.last_project_id):
+                        #next id should be used
+                        self.active = True
+                        continue
+                    else:
+                        continue
+
+
                 fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
                 #fullproject = requests.get(self.base_url + "/v1/projects/997065",headers=self.headers)
                 fp = json.loads(fullproject.text)
 
-                if self.active is False:
-                    continue
 
-
-                set = fp
-
-                if "companies" in set:
-                    for company in set["companies"]:
+                if "companies" in fp:
+                    for company in fp["companies"]:
                         company["details"] = self.processCompany(company)
 
 
@@ -92,19 +110,16 @@ class EduZem():
                                 company["details"] = self.processCompany(company)
                         contact["details"] = privacyContact
 
-                if "tasks" in set:
-                    del set["tasks"]
-                if "notes" in set:
-                    del set["notes"]
-                if "forms" in set:
-                    del set["forms"]
-                if "appointments" in set:
-                    del set["appointments"]
+                if "tasks" in fp:
+                    del fp["tasks"]
+                if "notes" in fp:
+                    del fp["notes"]
+                if "forms" in fp:
+                    del fp["forms"]
+                if "appointments" in fp:
+                    del fp["appointments"]
 
-
-
-
-                json.dump(set,kurse_serialized,indent=20)
+                json.dump(fp,kurse_serialized,indent=20)
 
                 kurse_serialized.write(",\n")
                 kurse_serialized.flush()
@@ -112,6 +127,10 @@ class EduZem():
         kurse_serialized.write("\n]")
         kurse_serialized.close()
 
+
+
 if __name__ == '__main__':
-    zem = EduZem()
+    zem = EduZemFile()
     zem.process()
+
+

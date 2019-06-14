@@ -15,5 +15,24 @@ Producer:
   client_id: edu-zem-producer
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
+Topics: cc-zem
+
 Topic:
   name: cc-zem
+
+Consumer:
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  client_id: zem_consumer_client
+  auto_offset_reset: earliest
+  consumer_timeout_ms: 10000
+
+Logging:
+  name: default-cc-not-used
+  path: /basedir/logs/times.log
+  errpath: /basedir/logs/error.log
+  config: /basedir/configs/logs/cc.config.yaml
+
+ES:
+  hosts: "localhost:8080"
+  index: zem
+  active: FALSE

@@ -21,8 +21,8 @@ ssh harvester@sb-ucoai2.swissbib.unibas.ch "cd $TARGET; docker image rm kafka-ev
 
 
 
-echo "cp config and admin scripts on target host"
-scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
+#echo "cp config and admin scripts on target host"
+#scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
 
 rm kafka-event-hub.tar
 
