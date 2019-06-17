@@ -1,0 +1,4 @@
+export DOCKER_BASE=/home/swissbib/environment/code/swissbib.repositories/kafka-event-hub
+export WEBDAV=/home/swissbib/environment/code/swissbib.repositories/kafka-event-hub
+
+docker run --rm --network host  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=ZemConsumer  /basedir/configs/eduplatform/zem.yaml

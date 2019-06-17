@@ -3,7 +3,7 @@ AdminClient:
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
 EDU:
-  token: veR4onLqWUIPRO8GpmG7uSpJwamRva
+  token: 5D74BwKxn8sMZpsufNDh34fAiMyuge
   timestampUTC: '2019-05-16T01:01:01Z'
   url: https://api.marketcircle.net
   lastproject: 776077
@@ -22,7 +22,7 @@ Topic:
 
 Consumer:
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
-  client_id: zem_consumer_client
+  client_id: zem_consumer_clie
   auto_offset_reset: earliest
   consumer_timeout_ms: 10000
 
@@ -35,4 +35,4 @@ Logging:
 ES:
   hosts: "localhost:8080"
   index: zem
-  active: FALSE
+  active: True

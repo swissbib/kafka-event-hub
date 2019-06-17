@@ -34,6 +34,15 @@ then
     docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=EduZemKafka --sharedconfig /basedir/configs/share/edu.share.yaml /basedir/configs/eduplatform/$1.yaml
 
 
+elif [ $1 == 'zemes' ]
+then
+
+    echo "start zem edu process"
+    echo "used docker command"
+    echo "docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=EduZemKafka --sharedconfig /basedir/configs/share/edu.share.yaml /basedir/configs/eduplatform/$1.yaml"
+    docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=ZemConsumer  /basedir/configs/eduplatform/$1.yaml
+
+
 else
 
     echo "start oai process"

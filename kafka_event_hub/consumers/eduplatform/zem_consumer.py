@@ -26,7 +26,7 @@ class ZemConsumer(AbstractBaseConsumer):
 
 
 
-    def __init__(self, config_path: str, **kwargs):
+    def __init__(self, config_path: str, configrepshare: str = None, **kwargs):
         super().__init__(config_path, ConsumerConfig, **kwargs)
         self._initialize()
 
@@ -48,7 +48,7 @@ class ZemConsumer(AbstractBaseConsumer):
             if not self.es.exists(index=self.dI, id=key):
                 response = self.es.create(index=self.dI, id=key, body=doc)
 
-    def consume(self):
+    def process(self):
 
         #test = self.indexClient.get_mapping(index=self.dI)
 
@@ -78,4 +78,4 @@ if __name__ == '__main__':
     config = config_path = args.config
 
     zemConsumer = ZemConsumer(config_path=config)
-    zemConsumer.consume()
+    zemConsumer.process()

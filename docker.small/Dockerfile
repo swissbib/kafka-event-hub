@@ -85,8 +85,10 @@ RUN mkdir -p /app/kafka_event_hub
 WORKDIR /app
 
 COPY requirements.txt /app
-COPY run.py /app
 RUN pip install -r requirements.txt
+
+COPY run.py /app
+
 
 #was machen wir mit den Tests?
 COPY kafka_event_hub /app/kafka_event_hub

@@ -1,2 +1,2 @@
 from kafka_event_hub.producers.eduplatform.edu_zem_kafka import EduZemKafka
-from kafka_event_hub.producers.eduplatform.edu_zem_file import EduZem
+from kafka_event_hub.producers.eduplatform.edu_zem_file import EduZemFile
