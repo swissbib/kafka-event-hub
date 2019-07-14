@@ -1,9 +1,9 @@
 AdminClient:
   client_id: edu-admin-zem-producer
-  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  bootstrap_servers: sb-uka3:9092,sb-ukaç:9092,sb-uka5:9092,sb-uka6:9092
 
 EDU:
-  token: 5D74BwKxn8sMZpsufNDh34fAiMyuge
+  token: 30UT9SW29ba50CLjy7KdB6lgEqivO3
   timestampUTC: '2019-05-16T01:01:01Z'
   url: https://api.marketcircle.net
   lastproject: 776077
@@ -21,7 +21,7 @@ Topic:
   name: cc-zem
 
 Consumer:
-  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  bootstrap_servers: sb-uka3:9092,sb-ukaç:9092,sb-uka5:9092,sb-uka6:9092
   client_id: zem_consumer_clie
   auto_offset_reset: earliest
   consumer_timeout_ms: 10000
@@ -33,6 +33,6 @@ Logging:
   config: /basedir/configs/logs/cc.config.yaml
 
 ES:
-  hosts: "localhost:8080"
+  hosts: "sb-ues5.swissbib.unibas.ch:8080"
   index: zem
   active: True

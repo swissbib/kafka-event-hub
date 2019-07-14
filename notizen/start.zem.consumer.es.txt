@@ -1,0 +1,4 @@
+export DOCKER_BASE=/swissbib/harvesting/docker.cc
+export WEBDAV=/swissbib/harvesting/rero.webdav
+
+docker run --rm  -v $WEBDAV:/webdav -v $DOCKER_BASE:/basedir   kafka-event-hub run.py --type=ZemConsumer  /basedir/configs/eduplatform/zem.yaml
