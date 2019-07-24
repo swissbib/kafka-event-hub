@@ -1,0 +1,70 @@
+von Silvia erstellt
+
+Language
+---
+
+"Sp Deutsch"                               = ger
+"Sp Deutsch-English"                       = gereng
+"Sp Deutsch-Espa\u00f1ol"                  = gerspa
+"Sp Deutsch-Fran\u00e7ais"                 = gerfre
+"Sp Deutsch-Fran\u00e7ais-English"         = gerfreeng
+"Sp English"                               = eng
+"Sp Espa\u00f1ol"                          = spa
+"Sp Fran\u00e7ais"                         = fre
+"Sp Italiano"                              = ita
+
+keywords
+---
+"00 Comp\u00e9tences transversales des enseignant-e-s"                                                                             = Überfachliche Kompetenzen Lehrpersonen
+"00 \u00dcberfachliche Kompetenzen Lehrpersonen"                                                                                   = Überfachliche Kompetenzen Lehrpersonen
+"01 Erstsprache - Weitere Angebote finden Sie auf unserer franz\u00f6sischen Seite."                                               = Erstsprache
+"01 Langue premi\u00e8re - offres suppl\u00e9mentaires sur notre page Internet en fran\u00e7ais"                                   = Erstsprache
+"02 Langues secondes - Vous trouverez d'autres offres sur notre page al\u00e9manique."                                             = Zweitsprachen
+"02 Zweitsprachen - Weitere Angebote finden Sie auf unserer franz\u00f6sischen Seite."                                             = Zweitsprachen
+"04 Mathematik"                                                                                                                    = Mathematik
+"04 Math\u00e9matiques"                                                                                                            = Mathematik
+"05 Physik"                                                                                                                        = Physik
+"05 Physique"                                                                                                                      = Physik
+"06 Chemie"                                                                                                                        = Chemie
+"07 Biologie"                                                                                                                      = Biologie
+"08 Geographie"                                                                                                                    = Geographie
+"08 G\u00e9ographie"                                                                                                               = Geographie
+"11 Wirtschaft und Recht"                                                                                                          = Wirtschaft und Recht
+"12 Geschichte"                                                                                                                    = Geschichte
+"12 Histoire"                                                                                                                      = Geschichte
+"13 Philosophie"                                                                                                                   = Philosophie
+"14 Religion"                                                                                                                      = Religion
+"16 Musik"                                                                                                                         = Musik
+"18 Informatik"                                                                                                                    = Informatik
+"18 Informatique "                                                                                                                 = Informatik
+"19 Informationstechnologien und Medien"                                                                                           = Informationstechnologie und Medien
+"19 Technologies de l'information et des m\u00e9dias"                                                                              = Informationstechnologie und Medien
+"19 Technologies de l'information et M\u00e9dias"                                                                                  = Informationstechnologie und Medien
+"20 Umweltbildung"                                                                                                                 = Umweltbildung
+"21 Spezialaufgaben Lehrpersonen"                                                                                                  = Spezialaufgaben Lehrpersonen
+"22 Zusatzausbildungen"                                                                                                            = Zusatzausbildungen
+"22 Zusatzausbildungen (Ausbildungen, die auf eine zus\u00e4tzliche Funktion vorbereiten und mit einem Zertifikat abschliessen)"   = Zusatzausbildungen
+"23 Interdisziplin\u00e4re Projekte und Studienreisen"                                                                             = Interdisziplinäre Projekte und Studienreisen
+"24 Allg. Didaktik und p\u00e4d. Psychologie"                                                                                      = Allg. Didaktik und päd. Psychologie
+"25 Lern- und Arbeitsverhalten Sch\u00fcler/innen"                                                                                 = Lern- und Arbeitsverhalten Schüler/innen
+"25 Techniques de l'apprentissage et du travail des \u00e9tudiant-e-s"                                                             = Lern- und Arbeitsverhalten Schüler/innen
+"26 Zweisprachige Matura / Immersives Unterrichten"                                                                                = Zweisprachige Matura / Immersives Unterrichten
+"27 Fachmittelschulen"                                                                                                             = Fachmittelschulen
+"27 \u00c9coles de culture g\u00e9n\u00e9rale"                                                                                     = Fachmittelschulen
+"28 Cours pour cadres"                                                                                                             = Kaderkurse
+"28 Kaderkurse"                                                                                                                    = Kaderkurse
+"29 Congr\u00e8s, Journ\u00e9es, Forums"                                                                                           = Kongresse, Tagungen, Foren
+"29 Kongresse, Tagungen, Foren"                                                                                                    = Kongresse, Tagungen, Foren
+"31 Course \u00e0 la carte"                                                                                                        = Hol-Angebot
+"31 Hol-Angebot"                                                                                                                   = Hol-Angebot
+
+
+courseType
+---
+"A admin"                   = Admin
+"A Fachkurs"                = Fachkurs
+"A Hol-Angebot"             = Hol-Angebot
+"A Kaderkurs"               = Kaderkurs
+"A publi"                   = publi
+"A Tagung"                  = Tagung
+"A Zusatzausbildung"        = Zusatzausbildung

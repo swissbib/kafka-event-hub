@@ -1,0 +1,20 @@
+doc["description"] = zemcourse["details"]
+doc["status"] = zemcourse["status"]
+doc["localID"] = zemcourse["extra_fields com.marketcircle.daylite/extra1"]
+doc["maxParticipants"] = zemcourse["extra_fields com.marketcircle.daylite/extra2"]
+doc["minParticipants"] = zemcourse["extra_fields com.marketcircle.daylite/extra3"]
+doc["price"] = zemcourse["extra_fields com.marketcircle.daylite/extra5"]
+doc["place"] = zemcourse["extra_fields com.marketcircle.daylite/extra6"]
+doc["dates"] = zemcourse["extra_fields com.marketcircle.daylite/extra7"]
+doc["subtitle"] = zemcourse["extra_fields com.marketcircle.daylite/extra9"]
+doc["goals"] = zemcourse["extra_fields com.marketcircle.daylite/extra11"]
+doc["targetAudience"] = zemcourse["extra_fields com.marketcircle.daylite/extra12"]
+doc["beginDate"] = zemcourse["extra_fields com.marketcircle.daylite/extra_date_1"]
+doc["endDate"] = zemcourse["extra_fields com.marketcircle.daylite/extra_date_2"]
+doc["registrationDate"] = zemcourse["extra_fields com.marketcircle.daylite/extra_date_3"]
+doc["organiser"] = zemcourse["companies - details - name"]
+
+
+was noch fehlt
+doc["methods"] = zemcourse["aus den forms, Methoden (max. 3):"]
+doc["priceNote"] = zemcourse["aus den forms, Bemerkungen zur Teilnahmegeb\u00fchr:\n(max. 200 Zeichen)"]

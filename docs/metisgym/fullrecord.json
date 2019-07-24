@@ -1,0 +1,85 @@
+"properties": {
+      // nicht wenn keywords enthält A Hol-Angebot
+      "beginDate"
+      "category"
+      "coursename"
+      // siehe Mapping
+      "courseType"
+      "dates"
+      "description"
+      // nicht wenn keywords enthält A Hol-Angebot
+      "endDate"
+      "goals"
+      // wenn keyword beginnt mit einer zweistelligen Zahl, siehe mapping
+      "keywords"
+      // wenn keyword beginnt mit Sp, siehe mapping
+      "language"
+      "localID"
+      // siehe Mapping
+      "methods"
+      "maxParticipants"
+      "minParticipants"
+      "organiser" : {
+          "properties": {
+               "name" // aus companies.details.name
+               "street" // aus companies.details.addresses.street
+               "city" // aus companies.details.addresses.city
+               "postalcode" // aus companies.details.addresses.postal_code
+               "url" // aus companies.details.urls.url
+          }
+      },
+      // wenn role = Referent/in
+      "speakers": {
+          "properties": {
+              "companies": {
+                  "properties": {
+                      // wenn bei verknüpften companies default = true
+                      "name" // aus person.details.companies.details.name
+                      "street" // aus person.details.companies.addresses.street
+                      "city" // aus person.details.companies.addresses.city
+                      "postalcode" // aus person.details.companies.addresses.postal_code
+                      "url" // aus person.details.companies.urls.url
+                      "title" // aus person.details.companies.title
+
+                  }
+              },
+              "firstName" // aus person.details.first_name
+              "lastName"  // aus person.details.last_name
+              "phone" // aus person.details.phone_numbers, wenn label = Tel Arbeit
+              "email" //aus person.details.emails, wenn label = Arbeit
+          }
+      },
+      // wenn role = Kursleiter/in
+      "instructors": {
+          "properties": {
+              "companies": {
+                  "properties": {
+                      // wenn bei verknüpften companies default = true
+                      "name" // aus person.details.companies.details.name
+                      "street" // aus person.details.companies.addresses.street
+                      "city" // aus person.details.companies.addresses.city
+                      "postalcode" // aus person.details.companies.addresses.postal_code
+                      "url" // aus person.details.companies.urls.url
+                      "title" // aus person.details.companies.title
+
+                  }
+              },
+              "firstName" // aus person.details.first_name
+              "lastName"  // aus person.details.last_name
+              "phone" // aus person.details.phone_numbers, wenn label = Tel Arbeit
+              "email" //aus person.details.emails, wenn label = Arbeit
+              "birthdate" // aus person.details.birthday, nur die ersten vier Zahlen
+          }
+      },
+      "place"
+      "price"
+      "priceNote"
+      // nicht aus den Daten, immer ZEM für die daylite Daten
+      "provider"
+      // nicht wenn keywords enthält A Hol-Angebot
+      "registrationDate"
+      "started" //?
+      "status"
+      "subtitle"
+      "targetAudience"
+}

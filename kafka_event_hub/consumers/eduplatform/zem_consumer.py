@@ -3,6 +3,8 @@ from kafka_event_hub.consumers.base_consumer import AbstractBaseConsumer
 import argparse
 import json
 from elasticsearch import Elasticsearch, exceptions
+from kafka_event_hub.consumers.eduplatform.zem_es_transformation import ZemESTransformation
+
 
 
 
@@ -17,12 +19,12 @@ class ZemConsumer(AbstractBaseConsumer):
 
     def createDoc(self, message):
         zemcourse = json.loads(message)
-        doc = {}
-        doc["coursename"] = zemcourse["name"] if "name" in zemcourse else "na"
-        doc["keywords"] = zemcourse["keywords"] if "keywords" in zemcourse else []
 
+        transformations = ZemESTransformation(zemcourse)
+        transformations.make_structure()
+        result = transformations.es_structure
 
-        return doc
+        return result
 
 
 

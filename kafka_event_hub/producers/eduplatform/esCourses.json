@@ -1,0 +1,54 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 2
+  },
+  "mappings": {
+    "properties": {
+      "coursename": {
+        "type": "text"
+      },
+      "keywords": {
+        "type": "text"
+      },
+      "persons": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "role": {
+            "type": "keyword"
+          },
+          "person_complete_or_reference": {
+            "type": "keyword"
+          },
+          "companies": {
+            "type": "nested",
+            "properties": {
+              "wollenwirdasso": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "status": {
+        "type": "keyword"
+      },
+      "started": {
+        "type": "date"
+      },
+      "completed": {
+        "type": "date"
+      },
+      "fulldocument": {
+        "type": "keyword",
+        "index": "false"
+      }
+    }
+  }
+}

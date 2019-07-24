@@ -1,14 +1,63 @@
 {
-
-  "settings" : {
-        "number_of_shards" : 1,
-        "number_of_replicas" : 1
-    },
-    "mappings" : {
-        "properties" : {
-            "coursename" : { "type" : "text" },
-            "keywords": {"type": "text"}
-
+    "metisgym": {
+        "mappings": {
+            "properties": {
+                // nicht wenn keywords enthält A Hol-Angebot
+                "beginDate" : {"type":  "date"},
+                "category": {"type": "keyword"},
+                "coursename": {"type": "text"},
+                // siehe Mapping
+                "courseType": {"type":  "keyword"},
+                "dates" : {"type":  "text"},
+                "description" : { "type": "text" },
+                // nicht wenn keywords enthält A Hol-Angebot
+                "endDate" : {"type":  "date"},
+                "fulldocument": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "goals" : {"type":  "text"},
+                // wenn keyword beginnt mit einer zweistelligen Zahl, siehe mapping
+                "keywords": {"type": "text"},
+                // wenn keyword beginnt mit Sp, siehe mapping
+                "language": {"type":  "keyword"},
+                "localID" : {"type":  "text"},
+                // siehe Mapping
+                "methods" : {"type":  "keyword"},
+                "maxParticipants" : {"type":  "number"},
+                "minParticipants" : {"type":  "number"},
+                "organiser" : {
+                    "type":  "nested",
+                    "properties": {
+                        "name": {"type":  "keyword"}
+                    }
+                },
+                // wenn role = Referent/in oder Kursleiter/in
+                "persons": {
+                    "type": "nested",
+                    "properties": {
+                        "companies": {
+                            "type": "nested",
+                            "properties": {
+                                // wenn bei verknüpften companies default = true
+                                "name": {"type": "text"}
+                            }
+                        },
+                        "id": {"type": "keyword"}, // ?
+                        "name": {"type": "text"}
+                    }
+                },
+                "place" : {"type":  "text"},
+                "price" : {"type":  "number"},
+                "priceNote": {"type":  "text"},
+                // nicht aus den Daten, immer ZEM für die daylite Daten
+                "provider" : {"type":  "keyword"},
+                // nicht wenn keywords enthält A Hol-Angebot
+                "registrationDate" : {"type":  "date"},
+                "status": {"type": "keyword"},
+                "subtitle": {"type":  "text"},
+                "targetAudience" : {"type":  "text"}
+            }
         }
     }
 }
