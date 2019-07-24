@@ -9,6 +9,7 @@ class ZemESTransformation():
         self.first_2_digits_keywords = re.compile('^\d\d', re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.first_digit_coursetype = re.compile('^A', re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.first_2_digits_language = re.compile('^Sp', re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.holangebot = re.compile('Hol - Angebot', re.UNICODE | re.DOTALL | re.IGNORECASE)
 
 
     @property
@@ -36,8 +37,11 @@ class ZemESTransformation():
         self._endDate()
         self._registrationDate()
         self._organiser()
+        self._provider()
 
 
+    def _provider(self):
+        self.es["provider"] = "ZEM" #always ZEM
 
     def _course_name(self):
         self.es["name"] = self.courses["name"] if "name" in self.courses else "na"
@@ -117,29 +121,35 @@ class ZemESTransformation():
             else "na"
 
     def _beginDate(self):
-        self.es["beginDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_1"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
-            else "na"
+
+        if self._check_holangebot() is False:
+            self.es["beginDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
+                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_1"  in self.courses["extra_fields"] \
+                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
+                else "na"
 
     def _endDate(self):
-        self.es["endDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_2"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
-            else "na"
+
+        if self._check_holangebot() is False:
+            self.es["endDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
+                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_2"  in self.courses["extra_fields"] \
+                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
+                else "na"
 
     def _registrationDate(self):
-        self.es["registrationDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_3"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
-            else "na"
+
+        if self._check_holangebot() is False:
+            self.es["registrationDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
+                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_3"  in self.courses["extra_fields"] \
+                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
+                else "na"
 
 
     def _organiser(self):
-        self.es["organiser"] = self.courses["companies"]["details"]["name"] if \
+        self.es["organiser"] = {'name': self.courses["companies"]["details"]["name"]} if \
             "companies" in self.courses and "details"  in self.courses["companies"] \
             and "name" in self.courses["cmpanies"]["details"] \
-            else "na"
+            else {}
 
     def _filteredKeyWords(self, rawKeywordList):
         return list(map(lambda fw: fw[3:],  filter(lambda v : self.first_2_digits_keywords.search(v),rawKeywordList)))
@@ -167,3 +177,22 @@ class ZemESTransformation():
 
         test = language_codes[language_value] if language_value in language_codes else language_value
         return test
+
+    def _not_hol_angebote(self, rawKeywordList):
+        return list(map(lambda lang:self._map_language(lang),
+                        map(lambda fw: fw[3:],  filter(lambda v : self.first_2_digits_language.search(v),rawKeywordList))))
+
+    def _get_keywords(self):
+        return self.courses["keywords"] if "keywords" in self.courses else []
+
+    def _check_holangebot(self):
+        #rule: no dates if holangebot
+        keywords = self._get_keywords()
+        holangebot = False
+        if isinstance(keywords, list) and len(keywords) > 0:
+            for elem in keywords:
+                if self.holangebot.search(elem):
+                    holangebot = True
+                    break
+
+        return holangebot

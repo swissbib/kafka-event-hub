@@ -27,7 +27,6 @@ class ZemConsumer(AbstractBaseConsumer):
         return result
 
 
-
     def __init__(self, config_path: str, configrepshare: str = None, **kwargs):
         super().__init__(config_path, ConsumerConfig, **kwargs)
         self._initialize()
@@ -43,9 +42,7 @@ class ZemConsumer(AbstractBaseConsumer):
     def _index_doc(self,key, message):
         if self.configuration["ES"]["active"]:
             doc = self.createDoc(message)
-
             #bug im update https://github.com/elastic/elasticsearch/issues/41625
-
             #response = self.es.update(index="zem",id=key,body=doc) if self.es.exists(index="zem",id=key) else self.es.create(index="zem",id=key,body=doc)
             if not self.es.exists(index=self.dI, id=key):
                 response = self.es.create(index=self.dI, id=key, body=doc)
@@ -53,11 +50,7 @@ class ZemConsumer(AbstractBaseConsumer):
     def process(self):
 
         #test = self.indexClient.get_mapping(index=self.dI)
-
-
-
         message = next(self._consumer,None)
-
 
         while (message is not None):
             value = message.value.decode('utf-8')
