@@ -1,69 +1,56 @@
 {
-    "metisgym": {
+       "settings" : {
+            "number_of_shards" : 1,
+            "number_of_replicas" : 1
+        },
         "mappings": {
             "properties": {
-                "id" : {
-                    "type": "keyword"
-                },
-                // nicht wenn keywords enthält A Hol-Angebot
                 "beginDate" : {"type":  "date"},
-                "category": {"type": "keyword"},
-                "coursename": {"type": "text"},
-                // siehe Mapping
+                "name": {"type": "text"},
                 "courseType": {"type":  "keyword"},
                 "dates" : {"type":  "text"},
                 "description" : { "type": "text" },
-                // nicht wenn keywords enthält A Hol-Angebot
                 "endDate" : {"type":  "date"},
                 "fulldocument": {
                     "type": "keyword",
                     "index": false
                 },
                 "goals" : {"type":  "text"},
-                // wenn keyword beginnt mit einer zweistelligen Zahl, siehe mapping
+                "id":  {"type":  "keyword"},
                 "keywords": {"type": "text"},
-                // wenn keyword beginnt mit Sp, siehe mapping
                 "language": {"type":  "keyword"},
-                "localID" : {"type":  "text"},
-                // siehe Mapping
+                "localID" : {"type":  "keyword"},
                 "methods" : {"type":  "keyword"},
-                "maxParticipants" : {"type":  "number"},
-                "minParticipants" : {"type":  "number"},
+                "maxParticipants" : {"type":  "keyword"},
+                "minParticipants" : {"type":  "keyword"},
                 "organiser" : {
                     "type":  "nested",
                     "properties": {
                         "name": {"type":  "keyword"}
                     }
                 },
-                // wenn role = Referent/in oder Kursleiter/in
                 "persons": {
                     "type": "nested",
                     "properties": {
                         "companies": {
                             "type": "nested",
                             "properties": {
-                                // wenn bei verknüpften companies default = true
                                 "name": {"type": "text"}
-                            },
-
-                        "id": {"type": "keyword"}, // ?
+                            }
+                        },
+                        "id": {"type": "keyword"},
                         "name": {"type": "text"},
-                        "role": {"type":  "keyword"} //this makes it easier for data preparation
-
-                        }
+                        "role": {"type": "keyword"}
                     }
                 },
                 "place" : {"type":  "text"},
-                "price" : {"type":  "number"},
+                "price" : {"type":  "float"},
                 "priceNote": {"type":  "text"},
-                // nicht aus den Daten, immer ZEM für die daylite Daten
                 "provider" : {"type":  "keyword"},
-                // nicht wenn keywords enthält A Hol-Angebot
                 "registrationDate" : {"type":  "date"},
                 "status": {"type": "keyword"},
                 "subtitle": {"type":  "text"},
                 "targetAudience" : {"type":  "text"}
             }
         }
-    }
 }

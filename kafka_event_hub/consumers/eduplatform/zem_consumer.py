@@ -44,8 +44,8 @@ class ZemConsumer(AbstractBaseConsumer):
             doc = self.createDoc(message)
             #bug im update https://github.com/elastic/elasticsearch/issues/41625
             #response = self.es.update(index="zem",id=key,body=doc) if self.es.exists(index="zem",id=key) else self.es.create(index="zem",id=key,body=doc)
-            if not self.es.exists(index=self.dI, id=key):
-                response = self.es.create(index=self.dI, id=key, body=doc)
+            if not self.es.exists(index=self.dI, id=doc["id"]):
+                response = self.es.create(index=self.dI, id=doc["id"], body=doc)
 
     def process(self):
 
@@ -55,10 +55,7 @@ class ZemConsumer(AbstractBaseConsumer):
         while (message is not None):
             value = message.value.decode('utf-8')
             key = message.key.decode('utf-8')
-            print(value)
-            print(key)
             self._index_doc(key, value)
-
             message = next(self._consumer,None)
 
         #self._time_logger.info('Received message: {} with key {}'

@@ -1,15 +1,21 @@
 
 import re
+import hashlib
+import json
 
 class ZemESTransformation():
 
-    def __init__(self, courses : dict):
-        self.courses = courses
+    def __init__(self, course : dict):
+        self.course = course
         self.es = {}
         self.first_2_digits_keywords = re.compile('^\d\d', re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.first_digit_coursetype = re.compile('^A', re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.first_2_digits_language = re.compile('^Sp', re.UNICODE | re.DOTALL | re.IGNORECASE)
         self.holangebot = re.compile('Hol - Angebot', re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.relevant_contact_role = re.compile('Referent|Kursleiter', re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.leiter_contact_role = re.compile('Kursleiter', re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.referent_contact_role = re.compile('Referent', re.UNICODE | re.DOTALL | re.IGNORECASE)
+        self.work_phone_number = re.compile('Arbeit', re.UNICODE | re.DOTALL | re.IGNORECASE)
 
 
     @property
@@ -27,7 +33,9 @@ class ZemESTransformation():
         self._localID()
         self._maxParticipants()
         self._minParticipants()
+        self._course_methods()
         self._price()
+        self._price_note()
         self._place()
         self._dates()
         self._subtitle()
@@ -38,117 +46,247 @@ class ZemESTransformation():
         self._registrationDate()
         self._organiser()
         self._provider()
+        self._contacts()
+        self._create_id()
+        self._create_full_document()
 
+
+
+    def _create_full_document(self):
+        fullrecord = {}
+        fullrecord["beginDate"] = self.es["beginDate"]
+        #fullrecord["category"]
+        fullrecord["speakers"] = self.es["persons"]
+        fullrecord["coursename"] = self.es["name"] if "name" in self.es else "NA"
+        fullrecord["courseType"] = self.es["courseType"] if "courseType" in self.es else []
+        fullrecord["dates"] = self.es["dates"] if "dates" in self.es else "NA"
+        fullrecord["description"] = self.es["description"] if "description" in self.es else "NA"
+        fullrecord["endDate"] = self.es["endDate"] if "endDate" in self.es else "NA"
+        fullrecord["goals"] = self.es["goals"] if "goals" in self.es else "NA"
+        fullrecord["keywords"] = self.es["keywords"] if "keywords" in self.es else []
+        fullrecord["language"] = self.es["language"] if "language" in self.es else []
+        fullrecord["localID"] = self.es["localID"] if "localID" in self.es else "NA"
+        fullrecord["methods"] =  self.es["methods"] if "methods" in self.es else []
+        fullrecord["maxParticipants"] = self.es["maxParticipants"] if "maxParticipants" in self.es else "NA"
+        fullrecord["minParticipants"] = self.es["minParticipants"] if "minParticipants" in self.es else "NA"
+        fullrecord["organiser"] = self.es["organiser"] if "organiser" in self.es else {}
+        fullrecord["place"] = self.es["place"] if "place" in self.es else {}
+        fullrecord["price"] = self.es["price"] if "price" in self.es else "NA"
+        fullrecord["priceNote"] = self.es["priceNote"] if "priceNote" in self.es else "NA"
+        fullrecord["provider"] = self.es["provider"] if "provider" in self.es else "NA"
+        fullrecord["registrationDate"] = self.es["registrationDate"] if "registrationDate" in self.es else "NA"
+        fullrecord["status"] = self.es["status"] if "status" in self.es else "NA"
+        fullrecord["subtitle"] = self.es["subtitle"] if "subtitle" in self.es else "NA"
+        fullrecord["targetAudience"] = self.es["targetAudience"] if "targetAudience" in self.es else "NA"
+
+
+        contacts = self.course["contacts"] if "contacts" in self.course else []
+        fullrecord["instructors"] =  list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
+                                              filter(lambda contact: self._filter_leiter_contacts(contact), contacts)))
+        fullrecord["speakers"] =  list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
+                                              filter(lambda contact: self._filter_referent_contacts(contact), contacts)))
+
+        self.es["fulldocument"] = json.dumps(fullrecord)
+
+
+    def _course_methods(self):
+        self.es["methods"] = self.course["methods"] if "methods" in self.course else []
+
+    def _price_note(self):
+        self.es["priceNote"] = self.course["priceNote"] if "priceNote" in self.course else "NA"
+
+    def _create_id(self):
+        #Todo: zem kafka producer should create id consisting of prefix (ZEM) + numeric id coming from zem
+
+        self.es["id"] = "ZEM" + self.course["self"][self.course["self"].rfind("/") + 1:]
+
+    def _contacts(self):
+        contacts = self.course["contacts"] if "contacts" in self.course else []
+        zem_prepared_contacts = []
+        if len(contacts) > 0:
+            zem_prepared_contacts =  list(map(lambda rc: self._prepare_relevant_contact(rc),
+                                              filter(lambda contact: self._filterrelevantContacts(contact), contacts)))
+
+        self.es["persons"] = zem_prepared_contacts
+
+    def _prepare_relevant_contact(self,rc):
+        contact = {}
+        if "details" in rc:
+            last_name = rc["details"]["last_name"] if "last_name" in rc["details"] else ""
+            first_name = rc["details"]["first_name"] if "first_name" in rc["details"] else ""
+            contact["name"] = last_name + ", " + first_name
+            projectid = rc["contact"] if "contact" in rc else hashlib.sha1(contact["name"].encode('utf-8')).hexdigest()
+            contact["id"] = projectid[projectid.rfind("/") + 1:]
+            contact["role"] = rc["role"]
+            if "companies" in rc["details"] and type(rc["details"]["companies"] is list):
+                contact["companies"] =  list(map(lambda rel_company: self._prepare_company_of_relevant_contact(rel_company) ,
+                                              filter(lambda company: self._filter_relevant_company(company),
+                                                 rc["details"]["companies"])))
+        return contact
+
+    def _prepare_relevant_contact_fullrecord(self, rc):
+        contact = {}
+        if "details" in rc:
+            contact["firstName"] = rc["details"]["first_name"] if "first_name" in rc["details"] else "NA"
+            contact["lastName"] = rc["details"]["last_name"] if "last_name" in rc["details"] else "NA"
+
+            contact["phone"] = list(map(lambda number_object:number_object["number"],
+                                        filter(lambda phone_number: self._filter_work_phone_number_email(phone_number),rc["details"]["phone_numbers"] ))) \
+                if "details" in rc and "phone_numbers" in rc["details"] else []
+
+            contact["email"] = list(map(lambda email_object:email_object["address"],
+                                        filter(lambda email: self._filter_work_phone_number_email(email),rc["details"]["emails"] ))) \
+                if "details" in rc and "emails" in rc["details"] else []
+
+            contact["birthdate"] = rc["details"]["birthdate"] if "birthdate" in rc["details"] else "NA"
+            #projectid = rc["contact"] if "contact" in rc else hashlib.sha1(
+            #    contact["name"].encode('utf-8')).hexdigest()
+            #contact["id"] = projectid[projectid.rfind("/") + 1:]
+            if "companies" in rc["details"] and type(rc["details"]["companies"] is list):
+                contact["companies"] = list(
+                    map(lambda rel_company: self._prepare_company_of_relevant_contact_fullrecord(rel_company),
+                        filter(lambda company: self._filter_relevant_company(company),
+                               rc["details"]["companies"])))
+
+        return contact
+
+    def _filter_work_phone_number_email(self,phone_number):
+        return self.work_phone_number.search(phone_number["label"]) if "label" in phone_number else False
+
+
+    def _filterrelevantContacts(self, contact):
+        return self.relevant_contact_role.search(contact["role"]) if "role" in contact else False
+
+    def _filter_leiter_contacts(self, contact):
+        return self.leiter_contact_role.search(contact["role"]) if "role" in contact else False
+
+    def _filter_referent_contacts(self, contact):
+        return self.referent_contact_role.search(contact["role"]) if "role" in contact else False
+
+
+    def _filter_relevant_company(self, company):
+        return  True if "default" in company and str(company["default"]).lower() == "true" else False
+
+    def _prepare_company_of_relevant_contact(self, contact_zem):
+        return {"name": contact_zem["details"]["name"]} if "details" in contact_zem and "name" in contact_zem["details"] else {"name": "company name NA"}
+
+    def _prepare_company_of_relevant_contact_fullrecord(self, contact_zem):
+
+        return {
+            "name": contact_zem["details"]["name"] if "details" in contact_zem and "name" in contact_zem["details"] else  "NA",
+            "title" : contact_zem["details"]["title"] if "details" in contact_zem and "title" in contact_zem["details"] else "NA",
+            "url" : list(filter(lambda url: self.work_phone_number.search(url["label"]),contact_zem["details"]["urls"]) ) if "details" in contact_zem and "urls" in contact_zem["details"] else []
+        }
 
     def _provider(self):
         self.es["provider"] = "ZEM" #always ZEM
 
     def _course_name(self):
-        self.es["name"] = self.courses["name"] if "name" in self.courses else "na"
+        self.es["name"] = self.course["name"] if "name" in self.course else "na"
 
     def _key_words(self):
-        self.es["keywords"] = self._filteredKeyWords(self.courses["keywords"]) if "keywords" in self.courses else []
+        self.es["keywords"] = self._filteredKeyWords(self.course["keywords"]) if "keywords" in self.course else []
 
     def _key_coursetypes(self):
-        self.es["courseType"] = self._filteredCourseType(self.courses["keywords"]) if "keywords" in self.courses else []
+        self.es["courseType"] = self._filteredCourseType(self.course["keywords"]) if "keywords" in self.course else []
 
     def _key_language(self):
-        self.es["language"] = self._filteredLanguageType(self.courses["keywords"]) if "keywords" in self.courses else []
+        self.es["language"] = self._filteredLanguageType(self.course["keywords"]) if "keywords" in self.course else []
 
 
     def _description(self):
-        self.es["description"] = self.courses["details"] if "details" in self.courses else "na"
+        self.es["description"] = self.course["details"] if "details" in self.course else "na"
 
     def _status(self):
-        self.es["status"] = self.courses["status"] if "status" in self.courses else "na"
+        self.es["status"] = self.course["status"] if "status" in self.course else "na"
 
     def _localID(self):
-        self.es["localID"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra1"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra1"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra1"] \
+        self.es["localID"] = self.course["extra_fields"]["com.marketcircle.daylite/extra1"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra1"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra1"] \
             else "na"
 
     def _maxParticipants(self):
-        self.es["maxParticipants"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra2"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra2"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra2"] \
+        self.es["maxParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra2"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra2"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra2"] \
             else "na"
 
 
     def _minParticipants(self):
-        self.es["minParticipants"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra3"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra3"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra3"] \
+        self.es["minParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra3"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra3"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra3"] \
             else "na"
 
     def _price(self):
-        self.es["price"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra5"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra5"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra5"] \
+        self.es["price"] = self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra5"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra5"] \
             else "na"
 
 
     def _place(self):
-        self.es["place"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra6"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra6"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra6"] \
+        self.es["place"] = self.course["extra_fields"]["com.marketcircle.daylite/extra6"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra6"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra6"] \
             else "na"
 
     def _dates(self):
         #todo: hier Liste als default value??
-        self.es["dates"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra7"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra7"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra7"] \
+        self.es["dates"] = self.course["extra_fields"]["com.marketcircle.daylite/extra7"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra7"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra7"] \
             else "na"
 
     def _subtitle(self):
         #todo: hier Liste als default value??
-        self.es["subtitle"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra9"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra9"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra9"] \
+        self.es["subtitle"] = self.course["extra_fields"]["com.marketcircle.daylite/extra9"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra9"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra9"] \
             else "na"
 
     def _goals(self):
-        self.es["goals"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra11"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra11"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra11"] \
+        self.es["goals"] = self.course["extra_fields"]["com.marketcircle.daylite/extra11"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra11"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra11"] \
             else "na"
 
     def _targetAudience(self):
-        self.es["targetAudience"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra12"]["value"] if \
-            "extra_fields" in self.courses and "com.marketcircle.daylite/extra12"  in self.courses["extra_fields"] \
-            and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra12"] \
+        self.es["targetAudience"] = self.course["extra_fields"]["com.marketcircle.daylite/extra12"]["value"] if \
+            "extra_fields" in self.course and "com.marketcircle.daylite/extra12"  in self.course["extra_fields"] \
+            and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra12"] \
             else "na"
 
     def _beginDate(self):
 
         if self._check_holangebot() is False:
-            self.es["beginDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
-                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_1"  in self.courses["extra_fields"] \
-                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
+            self.es["beginDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
+                "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_1"  in self.course["extra_fields"] \
+                and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
                 else "na"
 
     def _endDate(self):
 
         if self._check_holangebot() is False:
-            self.es["endDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
-                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_2"  in self.courses["extra_fields"] \
-                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
+            self.es["endDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
+                "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_2"  in self.course["extra_fields"] \
+                and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
                 else "na"
 
     def _registrationDate(self):
 
         if self._check_holangebot() is False:
-            self.es["registrationDate"] = self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
-                "extra_fields" in self.courses and "com.marketcircle.daylite/extra_date_3"  in self.courses["extra_fields"] \
-                and "value" in self.courses["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
+            self.es["registrationDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
+                "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_3"  in self.course["extra_fields"] \
+                and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
                 else "na"
 
 
     def _organiser(self):
-        self.es["organiser"] = {'name': self.courses["companies"]["details"]["name"]} if \
-            "companies" in self.courses and "details"  in self.courses["companies"] \
-            and "name" in self.courses["cmpanies"]["details"] \
+        self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]} if \
+            "companies" in self.course and "details"  in self.course["companies"] \
+            and "name" in self.course["cmpanies"]["details"] \
             else {}
 
     def _filteredKeyWords(self, rawKeywordList):
@@ -172,7 +310,7 @@ class ZemESTransformation():
             'English': 'eng',
             'Espa\u00f1ol': 'spa',
             'Fran\u00e7ais': 'fre',
-            'Italiano': 'Italiano'
+            'Italiano': 'ita'
         }
 
         test = language_codes[language_value] if language_value in language_codes else language_value
@@ -183,7 +321,7 @@ class ZemESTransformation():
                         map(lambda fw: fw[3:],  filter(lambda v : self.first_2_digits_language.search(v),rawKeywordList))))
 
     def _get_keywords(self):
-        return self.courses["keywords"] if "keywords" in self.courses else []
+        return self.course["keywords"] if "keywords" in self.course else []
 
     def _check_holangebot(self):
         #rule: no dates if holangebot
