@@ -36,5 +36,5 @@ Logging:
 ES:
   #hosts: "sb-ues5.swissbib.unibas.ch:8080"
   hosts: "localhost:8080"
-  index: metisgym
+  index: zem
   active: True

@@ -182,7 +182,7 @@ class ZemESTransformation():
         self.es["provider"] = "ZEM" #always ZEM
 
     def _course_name(self):
-        self.es["name"] = self.course["name"] if "name" in self.course else "na"
+        self.es["name"] = self.course["name"] if "name" in self.course else "NA"
 
     def _key_words(self):
         self.es["keywords"] = self._filteredKeyWords(self.course["keywords"]) if "keywords" in self.course else []
@@ -195,68 +195,68 @@ class ZemESTransformation():
 
 
     def _description(self):
-        self.es["description"] = self.course["details"] if "details" in self.course else "na"
+        self.es["description"] = self.course["details"] if "details" in self.course else "NA"
 
     def _status(self):
-        self.es["status"] = self.course["status"] if "status" in self.course else "na"
+        self.es["status"] = self.course["status"] if "status" in self.course else "NA"
 
     def _localID(self):
         self.es["localID"] = self.course["extra_fields"]["com.marketcircle.daylite/extra1"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra1"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra1"] \
-            else "na"
+            else "NA"
 
     def _maxParticipants(self):
         self.es["maxParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra2"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra2"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra2"] \
-            else "na"
+            else "NA"
 
 
     def _minParticipants(self):
         self.es["minParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra3"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra3"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra3"] \
-            else "na"
+            else "NA"
 
     def _price(self):
         self.es["price"] = self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra5"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra5"] \
-            else "na"
+            else "NA"
 
 
     def _place(self):
         self.es["place"] = self.course["extra_fields"]["com.marketcircle.daylite/extra6"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra6"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra6"] \
-            else "na"
+            else "NA"
 
     def _dates(self):
         #todo: hier Liste als default value??
         self.es["dates"] = self.course["extra_fields"]["com.marketcircle.daylite/extra7"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra7"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra7"] \
-            else "na"
+            else "NA"
 
     def _subtitle(self):
         #todo: hier Liste als default value??
         self.es["subtitle"] = self.course["extra_fields"]["com.marketcircle.daylite/extra9"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra9"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra9"] \
-            else "na"
+            else "NA"
 
     def _goals(self):
         self.es["goals"] = self.course["extra_fields"]["com.marketcircle.daylite/extra11"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra11"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra11"] \
-            else "na"
+            else "NA"
 
     def _targetAudience(self):
         self.es["targetAudience"] = self.course["extra_fields"]["com.marketcircle.daylite/extra12"]["value"] if \
             "extra_fields" in self.course and "com.marketcircle.daylite/extra12"  in self.course["extra_fields"] \
             and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra12"] \
-            else "na"
+            else "NA"
 
     def _beginDate(self):
 
@@ -264,7 +264,7 @@ class ZemESTransformation():
             self.es["beginDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
                 "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_1"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
-                else "na"
+                else "NA"
 
     def _endDate(self):
 
@@ -272,7 +272,7 @@ class ZemESTransformation():
             self.es["endDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
                 "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_2"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
-                else "na"
+                else "NA"
 
     def _registrationDate(self):
 
@@ -280,7 +280,7 @@ class ZemESTransformation():
             self.es["registrationDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
                 "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_3"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
-                else "na"
+                else "NA"
 
 
     def _organiser(self):
