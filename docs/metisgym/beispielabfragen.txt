@@ -20,3 +20,12 @@ curl -XGET "http://localhost:8080/metisgym/_search" -H 'Content-Type: applicatio
     }
   }
 }'
+
+GET /_search
+{
+    "query": {
+        "exists": {
+            "field": "methods"
+        }
+    }
+}

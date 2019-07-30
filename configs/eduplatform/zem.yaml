@@ -3,10 +3,10 @@ AdminClient:
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
 EDU:
-  token: vCYY36w12j2UUr50D8lYb0QHQlCihD
+  token: Fcu6J7vK8IzlUOMHsMTqs57Xgfahpu
   timestampUTC: '2019-05-16T01:01:01Z'
   url: https://api.marketcircle.net
-  lastproject: 776077
+  lastproject: 862127
 
 Processing:
   Default:

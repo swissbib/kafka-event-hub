@@ -16,6 +16,7 @@ from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 from kafka_event_hub.config import EduConfig
 from kafka_event_hub.utility.producer_utility import current_timestamp
 from kafka_event_hub.config.config_utility import init_logging
+import itertools
 
 
 
@@ -56,6 +57,19 @@ class EduZemKafka(AbstractBaseProducer):
     def checkStopProcessing(self, project):
         return False
 
+    def process_methods_pricenote_in_form(self,form):
+        formprops =  json.loads(requests.get(self.base_url + form["form"], headers=self.headers).text)
+        methods = []
+        priceNote = None
+        if "values" in formprops:
+            for value in formprops["values"]:
+                if "name" in value and "values" in value and value["name"] == "Methoden (max. 3):":
+                    methods = value["values"]
+                if "name" in value and "value" in value and value["name"] == "Bemerkungen zur Teilnahmegeb\u00fchr:\n(max. 200 Zeichen)":
+                    priceNote = value["value"]
+
+
+        return (methods,priceNote)
 
     def getProjectId(self, url: str):
 
@@ -103,13 +117,30 @@ class EduZemKafka(AbstractBaseProducer):
 
 
                 fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
+                #Beispielprojekt mit pricenote
                 #fullproject = requests.get(self.base_url + "/v1/projects/997065",headers=self.headers)
+
                 fp = json.loads(fullproject.text)
+
+
+                if "forms" in fp:
+                    methods = []
+                    price_note = None
+                    for form in fp["forms"]:
+                        method_pricenote_tuple = self.process_methods_pricenote_in_form(form)
+                        methods.append(method_pricenote_tuple[0])
+                        price_note = method_pricenote_tuple[1]
+                    fp["course_methods"] =  list(itertools.chain(*methods))
+                    if not price_note is None:
+                        fp["price_note"] = price_note
 
 
                 if "companies" in fp:
                     for company in fp["companies"]:
                         company["details"] = self.processCompany(company)
+
+
+
 
 
                 if "contacts" in fp:

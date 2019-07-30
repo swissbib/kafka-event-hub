@@ -159,13 +159,13 @@ class ZemESTransformation():
 
 
     def _course_methods(self):
-        if "methods" in self.course:
-            self.es["methods"] = self.course["methods"]
+        if "course_methods" in self.course:
+            self.es["methods"] = self.course["course_methods"]
         #self.es["methods"] = self.course["methods"] if "methods" in self.course else []
 
     def _price_note(self):
-        if "priceNote" in self.course:
-            self.es["priceNote"] = self.course["priceNote"]
+        if "price_note" in self.course:
+            self.es["priceNote"] = self.course["price_note"]
         #self.es["priceNote"] = self.course["priceNote"] if "priceNote" in self.course else "NA"
 
     def _create_id(self):
