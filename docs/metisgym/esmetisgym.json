@@ -17,7 +17,7 @@
                 },
                 "goals" : {"type":  "text"},
                 "id":  {"type":  "keyword"},
-                "keywords": {"type": "text"},
+                "keywords": {"type": "keyword"},
                 "language": {"type":  "keyword"},
                 "localID" : {"type":  "keyword"},
                 "methods" : {"type":  "keyword"},

@@ -1,0 +1,22 @@
+curl -XGET "http://localhost:8080/metisgym/_search" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "nested": {
+      "path": "persons",
+      "query": {
+        "match": {
+          "persons.id": "30004"
+        }
+      }
+    }
+  }
+}'
+
+curl -XGET "http://localhost:8080/metisgym/_search" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "match": {
+      "keywords": "Kaderkurse"
+    }
+  }
+}'
