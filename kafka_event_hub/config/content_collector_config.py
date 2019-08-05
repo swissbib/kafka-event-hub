@@ -151,6 +151,17 @@ class EduConfig(ContentCollectorConfig):
         return None if self.configuration['EDU'].get('lastproject') is None \
             else self.configuration['EDU'].get('lastproject')
 
+    @property
+    def config_path_special_rep(self):
+        return self._config_path_rep
+
+    @property
+    def auth_file(self):
+        return self.configuration['EDU']['auth_file']
+
+    @property
+    def refresh_token_time(self):
+        return self.configuration['EDU']['time_to_refresh_token']
 
 
 

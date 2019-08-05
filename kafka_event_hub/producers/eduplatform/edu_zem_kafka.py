@@ -17,6 +17,9 @@ from kafka_event_hub.config import EduConfig
 from kafka_event_hub.utility.producer_utility import current_timestamp
 from kafka_event_hub.config.config_utility import init_logging
 import itertools
+import os
+import yaml
+from datetime import datetime
 
 
 
@@ -25,8 +28,8 @@ class EduZemKafka(AbstractBaseProducer):
 
     def __init__(self, configrep: str, configrepshare: str):
         AbstractBaseProducer.__init__(self,configrepshare, EduConfig, configrep)
+        self.refresh_access_token()
 
-        self.headers = {'Authorization': "Bearer  " + self.configuration.auth_token}
         self.base_url = self.configuration.base_url
         self.active = True
 
@@ -115,6 +118,7 @@ class EduZemKafka(AbstractBaseProducer):
                         ))
                         continue
 
+                self.check_valid_access_token()
 
                 fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
                 #Beispielprojekt mit pricenote
@@ -182,6 +186,48 @@ class EduZemKafka(AbstractBaseProducer):
             STARTTIME=current_timestamp()
         ))
 
+
+    def read_oauth2_credentials(self):
+
+        special_rep_path = os.path.dirname(self.configuration.config_path_special_rep)
+        self._auth_file = special_rep_path + os.sep + self.configuration.auth_file
+        try:
+            with open(self._auth_file, 'r') as fp:
+                self._auth_file_dic = yaml.load(fp)
+        except Exception:
+            self.source_logger.exception('The config file at %s could not be loaded!', self._auth_file)
+            raise Exception
+
+    def refresh_access_token(self):
+
+        self.refresh_timestamp = datetime.now()
+
+        self.read_oauth2_credentials()
+        response = requests.post(self._auth_file_dic['oauth2']['base_token_url'],
+                                 data={'client_secret': self._auth_file_dic['oauth2']['client_secret'],
+                                       'grant_type': 'refresh_token',
+                                       'refresh_token': self._auth_file_dic['oauth2']['refresh_token'],
+                                       'client_id': self._auth_file_dic['oauth2']['client_id'],
+                                       })
+
+        if response is None or not response.ok:
+            self.source_logger.exception('error refreshing access_token')
+            raise Exception("error refreshing access_token")
+
+        json_data = json.loads(response.text)
+        self.headers = {'Authorization': "Bearer  " + json_data["access_token"]}
+        self._auth_file_dic['oauth2']['refresh_token'] = json_data["refresh_token"]
+
+        with open(self._auth_file, 'w') as fp:
+            yaml.dump(self._auth_file_dic, fp, default_flow_style=False)
+
+    def check_valid_access_token(self):
+
+        time_to_refresh = datetime.now()
+        delta = time_to_refresh - self.refresh_timestamp
+        if delta.total_seconds() > int(self.configuration.refresh_token_time):
+            self.source_logger_summary.info("refreshing access token")
+            self.refresh_access_token()
 
 
 if __name__ == '__main__':

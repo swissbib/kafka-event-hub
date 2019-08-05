@@ -5,7 +5,7 @@ curl -XGET "http://localhost:8080/metisgym/_search" -H 'Content-Type: applicatio
       "path": "persons",
       "query": {
         "match": {
-          "persons.id": "30004"
+          "persons.name": "Widrig"
         }
       }
     }

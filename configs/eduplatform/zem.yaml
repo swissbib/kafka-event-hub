@@ -6,7 +6,9 @@ EDU:
   token: Fcu6J7vK8IzlUOMHsMTqs57Xgfahpu
   timestampUTC: '2019-05-16T01:01:01Z'
   url: https://api.marketcircle.net
-  lastproject: 862127
+  auth_file: zem_auth.yaml
+  time_to_refresh_token: 2500
+  #lastproject: 862127
 
 Processing:
   Default:
@@ -15,10 +17,10 @@ Producer:
   client_id: edu-zem-producer
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
-Topics: cc-zem
+Topics: cc-zemall1
 
 Topic:
-  name: cc-zem
+  name: cc-zemall1
 
 Consumer:
   #bootstrap_servers: sb-uka3:9092,sb-uka4:9092,sb-uka5:9092,sb-uka6:9092

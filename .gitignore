@@ -19,3 +19,4 @@ MANIFEST
 .python-version
 
 zemdaten
+*/**/*_auth.yaml
