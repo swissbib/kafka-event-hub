@@ -21,6 +21,7 @@
                 "language": {"type":  "keyword"},
                 "localID" : {"type":  "keyword"},
                 "methods" : {"type":  "keyword"},
+                "note" : {"type":  "text"},
                 "maxParticipants" : {"type":  "keyword"},
                 "minParticipants" : {"type":  "keyword"},
                 "organiser" : {
