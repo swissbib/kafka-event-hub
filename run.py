@@ -1,6 +1,6 @@
 
 import argparse
-from kafka_event_hub.producers import OAIProducerKafka, FilePushNebisKafka, WebDavReroKafka, EduZemKafka
+from kafka_event_hub.producers import OAIProducerKafka, FilePushNebisKafka, WebDavReroKafka, EduZemKafka, EduEventoKafka
 from kafka_event_hub.consumers import ZemConsumer
 
 

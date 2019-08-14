@@ -1,0 +1,42 @@
+AdminClient:
+  client_id: edu-admin-evento-producer
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+
+EDU:
+  token: Fcu6J7vK8IzlUOMHsMTqs57Xgfahpu
+  timestampUTC: '2019-05-16T01:01:01Z'
+  url: https://api.marketcircle.net
+  auth_file: evento_auth.yaml
+  time_to_refresh_token: 10000
+  #lastproject: 862127
+
+Processing:
+  Default:
+    stoppageTime: '2019-01-20T12:55:24Z'
+Producer:
+  client_id: edu-evento-producer
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+
+Topics: cc-evento
+
+Topic:
+  name: cc-evento
+
+Consumer:
+  #bootstrap_servers: sb-uka3:9092,sb-uka4:9092,sb-uka5:9092,sb-uka6:9092
+  bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
+  client_id: zem_consumer_clie
+  auto_offset_reset: earliest
+  consumer_timeout_ms: 10000
+
+Logging:
+  name: default-cc-not-used
+  path: /basedir/logs/times.log
+  errpath: /basedir/logs/error.log
+  config: /basedir/configs/logs/cc.config.yaml
+
+ES:
+  #hosts: "sb-ues5.swissbib.unibas.ch:8080"
+  hosts: "localhost:8080"
+  index: metisgym
+  active: True

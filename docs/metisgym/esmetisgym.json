@@ -41,7 +41,8 @@
                         },
                         "id": {"type": "keyword"},
                         "name": {"type": "text"},
-                        "role": {"type": "keyword"}
+                        "role": {"type": "keyword"},
+                        "swissbiburl": {"type": "keyword"}
                     }
                 },
                 "place" : {"type":  "text"},
