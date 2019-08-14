@@ -1,3 +1,10 @@
+advanced use of requests
+
+https://2.python-requests.org/en/master/user/advanced/
+
+Starten des zem scripts
+run.py --type=EduZemKafka --sharedconfig=configs/share/edu.share.yaml   configs/eduplatform/zem.yaml
+
 
 Python
 the hitchhicker guide to python

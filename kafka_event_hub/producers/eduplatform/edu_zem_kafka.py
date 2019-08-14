@@ -11,6 +11,7 @@ __description__ = """
                     """
 
 import requests
+
 import json
 from kafka_event_hub.producers.base_producer import AbstractBaseProducer
 from kafka_event_hub.config import EduConfig
@@ -20,6 +21,8 @@ import itertools
 import os
 import yaml
 from datetime import datetime
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 
 
@@ -44,7 +47,8 @@ class EduZemKafka(AbstractBaseProducer):
 
     def processCompany(self, company):
 
-        jsonCompany = json.loads(requests.get(self.base_url + company["company"], headers=self.headers).text)
+        jsonCompany = self.make_repository_request(company["company"])
+        #jsonCompany = json.loads(requests.get(self.base_url + company["company"], headers=self.headers).text)
         privacyCompany = {}
 
         privacyCompany["addresses"] = jsonCompany["addresses"] if "addresses" in jsonCompany else []
@@ -61,7 +65,8 @@ class EduZemKafka(AbstractBaseProducer):
         return False
 
     def process_methods_pricenote_in_form(self,form):
-        formprops =  json.loads(requests.get(self.base_url + form["form"], headers=self.headers).text)
+
+        formprops =  self.make_repository_request(form["form"])
         methods = []
         priceNote = None
         if "values" in formprops:
@@ -120,11 +125,11 @@ class EduZemKafka(AbstractBaseProducer):
 
                 self.check_valid_access_token()
 
-                fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
+                #fullproject = requests.get(self.base_url + project["self"],headers=self.headers)
                 #Beispielprojekt mit pricenote
                 #fullproject = requests.get(self.base_url + "/v1/projects/997065",headers=self.headers)
 
-                fp = json.loads(fullproject.text)
+                fp = self.make_repository_request(project["self"])
 
 
                 if "forms" in fp:
@@ -149,7 +154,8 @@ class EduZemKafka(AbstractBaseProducer):
 
                 if "contacts" in fp:
                     for contact in fp["contacts"]:
-                        jsonContactDetails = json.loads(requests.get(self.base_url + contact["contact"], headers=self.headers).text)
+                        jsonContactDetails = self.make_repository_request(contact["contact"])
+                        #jsonContactDetails = json.loads(requests.get(self.base_url + contact["contact"], headers=self.headers).text)
                         privacyContact = {}
                         privacyContact["prefix"] = jsonContactDetails["prefix"] if "prefix" in jsonContactDetails else "na"
                         privacyContact["first_name"] = jsonContactDetails["first_name"] if "first_name" in jsonContactDetails else "na"
@@ -228,6 +234,61 @@ class EduZemKafka(AbstractBaseProducer):
         if delta.total_seconds() > int(self.configuration.refresh_token_time):
             self.source_logger_summary.info("refreshing access token")
             self.refresh_access_token()
+
+    def make_repository_request(self, query_parameter,
+                                retries=3,
+                                backoff_factor=0.3,
+                                status_forcelist=(500, 502, 504),
+                                session=None,):
+        #https://www.peterbe.com/plog/best-practice-with-retries-with-requests
+
+        self.source_logger_summary.info("fetch: " + query_parameter + " " + str(datetime.now()))
+        session = session or requests.Session()
+        retry = Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=status_forcelist,
+
+        )
+        adapter = HTTPAdapter(max_retries=retry)
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+
+        #json_response = None
+        #i = 0
+        #while (i < 3):
+        #    try:
+        #        response = session.get(
+        #            self.base_url + query_parameter, headers=self.headers
+        #        )
+        #        if not response is None and response.ok:
+        #            break
+        #    except Exception as exc:
+        #        self.source_logger.exception("error trying to fetch content" + str(exc))
+        #        i += 1
+        #
+        #if not response is None and response.ok:
+        #    return json.loads(response.text)
+        #else:
+        #    self.source_logger.exception("definitely not able to fetch content")
+        #    raise Exception("definitely not able to fetch content")
+
+
+        response = session.get(
+            self.base_url + query_parameter, headers=self.headers
+        )
+
+        self.source_logger_summary.info("ready fetch: " + query_parameter + " " + str(datetime.now()))
+
+        return json.loads(response.text)
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

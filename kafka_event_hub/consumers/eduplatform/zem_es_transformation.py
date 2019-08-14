@@ -83,7 +83,7 @@ class ZemESTransformation():
         if "beginDate" in self.es:
             fullrecord["beginDate"] = self.es["beginDate"]
         #fullrecord["category"]
-        fullrecord["speakers"] = self.es["persons"]
+        fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
         if "name" in self.es:
             fullrecord["coursename"] = self.es["name"]
         #fullrecord["coursename"] = self.es["name"] if "name" in self.es else "NA"
