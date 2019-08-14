@@ -45,6 +45,18 @@
                         "swissbiburl": {"type": "keyword"}
                     }
                 },
+                "keywordsurl": {
+                    "type": "nested",
+                    "properties": {
+                        "keyword": {"type":  "keyword",
+                                    "index": false
+                        },
+                        "url": {"type":  "keyword",
+                                "index": false
+                        }
+                    }
+                },
+
                 "place" : {"type":  "text"},
                 "price" : {"type":  "float"},
                 "priceNote": {"type":  "text"},

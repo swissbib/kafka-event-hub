@@ -21,6 +21,7 @@ class ZemConsumer(AbstractBaseConsumer):
         zemcourse = json.loads(message)
 
         transformations = ZemESTransformation(zemcourse)
+        transformations.set_configuration(self.configuration.configuration)
         transformations.make_structure()
         result = transformations.es_structure
 

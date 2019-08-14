@@ -164,6 +164,17 @@ class EduConfig(ContentCollectorConfig):
         return self.configuration['EDU']['time_to_refresh_token']
 
 
+    @property
+    def persons_to_enrich(self):
+        return self.configuration['Transformations']['enrich_persons'] \
+            if 'Transformations' in self.configuration \
+               and 'enrich_persons' in self.configuration['Transformations'] else None
+
+    @property
+    def keywords_to_enrich(self):
+        return self.configuration['Transformations']['keywords'] \
+            if 'Transformations' in self.configuration \
+               and 'keywords' in self.configuration['Transformations'] else None
 
 
 class FileNebisScpConfig(ContentCollectorConfig):

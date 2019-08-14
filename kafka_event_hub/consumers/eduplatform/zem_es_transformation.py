@@ -6,6 +6,8 @@ import json
 class ZemESTransformation():
 
     def __init__(self, course : dict):
+
+        self._configuration = None
         self.course = course
         self.es = {}
         self.first_2_digits_keywords = re.compile('^\d\d', re.UNICODE | re.DOTALL | re.IGNORECASE)
@@ -43,6 +45,8 @@ class ZemESTransformation():
             "Course \u00e0 la carte": "Hol-Angebot"
         }
 
+    def set_configuration(self, value):
+        self._configuration = value
 
     @property
     def es_structure(self):
@@ -104,6 +108,10 @@ class ZemESTransformation():
         #fullrecord["goals"] = self.es["goals"] if "goals" in self.es else "NA"
         if "keywords" in self.es:
             fullrecord["keywords"] = self.es["keywords"]
+            enriched_keywords = self._check_keywords_url(self.es["keywords"])
+            if len(enriched_keywords) > 0:
+                fullrecord["keywordsurl"] = enriched_keywords
+
         #fullrecord["keywords"] = self.es["keywords"] if "keywords" in self.es else []
         if "language" in self.es:
             fullrecord["language"] = self.es["language"]
@@ -190,14 +198,34 @@ class ZemESTransformation():
             last_name = rc["details"]["last_name"] if "last_name" in rc["details"] else ""
             first_name = rc["details"]["first_name"] if "first_name" in rc["details"] else ""
             contact["name"] = last_name + ", " + first_name
-            projectid = rc["contact"] if "contact" in rc else hashlib.sha1(contact["name"].encode('utf-8')).hexdigest()
-            contact["id"] = projectid[projectid.rfind("/") + 1:]
+            if "contact" in rc:
+                contact["id"] = self._get_id_from_resource(rc["contact"])
+            else:
+                contact["id"] = hashlib.sha1(contact["name"].encode('utf-8')).hexdigest()
+
+            if contact["id"] in self._get_ids_persons_to_enrich():
+                contact["swissbiburl"] = list(map(lambda kw: kw[contact["id"]]["url"], filter(lambda dict: list(dict.keys())[0] == contact["id"],
+                                                           self._configuration["Transformations"]["enrich_persons"])))[0]
+
+
             contact["role"] = rc["role"]
             if "companies" in rc["details"] and type(rc["details"]["companies"] is list):
                 contact["companies"] =  list(map(lambda rel_company: self._prepare_company_of_relevant_contact(rel_company) ,
                                               filter(lambda company: self._filter_relevant_company(company),
                                                  rc["details"]["companies"])))
         return contact
+
+    def _get_id_from_resource(self,resourcelink):
+        return resourcelink[resourcelink.rfind("/") + 1:]
+
+    def _get_ids_persons_to_enrich(self):
+
+        return list(map(lambda ep: str(list( ep.keys())[0]), self._configuration["Transformations"]["enrich_persons"])) \
+            if self._configuration is not None \
+            and "Transformations" in self._configuration \
+            and "enrich_persons" in self._configuration["Transformations"] else []
+
+
 
     def _prepare_relevant_contact_fullrecord(self, rc):
         contact = {}
@@ -216,6 +244,13 @@ class ZemESTransformation():
             #contact["birthdate"] = rc["details"]["birthdate"] if "birthdate" in rc["details"] else "NA"
             if "birthdate" in rc["details"]:
                 contact["birthdate"] = rc["details"]["birthdate"]
+
+            contactid = self._get_id_from_resource(rc["contact"])
+            if  contactid in self._get_ids_persons_to_enrich():
+                contact["swissbiburl"] = list(map(lambda kw: kw[contactid]["url"], filter(lambda dict: list(dict.keys())[0] == contactid,
+                                                           self._configuration["Transformations"]["enrich_persons"])))[0]
+
+
 
             #projectid = rc["contact"] if "contact" in rc else hashlib.sha1(
             #    contact["name"].encode('utf-8')).hexdigest()
@@ -276,6 +311,26 @@ class ZemESTransformation():
         if "keywords" in self.course:
             #self.es["keywords"] = self._filteredKeyWords(self.course["keywords"]) if "keywords" in self.course else []
             self.es["keywords"] = self._filteredKeyWords(self.course["keywords"])
+            enriched_keywords = self._check_keywords_url(self.es["keywords"])
+            if len(enriched_keywords) > 0:
+                self.es["keywordsurl"] = enriched_keywords
+
+    def _check_keywords_url(self, keywords):
+        enriched_keywords = []
+        if self._configuration is not None and "Transformations" in self._configuration  \
+            and "keywords" in self._configuration["Transformations"]:
+            for dict in self._configuration["Transformations"]["keywords"]:
+                key = list(dict.keys())[0]
+                if key in keywords:
+                    enriched_keywords.append(
+                        {
+                            "keyword" : key,
+                            "url": list(map(lambda kw: kw[key]["url"],  filter(lambda dict: list(dict.keys())[0] == key,
+                                          self._configuration["Transformations"]["keywords"])))[0]
+                        }
+                    )
+        return enriched_keywords
+
 
     def _key_coursetypes(self):
         if "keywords" in self.course:

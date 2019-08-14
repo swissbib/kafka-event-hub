@@ -38,5 +38,18 @@ Logging:
 ES:
   #hosts: "sb-ues5.swissbib.unibas.ch:8080"
   hosts: "localhost:8080"
-  index: metisgym
+  index: metisgym2
   active: True
+
+
+Transformations:
+  enrich_persons:
+    - 19402000:
+        url: https://www.swissbib.ch/Search/Results?lookfor=%22Langenegger,%20Andr%C3%A9%22&type=Author
+    - 24047000:
+        url: https://www.swissbib.ch/Search/Results?lookfor=%22Capaul,%20Roman%22&type=Author
+  keywords:
+    - Kaderkurse:
+        url: https://www.swissbib.ch/Search/Results?join=AND&bool0%5B%5D=OR&lookfor0%5B%5D=schulleitung&lookfor0%5B%5D=schulverwaltung&lookfor0%5B%5D=schulorganisation&lookfor0%5B%5D=schulentwicklung&lookfor0%5B%5D=schulleiter&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&sortControlElement=sortControlElement&sort=publishDateSort+desc
+    - 'Wirtschaft und Recht':
+        url: https://www.swissbib.ch/Search/Results?sort=relevance&advancedSearchFormRequest=advancedSearchFormRequest&join=OR&bool0[]=OR&lookfor0[]=wirtschaftslehre&type0[]=Subject&lookfor0[]=rechtskundeunterricht&type0[]=Subject&lookfor0[]=rechtserziehung&type0[]=Subject&lookfor0[]=Wirtschafts-+und+Rechtslehre&type0[]=Subject&bool1[]=AND&lookfor1[]=wirtschaft&type1[]=Subject&lookfor1[]=Lehrmittel&type1[]=Subject&bool2[]=AND&lookfor2[]=wirtschaft&type2[]=Subject&lookfor2[]=lehrbuch&type2[]=Subject&lookfor2[]=&type2[]=AllFields&bool3[]=AND&lookfor3[]=wirtschaft&type3[]=Subject&lookfor3[]=schulbuch&type3[]=Subject
