@@ -2,3 +2,6 @@ from kafka_event_hub.consumers.elastic.elastic_consumers import BulkElasticConsu
 from kafka_event_hub.consumers.simple.simple_consumer import SimpleConsumer
 from kafka_event_hub.consumers.eduplatform.zem_consumer import ZemConsumer
 from kafka_event_hub.consumers.eduplatform.zem_es_transformation import ZemESTransformation
+
+from kafka_event_hub.consumers.eduplatform.evento_consumer import EventoConsumer
+from kafka_event_hub.consumers.eduplatform.evento_es_transformation import EventoESTransformation
