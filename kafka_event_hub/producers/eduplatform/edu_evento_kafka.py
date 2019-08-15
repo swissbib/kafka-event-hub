@@ -105,26 +105,52 @@ class EduEventoKafka(AbstractBaseProducer):
         all_events_locations = self.make_repository_request(self.url_all_event_locations)
         all_lessons_of_events = self.make_repository_request(self.lessons_of_event)
 
-        all = {}
-        all["all_events"] = all_events
-        all["all_events_texts"] = all_events_texts
-        all["all_events_locations"] = all_events_locations
-        all["all_lessons_of_events"] = all_lessons_of_events
 
 
-        evento_out = open("evento_content.json","w")
-        evento_out.write(json.dumps(all))
 
-        evento_out.close()
+        #all = {}
+        #all["all_events"] = all_events
+        #all["all_events_texts"] = all_events_texts
+        #all["all_events_locations"] = all_events_locations
+        #all["all_lessons_of_events"] = all_lessons_of_events
 
 
-        #self.send(key="4711".encode('utf8'),
-        #          message=json.dumps(all_events).encode('utf8'))
+        #todo: bis jetzt kein check, ob die referenzen in den abhängigen Objekten überhaupt vorhanden sind!!
+        filtered_dict_events_as_list = list(map(lambda fe: {str(fe['Id']): fe},  filter(lambda e: e['Id'] != 2, all_events)))
+        all_events_dict = {}
+        for single_dict in filtered_dict_events_as_list:
+            key = str(list(single_dict.keys())[0])
+            all_events_dict[key] = single_dict[key]
+            all_events_dict[key]['event_texts'] = []
+            all_events_dict[key]['event_locations'] = []
+            all_events_dict[key]['lessons_of_event'] = []
+
+        for single_event_text in all_events_texts:
+            all_events_dict[str(single_event_text['EventId'])]['event_texts'].append(single_event_text)
+
+        for single_event_location in all_events_locations:
+            all_events_dict[str(single_event_location['EventId'])]['event_locations'].append(single_event_location)
+
+        for single_lesson_of_event in all_lessons_of_events:
+            all_events_dict[str(single_lesson_of_event['EventId'])]['lessons_of_event'].append(single_lesson_of_event)
+
+
+        #evento_out = open("evento_content.json","w")
+        #evento_out.write(json.dumps(all))
+
+        #evento_out.close()
+
+        for key, evento_course in all_events_dict.items():
+            self.send(key=key.encode('utf8'),
+                      message=json.dumps(evento_course).encode('utf8'))
+
 
         self.source_logger_summary.info('\n\n\n\nFinished Edu zem {SOURCE} {STARTTIME}'.format(
             SOURCE=self._shortcut_source_name,
             STARTTIME=current_timestamp()
         ))
+
+
 
 
     def read_oauth2_credentials(self):

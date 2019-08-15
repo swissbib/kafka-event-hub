@@ -43,10 +43,11 @@ ES:
 
 Transformations:
   enrich_persons:
-    - '19402000':
-        url: https://www.swissbib.ch/Search/Results?lookfor=%22Langenegger,%20Andr%C3%A9%22&type=Author
     - '24047000':
+        url: https://www.swissbib.ch/Search/Results?lookfor=%22Langenegger,%20Andr%C3%A9%22&type=Author
+    - '19402000':
         url: https://www.swissbib.ch/Search/Results?lookfor=%22Capaul,%20Roman%22&type=Author
+
   keywords:
     - Kaderkurse:
         url: https://www.swissbib.ch/Search/Results?join=AND&bool0%5B%5D=OR&lookfor0%5B%5D=schulleitung&lookfor0%5B%5D=schulverwaltung&lookfor0%5B%5D=schulorganisation&lookfor0%5B%5D=schulentwicklung&lookfor0%5B%5D=schulleiter&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&type0%5B%5D=Subject&sortControlElement=sortControlElement&sort=publishDateSort+desc
