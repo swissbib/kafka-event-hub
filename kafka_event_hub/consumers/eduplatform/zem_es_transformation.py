@@ -129,6 +129,11 @@ class ZemESTransformation():
         if "minParticipants" in self.es:
             fullrecord["minParticipants"] = self.es["minParticipants"]
         #fullrecord["minParticipants"] = self.es["minParticipants"] if "minParticipants" in self.es else "NA"
+
+        if "note" in self.es:
+            fullrecord["note"] = self.es["note"]
+
+
         if "organiser" in self.es:
             fullrecord["organiser"] = self.es["organiser"]
         #fullrecord["organiser"] = self.es["organiser"] if "organiser" in self.es else {}
