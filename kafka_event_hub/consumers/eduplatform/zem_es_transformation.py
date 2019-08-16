@@ -79,6 +79,7 @@ class ZemESTransformation():
         self._contacts()
         self._create_id()
         self._create_full_document()
+        self._note()
 
 
 
@@ -401,6 +402,11 @@ class ZemESTransformation():
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra6"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra6"] \
             #     else "NA"
+
+    def _note(self):
+        #by now not used for zem only evento
+        pass
+
 
     def _dates(self):
         #todo: hier Liste als default value??
