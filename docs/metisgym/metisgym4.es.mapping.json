@@ -1,0 +1,154 @@
+{
+  "metisgym3" : {
+    "mappings" : {
+      "properties" : {
+        "beginDate" : {
+          "type" : "date"
+        },
+        "courseType" : {
+          "type" : "keyword"
+        },
+        "dates" : {
+          "type" : "text"
+        },
+        "description" : {
+          "type" : "text"
+        },
+        "endDate" : {
+          "type" : "date"
+        },
+        "fulldocument" : {
+          "type" : "keyword",
+          "index" : false
+        },
+        "goals" : {
+          "type" : "text"
+        },
+        "id" : {
+          "type" : "keyword"
+        },
+        "instructorsNote" : {
+          "type" : "text"
+        },
+        "keywords" : {
+          "type" : "keyword"
+        },
+        "keywordsurl" : {
+          "type" : "nested",
+          "properties" : {
+            "keyword" : {
+              "type" : "keyword",
+              "index" : false
+            },
+            "url" : {
+              "type" : "keyword",
+              "index" : false
+            }
+          }
+        },
+        "language" : {
+          "type" : "keyword"
+        },
+        "localID" : {
+          "type" : "keyword"
+        },
+        "maxParticipants" : {
+          "type" : "keyword"
+        },
+        "methods" : {
+          "type" : "keyword"
+        },
+        "minParticipants" : {
+          "type" : "keyword"
+        },
+        "name" : {
+          "type" : "text"
+        },
+        "note" : {
+          "type" : "text"
+        },
+        "organiser" : {
+          "type" : "nested",
+          "properties" : {
+            "name" : {
+              "type" : "keyword"
+            }
+          }
+        },
+        "persons" : {
+          "type" : "nested",
+          "properties" : {
+            "companies" : {
+              "type" : "nested",
+              "properties" : {
+                "name" : {
+                  "type" : "text"
+                },
+                "title" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                }
+              }
+            },
+            "id" : {
+              "type" : "keyword"
+            },
+            "lastName" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "name" : {
+              "type" : "text"
+            },
+            "role" : {
+              "type" : "keyword"
+            },
+            "swissbiburl" : {
+              "type" : "keyword"
+            }
+          }
+        },
+        "place" : {
+          "type" : "text"
+        },
+        "price" : {
+          "type" : "float"
+        },
+        "priceNote" : {
+          "type" : "text"
+        },
+        "provider" : {
+          "type" : "keyword"
+        },
+        "registrationDate" : {
+          "type" : "date"
+        },
+        "registrationInfo" : {
+          "type" : "text"
+        },
+        "requirements" : {
+          "type" : "text"
+        },
+        "status" : {
+          "type" : "keyword"
+        },
+        "subtitle" : {
+          "type" : "text"
+        },
+        "targetAudience" : {
+          "type" : "text"
+        }
+      }
+    }
+  }
+}

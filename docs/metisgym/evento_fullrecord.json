@@ -1,0 +1,77 @@
+"properties": {
+      "beginDate" //aus all-events.DateFrom
+      "category"
+      "coursename" //aus all-events.Designation
+      "courseType" // aus all-events.AreaOfEducation und all-events.EventCategory und all-events.EventLevel und aus all-events.EventType
+      "dates" //aus all-events.DateString
+      "description" //aus all_events_texts.Value, wenn Type = Memo und Number = 1
+      "endDate" //aus all_events.DateTo
+      "goals" //aus all_events_texts.Value, wenn Type = Memo und Number = 2
+      "keywords"
+      "language" //aus all_events.LanguageOfInstruction (ist in den beiden Testsätzen null)
+      "localID" //aus all_events.Number
+      "methods" //aus all_events_texts.Value, wenn Type = Memo und Number = 5
+      "maxParticipants" //aus all_events.MaxParticipants
+      "minParticipants" //aus all_events.MinParticipants
+      "note" //aus all_events_texts.Value, wenn Type = Memo und Number = 7
+      "organiser" : {
+          "properties": {
+               "name"
+               "street"
+               "city"
+               "postalcode"
+               "url"
+          }
+      },
+      "speakers": {
+          "properties": {
+              "companies": {
+                  "properties": {
+                      "name"
+                      "street"
+                      "city"
+                      "postalcode"
+                      "url"
+                      "title"
+
+                  }
+              },
+              "firstName"
+              "lastName"
+              "phone"
+              "email"
+          }
+      },
+      "instructors": {
+          "properties": {
+              "companies": {
+                  "properties": {
+                      "name"
+                      "street"
+                      "city"
+                      "postalcode"
+                      "url"
+                      "title"
+
+                  }
+              },
+              "firstName"
+              "lastName"
+              "phone"
+              "email"
+              "birthdate"
+          }
+      },
+      "instructorsNote" //aus all_events.Leadership
+      "place" //aus all_events.Location
+      "price" //aus all_events.Price
+      "priceNote"
+      "provider" // nicht aus den Daten, immer Test für die evento Daten
+      "registrationDate" //aus all_events.SubscriptionDateTo
+      "registrationInfo" //aus all_events_texts.Value, wenn Type = Memo und Number = 6
+      "requirements" //aus all_events_texts.Value, wenn Type = Memo und Number = 4
+      "started"
+      "status" //aus all_events.Status
+      "subtitle"
+      "targetAudience" //aus all_events_texts.Value,  wenn Type = Memo und Number = 3
+}
