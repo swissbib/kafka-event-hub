@@ -23,19 +23,22 @@ class EventoESTransformation():
         self._dates()
         self._description()
         self._endDate()
-
+        self._goals()
+        self._instructorsNote()
         self._key_language()
         self._localID()
         self._maxParticipants()
         self._minParticipants()
+        self._methods()
         self._note()
         self._place()
         self._price()
         self._provider()
         self._registrationDate()
+        self._registrationInfo()
+        self._requirements()
         self._status()
         self._targetAudience()
-        self._contacts()
 
         self._create_full_document()
 
@@ -59,7 +62,7 @@ class EventoESTransformation():
 
     def _beginDate(self):
         #Silvia: aus all-events.DateFrom
-        if "DateFrom" in self.course:
+        if "DateFrom" in self.course and self.course["DateFrom"] is not None:
             self.es["beginDate"] = self.course["DateFrom"]
 
     def _key_coursetypes(self):
@@ -80,9 +83,17 @@ class EventoESTransformation():
         self.es["courseType"] = coursetypes
 
     def _dates(self):
-        #Silvia: aus all-events.DateString
+        #Silvia: aus all-events.DateString und all-events.TimeFrom und all-events.TimeTo
+        dates = []
         if "DateString" in self.course:
-            self.es["dates"] = self.course["DateString"]
+            dates.append(self.course["DateString"])
+        if "TimeFrom" in self.course and self.course["TimeFrom"] is not None:
+            dates.append(self.course["TimeFrom"])
+        if "TimeTo" in self.course and self.course["TimeTo"] is not None:
+            dates.append(self.course["TimeTo"])
+
+        self.es["dates"] = dates
+
 
     def _description(self):
         #Silvia: aus all_events_texts.Value, wenn Type = Memo und Number = 1
@@ -106,15 +117,34 @@ class EventoESTransformation():
 
     def _endDate(self):
         #Silvia: aus all_events.DateTo
-        if "DateTo" in self.course:
+        if "DateTo" in self.course and self.course["DateTo"] is not None:
             self.es["endDate"] = self.course["DateTo"]
+
+    def _goals(self):
+        # aus all_events_texts.Value,  wenn Type = Memo und Number = 2
+        if "event_texts" in self.course:
+            # todo
+            # same question as for _description.
+            # we have to check what to do in the future
+
+            all_goals = "  / ".join(list(map(lambda etd: etd['Value'],
+                                               filter(lambda event_text_dict:
+                                                      event_text_dict['Type'] == 'Memo'
+                                                      and event_text_dict['Number'] == 2, self.course["event_texts"]))))
+
+            self.es["goals"] = all_goals
+
+    def _instructorsNote(self):
+        #aus all_events.Leadership
+        if "Leadership" in self.course and self.course["Leadership"] is not None:
+            self.es["instructorsNote"] = self.course["Leadership"]
 
     def _key_language(self):
         #Silvia: aus all_events.LanguageOfInstruction (ist in den beiden Testsätzen null)
         if "LanguageOfInstruction" in self.course and self.course["LanguageOfInstruction"] is not None:
             self.es["language"] = self.course["LanguageOfInstruction"]
         else:
-            self.es["language"] = "de" #just a default value
+            self.es["language"] = "ger" #just a default value
 
     def _localID(self):
         #aus all_events.Number
@@ -131,8 +161,23 @@ class EventoESTransformation():
         if "MinParticipants" in self.course:
             self.es["minParticipants"] = self.course["MinParticipants"]
 
+    def _methods(self):
+        #aus all_events_texts.Value,  wenn Type = Memo und Number = 5
+        if "event_texts" in self.course:
+
+            #todo
+            #same question as for _description.
+            #we have to check what to do in the future
+
+            all_methods =  "  / ".join(  list(map(lambda etd: etd['Value'],
+                                        filter(lambda event_text_dict:
+                                               event_text_dict['Type'] == 'Memo'
+                                               and event_text_dict['Number'] == 5, self.course["event_texts"]))))
+
+            self.es["methods"] = all_methods
+
     def _note(self):
-        #aus all_events_texts.Value, wenn Type = Memo und Number = 3
+        #aus all_events_texts.Value, wenn Type = Memo und Number = 7
         if "event_texts" in self.course:
 
             #todo
@@ -142,19 +187,19 @@ class EventoESTransformation():
             all_notes =  "  / ".join(  list(map(lambda etd: etd['Value'],
                                         filter(lambda event_text_dict:
                                                event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 3, self.course["event_texts"]))))
+                                               and event_text_dict['Number'] == 7, self.course["event_texts"]))))
 
             self.es["note"] = all_notes
 
     def _place(self):
         #aus all_events.Location
-        if "Location" in self.course:
+        if "Location" in self.course and self.course["Location"] is not None:
             self.es["place"] = self.course["Location"]
 
 
     def _price(self):
         #aus all_events.Price
-        if "Price" in self.course:
+        if "Price" in self.course and self.course["Price"] is not None:
             self.es["price"] = self.course["Price"]
 
     def _provider(self):
@@ -162,8 +207,38 @@ class EventoESTransformation():
 
     def _registrationDate(self):
         #aus all_events.SubscriptionDateTo
-        if "SubscriptionDateTo" in self.course:
+        if "SubscriptionDateTo" in self.course and self.course["SubscriptionDateTo"] is not None:
             self.es["registrationDate"] = self.course["SubscriptionDateTo"]
+
+    def _registrationInfo(self):
+        #aus all_events_texts.Value,  wenn Type = Memo und Number = 6
+        if "event_texts" in self.course:
+
+            #todo
+            #same question as for _description.
+            #we have to check what to do in the future
+
+            all_registrationInfo =  "  / ".join(  list(map(lambda etd: etd['Value'],
+                                        filter(lambda event_text_dict:
+                                               event_text_dict['Type'] == 'Memo'
+                                               and event_text_dict['Number'] == 6, self.course["event_texts"]))))
+
+            self.es["registrationInfo"] = all_registrationInfo
+
+    def _requirements(self):
+        #aus all_events_texts.Value,  wenn Type = Memo und Number = 4
+        if "event_texts" in self.course:
+
+            #todo
+            #same question as for _description.
+            #we have to check what to do in the future
+
+            all_requirements =  "  / ".join(  list(map(lambda etd: etd['Value'],
+                                        filter(lambda event_text_dict:
+                                               event_text_dict['Type'] == 'Memo'
+                                               and event_text_dict['Number'] == 4, self.course["event_texts"]))))
+
+            self.es["requirements"] = all_requirements
 
     def _status(self):
         #aus all_events.Status
@@ -172,60 +247,28 @@ class EventoESTransformation():
 
 
     def _targetAudience(self):
-        #aus all_events_texts.Value,  wenn Type = Memo und Number = 2
+        #aus all_events_texts.Value,  wenn Type = Memo und Number = 3
         if "event_texts" in self.course:
 
             #todo
-            #same question as for _description. By now note is only used for evento not zem
+            #same question as for _description.
             #we have to check what to do in the future
 
             all_targetAudience =  "  / ".join(  list(map(lambda etd: etd['Value'],
                                         filter(lambda event_text_dict:
                                                event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 2, self.course["event_texts"]))))
+                                               and event_text_dict['Number'] == 3, self.course["event_texts"]))))
 
             self.es["targetAudience"] = all_targetAudience
 
 
-
-    def _contacts(self):
-
-        # Definition Silvia for fulldocument
-        #      "instructors": {
-        #          "properties": {
-        #              "companies": {
-        #                  "properties": {
-        #                      "name"
-        #                      "street"
-        #                      "city"
-        #                      "postalcode"
-        #                      "url"
-        #                      "title" // aus all_events.Leadership, alles was nach Komma kommt
-        #
-        #                  }
-        #              },
-        #              "firstName"
-        #              "lastName"  // aus all_events.Leadership, alles was vor Komma kommt
-        #              "phone"
-        #              "email"
-        #              "birthdate"
-        #          }
-        #      },
-
-        if "Leadership" in self.course:
-            contact = {}
-            leadership = self.course["Leadership"].split(",")
-            if (len(leadership) == 2):
-                contact["lastName"] = leadership[0]
-                contact["companies"] = [{'title': leadership[1]}]
-                self.es["persons"] = [contact]
 
     def _create_full_document(self):
         fullrecord = {}
         if "beginDate" in self.es:
             fullrecord["beginDate"] = self.es["beginDate"]
         #fullrecord["category"]
-        fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
+        #fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
         if "name" in self.es:
             fullrecord["coursename"] = self.es["name"]
         #fullrecord["coursename"] = self.es["name"] if "name" in self.es else "NA"
@@ -241,6 +284,12 @@ class EventoESTransformation():
         if "endDate" in self.es:
             fullrecord["endDate"] = self.es["endDate"]
 
+        if "goals" in self.es:
+            fullrecord["goals"] = self.es["goals"]
+
+        if "instructorsNote" in self.es:
+            fullrecord["instructorsNote"] = self.es["instructorsNote"]
+
         if "language" in self.es:
             fullrecord["language"] = self.es["language"]
 
@@ -252,6 +301,9 @@ class EventoESTransformation():
 
         if "minParticipants" in self.es:
             fullrecord["minParticipants"] = self.es["minParticipants"]
+
+        if "methods" in self.es:
+            fullrecord["methods"] = self.es["methods"]
 
         if "note" in self.es:
             fullrecord["note"] = self.es["note"]
@@ -268,14 +320,17 @@ class EventoESTransformation():
         if "registrationDate" in self.es:
             fullrecord["registrationDate"] = self.es["registrationDate"]
 
+        if "registrationInfo" in self.es:
+            fullrecord["registrationInfo"] = self.es["registrationInfo"]
+
+        if "requirements" in self.es:
+            fullrecord["requirements"] = self.es["requirements"]
+
         if "status" in self.es:
             fullrecord["status"] = self.es["status"]
 
         if "targetAudience" in self.es:
             fullrecord["targetAudience"] = self.es["targetAudience"]
-
-        if "persons" in self.es:
-            fullrecord["instructors"] = self.es["persons"]
 
 
         self.es["fulldocument"] = json.dumps(fullrecord)
