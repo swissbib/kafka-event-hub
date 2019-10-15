@@ -17,7 +17,7 @@ class EventoESTransformation():
 
 
         self._create_id()
-        self._course_name()
+        self._courseName()
         self._beginDate()
         self._key_coursetypes()
         self._dates()
@@ -55,10 +55,10 @@ class EventoESTransformation():
     def es_structure(self):
         return self.es
 
-    def _course_name(self):
+    def _courseName(self):
         #Silvia: aus all-events.Designation
         if "Designation" in self.course:
-            self.es["name"] = self.course["Designation"]
+            self.es["courseName"] = self.course["Designation"]
 
     def _beginDate(self):
         #Silvia: aus all-events.DateFrom
@@ -269,9 +269,9 @@ class EventoESTransformation():
             fullrecord["beginDate"] = self.es["beginDate"]
         #fullrecord["category"]
         #fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
-        if "name" in self.es:
-            fullrecord["coursename"] = self.es["name"]
-        #fullrecord["coursename"] = self.es["name"] if "name" in self.es else "NA"
+        if "courseName" in self.es:
+            fullrecord["courseName"] = self.es["courseName"]
+        #fullrecord["courseName"] = self.es["courseName"] if "courseName" in self.es else "NA"
         if "courseType" in self.es:
             fullrecord["courseType"] = self.es["courseType"]
 

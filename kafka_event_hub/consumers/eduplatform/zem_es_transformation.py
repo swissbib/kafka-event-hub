@@ -54,7 +54,7 @@ class ZemESTransformation():
 
 
     def make_structure(self):
-        self._course_name()
+        self._courseName()
         self._key_words()
         self._key_coursetypes()
         self._key_language()
@@ -89,9 +89,9 @@ class ZemESTransformation():
             fullrecord["beginDate"] = self.es["beginDate"]
         #fullrecord["category"]
         fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
-        if "name" in self.es:
-            fullrecord["coursename"] = self.es["name"]
-        #fullrecord["coursename"] = self.es["name"] if "name" in self.es else "NA"
+        if "courseName" in self.es:
+            fullrecord["courseName"] = self.es["courseName"]
+        #fullrecord["courseName"] = self.es["courseName"] if "courseName" in self.es else "NA"
         if "courseType" in self.es:
             fullrecord["courseType"] = self.es["courseType"]
         #fullrecord["courseType"] = self.es["courseType"] if "courseType" in self.es else []
@@ -308,10 +308,10 @@ class ZemESTransformation():
     def _provider(self):
         self.es["provider"] = "ZEM" #always ZEM
 
-    def _course_name(self):
+    def _courseName(self):
         if "name" in self.course:
-            #self.es["name"] = self.course["name"] if "name" in self.course else "NA"
-            self.es["name"] = self.course["name"]
+            #self.es["courseName"] = self.course["name"] if "name" in self.course else "NA"
+            self.es["courseName"] = self.course["name"]
 
     def _key_words(self):
         if "keywords" in self.course:
@@ -486,7 +486,7 @@ class ZemESTransformation():
 
     def _organiser(self):
         if "companies" in self.course and "details" in self.course["companies"] \
-                        and "name" in self.course["cmpanies"]["details"]:
+                        and "name" in self.course["companies"]["details"]:
             self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]}
             # self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]} if \
             #     "companies" in self.course and "details"  in self.course["companies"] \
