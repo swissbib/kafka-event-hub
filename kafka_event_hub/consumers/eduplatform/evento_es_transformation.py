@@ -20,6 +20,7 @@ class EventoESTransformation():
         self._courseName()
         self._beginDate()
         self._key_coursetypes()
+        self._keywords()
         self._dates()
         self._description()
         self._endDate()
@@ -71,9 +72,6 @@ class EventoESTransformation():
         if "AreaOfEducation" in self.course:
             coursetypes.append(self.course["AreaOfEducation"])
 
-        if "EventCategory" in self.course:
-            coursetypes.append(self.course["EventCategory"])
-
         if "EventLevel" in self.course:
             coursetypes.append(self.course["EventLevel"])
 
@@ -82,8 +80,16 @@ class EventoESTransformation():
 
         self.es["courseType"] = coursetypes
 
+    def _keywords(self):
+
+        if "EventCategory" in self.course and self.course["EventCategory"] is not None:
+            self.es["keywords"] = self.course["EventCategory"]
+
+
     def _dates(self):
-        #Silvia: aus all-events.DateString und all-events.TimeFrom und all-events.TimeTo
+        #if text mit Label für dates: diesen Text in self.es["dates"]
+        #else if DateFrom = DateTo: Weekday DateFrom (in Datum umgewandelt), TimeFrom - TimeTo
+        #else: DateString, jeweils Weekday TimeFrom-TimeTo
         dates = []
         if "DateString" in self.course:
             dates.append(self.course["DateString"])
@@ -192,7 +198,8 @@ class EventoESTransformation():
             self.es["note"] = all_notes
 
     def _place(self):
-        #aus all_events.Location
+        #if event_location in self.course: self.es["place"] = BuildingName (ResocurceDesignation), BuildingAddress, BuildingZip BuildingLocation
+        #else if "Location" in self.course and self.course["Location"] is not None: self.es["place"] = self.course["Location"]
         if "Location" in self.course and self.course["Location"] is not None:
             self.es["place"] = self.course["Location"]
 
@@ -269,6 +276,10 @@ class EventoESTransformation():
             fullrecord["beginDate"] = self.es["beginDate"]
         #fullrecord["category"]
         #fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
+
+        if "certificate" in self.es:
+            fullrecord["certificate"] = self.es["certificate"]
+
         if "courseName" in self.es:
             fullrecord["courseName"] = self.es["courseName"]
         #fullrecord["courseName"] = self.es["courseName"] if "courseName" in self.es else "NA"
@@ -289,6 +300,9 @@ class EventoESTransformation():
 
         if "instructorsNote" in self.es:
             fullrecord["instructorsNote"] = self.es["instructorsNote"]
+
+        if "keywords" in self.es:
+            fullrecord["keywords"] = self.es["keywords"]
 
         if "language" in self.es:
             fullrecord["language"] = self.es["language"]
