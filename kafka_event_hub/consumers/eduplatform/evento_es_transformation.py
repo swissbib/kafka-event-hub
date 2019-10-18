@@ -41,13 +41,13 @@ class EventoESTransformation():
         self._status()
         self._targetAudience()
 
+        #new
+        self._certificate()
+        self._priceNote()
+
+
+        #now create full document out of single elements
         self._create_full_document()
-
-
-
-
-
-
 
 
 
@@ -55,6 +55,52 @@ class EventoESTransformation():
     @property
     def es_structure(self):
         return self.es
+
+
+
+    def _check_event_text_single(self, event_text, label_element):
+        if 'Number' in event_text and 'Number' in label_element and 'Type' in event_text \
+            and 'Type' in label_element and event_text['Number'] == label_element['Number'] and \
+                event_text['Type'] == 'Memo':
+            return event_text['Value']
+
+
+    def _check_event_text_sequence(self, searched_element):
+
+        type_memo = []
+        if "event_texts" in self.course:
+            all_certificates_label =  list(filter(lambda event_text_dict:
+                                               event_text_dict['Type'] == 'Label'
+                                               and event_text_dict['Value'] == searched_element, self.course["event_texts"]))
+
+            if len(all_certificates_label) > 0:
+
+                for label_element in all_certificates_label:
+                    type_memo = list(filter (lambda elem: elem is not None,
+                                           map(lambda event_text: self._check_event_text_single(event_text,
+                                                            label_element),self.course["event_texts"])))
+
+        return type_memo
+
+
+
+    def _certificate(self):
+
+        searched_element = self._check_event_text_sequence(searched_element='Abschluss')
+
+        if len(searched_element) > 0:
+            self.es['certificate'] = searched_element
+
+
+    def _priceNote(self):
+
+        searched_element = self._check_event_text_sequence(searched_element='Kosten')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Kosten '))
+
+        if len(searched_element) > 0:
+          self.es['description'] = searched_element
+
+
 
     def _courseName(self):
         #Silvia: aus all-events.Designation
@@ -98,28 +144,31 @@ class EventoESTransformation():
         if "TimeTo" in self.course and self.course["TimeTo"] is not None:
             dates.append(self.course["TimeTo"])
 
+
+        dates.extend(self._check_event_text_sequence(searched_element='Kursdaten/Zeiten'))
+        dates.extend(self._check_event_text_sequence(searched_element='Unterrichtszeiten'))
+        dates.extend(self._check_event_text_sequence(searched_element='Unterrichtszeiten/Zeitaufwand'))
+        dates.extend(self._check_event_text_sequence(searched_element='Unterrichtzeiten'))
+        dates.extend(self._check_event_text_sequence(searched_element='Unterrichtzeiten/Zeitaufwand'))
+        dates.extend(self._check_event_text_sequence(searched_element='Zeiten'))
+
+
         self.es["dates"] = dates
 
 
     def _description(self):
-        #Silvia: aus all_events_texts.Value, wenn Type = Memo und Number = 1
 
-        descriptions = []
-        if "event_texts" in self.course:
+        searched_element = self._check_event_text_sequence(searched_element='Ausbildungsinhalt')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Inhalt'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Kursinhalt'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Kursinhalt '))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Kursinhalt, -ziel, Arbeitsweise'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Programm/Kursinhalt'))
 
-            #todo
-            #description in zem is simple string. So here I'm going to use a concatination of several strings
-            #we have to check what to do in the future
+        if len(searched_element) > 0:
+            self.es['description'] = searched_element
 
-            #all_descriptions = " / ".join(list(filter(lambda event_text: event_text['Type'] == 'Memo' and event_text['Number'] == 1, self.course["event_texts"])))
-            all_descriptions =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 1, self.course["event_texts"]))))
-            #remove carriage return
-            all_descriptions = " ".join(all_descriptions.split()) #very simple done
-            #self.es["description"] = self.course["details"] if "details" in self.course else "NA"
-            self.es["description"] = all_descriptions
+
 
     def _endDate(self):
         #Silvia: aus all_events.DateTo
@@ -127,18 +176,10 @@ class EventoESTransformation():
             self.es["endDate"] = self.course["DateTo"]
 
     def _goals(self):
-        # aus all_events_texts.Value,  wenn Type = Memo und Number = 2
-        if "event_texts" in self.course:
-            # todo
-            # same question as for _description.
-            # we have to check what to do in the future
 
-            all_goals = "  / ".join(list(map(lambda etd: etd['Value'],
-                                               filter(lambda event_text_dict:
-                                                      event_text_dict['Type'] == 'Memo'
-                                                      and event_text_dict['Number'] == 2, self.course["event_texts"]))))
-
-            self.es["goals"] = all_goals
+        searched_element = self._check_event_text_sequence(searched_element='Kursziel')
+        if len(searched_element) > 0:
+            self.es['goals'] = searched_element
 
     def _instructorsNote(self):
         #aus all_events.Leadership
@@ -168,34 +209,37 @@ class EventoESTransformation():
             self.es["minParticipants"] = self.course["MinParticipants"]
 
     def _methods(self):
-        #aus all_events_texts.Value,  wenn Type = Memo und Number = 5
-        if "event_texts" in self.course:
 
-            #todo
-            #same question as for _description.
-            #we have to check what to do in the future
-
-            all_methods =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 5, self.course["event_texts"]))))
-
-            self.es["methods"] = all_methods
+        searched_element = self._check_event_text_sequence(searched_element='Arbeitsweise')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Methodik'))
+        if len(searched_element) > 0:
+            self.es['methods'] = searched_element
 
     def _note(self):
-        #aus all_events_texts.Value, wenn Type = Memo und Number = 7
-        if "event_texts" in self.course:
 
-            #todo
-            #same question as for _description. By now note is only used for evento not zem
-            #we have to check what to do in the future
+        searched_element = self._check_event_text_sequence(searched_element='Bemerkung')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Bemerkungen'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Durchf\u00fchrung'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Ferien'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Hinweis'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Information'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Informationen'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Kleidung'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Lehrmittel'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Link'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Selbststudium'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Tr\u00e4gerschaft'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Video'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Weitere Informationen'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Weitere Termine'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='WICHTIG'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Zeitaufwand'))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Zeitungsartikel'))
 
-            all_notes =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 7, self.course["event_texts"]))))
 
-            self.es["note"] = all_notes
+
+        if len(searched_element) > 0:
+            self.es['note'] = searched_element
 
     def _place(self):
         #if event_location in self.course: self.es["place"] = BuildingName (ResocurceDesignation), BuildingAddress, BuildingZip BuildingLocation
@@ -210,7 +254,8 @@ class EventoESTransformation():
             self.es["price"] = self.course["Price"]
 
     def _provider(self):
-        self.es["provider"] = "EVENTOTest" #only test and fix value to indicate this
+        #self.es["provider"] = "EVENTOTest" #only test and fix value to indicate this
+        self.es["provider"] = self._provider_Code
 
     def _registrationDate(self):
         #aus all_events.SubscriptionDateTo
@@ -218,34 +263,18 @@ class EventoESTransformation():
             self.es["registrationDate"] = self.course["SubscriptionDateTo"]
 
     def _registrationInfo(self):
-        #aus all_events_texts.Value,  wenn Type = Memo und Number = 6
-        if "event_texts" in self.course:
 
-            #todo
-            #same question as for _description.
-            #we have to check what to do in the future
-
-            all_registrationInfo =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 6, self.course["event_texts"]))))
-
-            self.es["registrationInfo"] = all_registrationInfo
+        searched_element = self._check_event_text_sequence(searched_element='Anmeldung ')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Anmeldung'))
+        if len(searched_element) > 0:
+            self.es['registrationInfo'] = searched_element
 
     def _requirements(self):
-        #aus all_events_texts.Value,  wenn Type = Memo und Number = 4
-        if "event_texts" in self.course:
 
-            #todo
-            #same question as for _description.
-            #we have to check what to do in the future
-
-            all_requirements =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 4, self.course["event_texts"]))))
-
-            self.es["requirements"] = all_requirements
+        searched_element = self._check_event_text_sequence(searched_element='Voraussetzung')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Voraussetzungen'))
+        if len(searched_element) > 0:
+            self.es['requirements'] = searched_element
 
     def _status(self):
         #aus all_events.Status
@@ -254,20 +283,12 @@ class EventoESTransformation():
 
 
     def _targetAudience(self):
-        #aus all_events_texts.Value,  wenn Type = Memo und Number = 3
-        if "event_texts" in self.course:
 
-            #todo
-            #same question as for _description.
-            #we have to check what to do in the future
-
-            all_targetAudience =  "  / ".join(  list(map(lambda etd: etd['Value'],
-                                        filter(lambda event_text_dict:
-                                               event_text_dict['Type'] == 'Memo'
-                                               and event_text_dict['Number'] == 3, self.course["event_texts"]))))
-
-            self.es["targetAudience"] = all_targetAudience
-
+        searched_element = self._check_event_text_sequence(searched_element='Zielgruppe')
+        searched_element.extend(self._check_event_text_sequence(searched_element='Zielgruppe '))
+        searched_element.extend(self._check_event_text_sequence(searched_element='Zielpublikum'))
+        if len(searched_element) > 0:
+            self.es['targetAudience'] = searched_element
 
 
     def _create_full_document(self):
@@ -346,10 +367,21 @@ class EventoESTransformation():
         if "targetAudience" in self.es:
             fullrecord["targetAudience"] = self.es["targetAudience"]
 
+        if "certificate" in self.es:
+            fullrecord["certificate"] = self.es["certificate"]
+
+        if "priceNote" in self.es:
+            fullrecord["priceNote"] = self.es["priceNote"]
 
         self.es["fulldocument"] = json.dumps(fullrecord)
 
     def _create_id(self):
         #Todo: zem kafka producer should create id consisting of prefix (ZEM) + numeric id coming from zem
 
-        self.es["id"] = "EVENTO" + str(self.course["Id"])
+        self.es["id"] = self._provider_Code + str(self.course["Id"])
+
+    @property
+    def _provider_Code(self):
+        return self._configuration['EDU']['code_data_provider'] \
+            if 'EDU' in self._configuration \
+               and 'code_data_provider' in self._configuration['EDU'] else 'DefaultProvider'

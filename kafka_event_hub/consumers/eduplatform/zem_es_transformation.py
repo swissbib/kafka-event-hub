@@ -75,7 +75,7 @@ class ZemESTransformation():
         self._endDate()
         self._registrationDate()
         self._organiser()
-        self._provider()
+        self._provider
         self._contacts()
         self._create_id()
         self._create_full_document()
@@ -185,7 +185,7 @@ class ZemESTransformation():
     def _create_id(self):
         #Todo: zem kafka producer should create id consisting of prefix (ZEM) + numeric id coming from zem
 
-        self.es["id"] = "ZEM" + self.course["self"][self.course["self"].rfind("/") + 1:]
+        self.es["id"] = self._provider_Code + self.course["self"][self.course["self"].rfind("/") + 1:]
 
     def _contacts(self):
         if "contacts" in self.course:
@@ -306,7 +306,8 @@ class ZemESTransformation():
 
 
     def _provider(self):
-        self.es["provider"] = "ZEM" #always ZEM
+        #self.es["provider"] = "ZEM" #always ZEM
+        self.es["provider"] = self._provider_Code
 
     def _courseName(self):
         if "name" in self.course:
@@ -543,3 +544,9 @@ class ZemESTransformation():
                     break
 
         return holangebot
+
+    @property
+    def _provider_Code(self):
+        return self._configuration['EDU']['code_data_provider'] \
+            if 'EDU' in self._configuration \
+               and 'code_data_provider' in self._configuration['EDU'] else 'DefaultProvider'

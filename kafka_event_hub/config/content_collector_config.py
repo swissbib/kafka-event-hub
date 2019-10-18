@@ -176,6 +176,11 @@ class EduConfig(ContentCollectorConfig):
             if 'Transformations' in self.configuration \
                and 'keywords' in self.configuration['Transformations'] else None
 
+    @property
+    def code_data_provider(self):
+        return self.configuration['EDU']['code_data_provider'] \
+            if 'EDU' in self.configuration \
+               and 'code_data_provider' in self.configuration['EDU'] else 'DefaultProvider'
 
 class FileNebisScpConfig(ContentCollectorConfig):
 

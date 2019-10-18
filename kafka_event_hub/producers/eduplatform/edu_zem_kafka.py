@@ -99,8 +99,11 @@ class EduZemKafka(AbstractBaseProducer):
             STARTTIME=current_timestamp()
         ))
 
-
         response = requests.get(self.base_url + "/v1/projects",headers=self.headers)
+        #todo post is actually not possible
+        # change the type of registered application so post and put methods are allowed
+        #status = {"state": {"equal": "open"}}
+        #response = requests.post(self.base_url + "/v1/projects",data=status,headers=self.headers)
 
 
         if response.ok:
@@ -131,6 +134,22 @@ class EduZemKafka(AbstractBaseProducer):
 
                 fp = self.make_repository_request(project["self"])
 
+                #Silvia
+                # Ich würde nur die Kurse mit Status in_progress nehmen.
+                # Im Moment ist noch deferred und abandoned vorhanden, was ja sicher keine
+                # aktuellen Kurse sind.
+                # Dann gibt es noch Status new, der aber auch wenig Sinn macht da noch keine
+                # vernünftige Kursbeschreibung vorhanden ist. Also besser weg damit.
+
+                #if not "status" in fp or fp["status"] is None or fp["status"] == "done" or fp["status"] == "cancelled":
+                if not "status" in fp or fp["status"] is None or fp["status"] != 'in_progress':
+                  continue
+
+
+                #t = open("onlytest.json","w")
+                #json.dump(fp,t,indent=20)
+                #t.flush()
+                #t.close()
 
                 if "forms" in fp:
                     methods = []

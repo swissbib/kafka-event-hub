@@ -1,18 +1,31 @@
 {
-  "metisgym3" : {
+   "settings" : {
+        "number_of_shards" : 1,
+        "number_of_replicas" : 1
+    },
     "mappings" : {
       "properties" : {
         "beginDate" : {
           "type" : "date"
         },
         "courseName" : {
-          "type" : "text"
+          "type" : "text",
+          "fields": {
+            "sortCourseName": {
+              "type": "keyword"
+            }
+          }
         },
         "courseType" : {
           "type" : "keyword"
         },
         "dates" : {
-          "type" : "text"
+          "type" : "text",
+          "fields": {
+            "sortDates": {
+              "type": "keyword"
+            }
+          }
         },
         "description" : {
           "type" : "text"
@@ -119,7 +132,12 @@
           }
         },
         "place" : {
-          "type" : "text"
+          "type" : "text",
+          "fields": {
+            "sortPlace": {
+              "type": "keyword"
+            }
+          }
         },
         "price" : {
           "type" : "float"
@@ -146,9 +164,13 @@
           "type" : "text"
         },
         "targetAudience" : {
-          "type" : "text"
+          "type" : "text",
+          "fields": {
+            "sortTargetAudience": {
+              "type": "keyword"
+            }
+          }
         }
       }
     }
-  }
 }

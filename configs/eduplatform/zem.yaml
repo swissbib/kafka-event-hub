@@ -8,6 +8,8 @@ EDU:
   url: https://api.marketcircle.net
   auth_file: zem_auth.yaml
   time_to_refresh_token: 2500
+  code_data_provider: 'ZEM'
+
   #lastproject: 862127
 
 Processing:
@@ -17,10 +19,10 @@ Producer:
   client_id: edu-zem-producer
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
-Topics: cc-zemall2
+Topics: cc-zem-open
 
 Topic:
-  name: cc-zemall2
+  name: cc-zem-open
 
 Consumer:
   #bootstrap_servers: sb-uka3:9092,sb-uka4:9092,sb-uka5:9092,sb-uka6:9092
@@ -38,7 +40,7 @@ Logging:
 ES:
   #hosts: "sb-ues5.swissbib.unibas.ch:8080"
   hosts: "localhost:8080"
-  index: metisgym2
+  index: metisgym5
   active: True
 
 Transformations:

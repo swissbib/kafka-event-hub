@@ -23,6 +23,7 @@ import yaml
 from datetime import datetime
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import re
 
 
 
@@ -39,8 +40,9 @@ class EduEventoKafka(AbstractBaseProducer):
         self.url_all_events = self.base_url + "Events/"
         self.url_all_event_texts = self.base_url + "EventTexts/"
         self.url_all_event_locations = self.base_url +  "EventLocations/"
-        self.lessons_of_event = self.base_url +  "Events/" + str(self._auth_file_dic['oauth2']['AnlassId']) + "/Lessons"
+        #self.lessons_of_event = self.base_url +  "Events/" + str(self._auth_file_dic['oauth2']['AnlassId']) + "/Lessons"
 
+        self.lessons_of_event = self.base_url +  "Events/{AnlassId}/Lessons"
 
         self.headers = {'CLX-Authorization': "token_type=urn:ietf:params:oauth:token-type:jwt-bearer, access_token={}".format(self._auth_file_dic['oauth2']['access_token']),
                         'Content-Type': 'application/json'}
@@ -99,20 +101,39 @@ class EduEventoKafka(AbstractBaseProducer):
         # Wollen sie auch gleich Anmeldungen vornehmen? Wenn ja, müssten ich Ihnen noch 2 Request und ein wenig Businesslogik Kenntnis mehr abgeben.
         # Nein!
 
+        #self.refresh_access_token()
+        #self.check_valid_access_token()
 
         all_events = self.make_repository_request(self.url_all_events)
         all_events_texts = self.make_repository_request(self.url_all_event_texts)
         all_events_locations = self.make_repository_request(self.url_all_event_locations)
-        all_lessons_of_events = self.make_repository_request(self.lessons_of_event)
+        #all_lessons_of_events = self.make_repository_request(self.lessons_of_event)
+
+        # all_events_serialized = open("all_events_serialized_eventobern.json", "w")
+        # all_events_texts_serialized = open("all_events_texts_serialized_eventobern.json", "w")
+        # all_events_locations_serialized = open("all_events_locations_serialized_eventobern.json", "w")
+        # #all_lessons_of_events_serialized = open("all_lessons_of_events_serialized_eventobern.json", "w")
+        #
+        # json.dump(all_events, all_events_serialized, indent=20)
+        # all_events_serialized.flush()
+        # all_events_serialized.close()
+        #
+        # json.dump(all_events_texts, all_events_texts_serialized, indent=20)
+        # all_events_texts_serialized.flush()
+        # all_events_texts_serialized.close()
+        #
+        # json.dump(all_events_locations, all_events_locations_serialized, indent=20)
+        # all_events_locations_serialized.flush()
+        # all_events_locations_serialized.close()
 
 
 
-
-        #all = {}
-        #all["all_events"] = all_events
-        #all["all_events_texts"] = all_events_texts
-        #all["all_events_locations"] = all_events_locations
+        all = {}
+        all["all_events"] = all_events
+        all["all_events_texts"] = all_events_texts
+        all["all_events_locations"] = all_events_locations
         #all["all_lessons_of_events"] = all_lessons_of_events
+        all["all_lessons_of_events"] = []
 
 
         #todo: bis jetzt kein check, ob die referenzen in den abhängigen Objekten überhaupt vorhanden sind!!
@@ -131,14 +152,22 @@ class EduEventoKafka(AbstractBaseProducer):
         for single_event_location in all_events_locations:
             all_events_dict[str(single_event_location['EventId'])]['event_locations'].append(single_event_location)
 
-        for single_lesson_of_event in all_lessons_of_events:
-            all_events_dict[str(single_lesson_of_event['EventId'])]['lessons_of_event'].append(single_lesson_of_event)
+        #search for all lessons
+        for single_event in filtered_dict_events_as_list:
+            eventKey = list(single_event.keys())[0]
+            lessons_url = self.lessons_of_event.replace("{AnlassId}", eventKey)
+            lessons_of_single_event =  self.make_repository_request(lessons_url)
+            for single_lesson in lessons_of_single_event:
+                all_events_dict[str(eventKey)]['lessons_of_event'].append(single_lesson)
 
 
-        #evento_out = open("evento_content.json","w")
-        #evento_out.write(json.dumps(all))
 
-        #evento_out.close()
+        # evento_out_serialized = open("evento_content_eventobern_all.json","w")
+        # json.dump(all_events_dict, evento_out_serialized, indent=20)
+        # evento_out_serialized.flush()
+        # evento_out_serialized.close()
+
+
 
         for key, evento_course in all_events_dict.items():
             self.send(key=key.encode('utf8'),
