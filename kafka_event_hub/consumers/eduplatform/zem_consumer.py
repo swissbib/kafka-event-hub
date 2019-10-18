@@ -41,6 +41,11 @@ class ZemConsumer(AbstractBaseConsumer):
             self.dI = index = self.configuration["ES"]["index"]
 
     def _index_doc(self,key, message):
+        # fp = open ("daylite.offen.json", "a")
+        # json.dump(json.loads(message), fp, indent=20)
+        # fp.flush()
+        # fp.close()
+
         if self.configuration["ES"]["active"]:
             doc = self.createDoc(message)
             #bug im update https://github.com/elastic/elasticsearch/issues/41625
