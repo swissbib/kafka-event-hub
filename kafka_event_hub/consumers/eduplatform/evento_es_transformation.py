@@ -2,6 +2,8 @@ import re
 import hashlib
 import json
 
+from datetime import datetime
+
 class EventoESTransformation():
 
     def __init__(self, course : dict):
@@ -133,17 +135,12 @@ class EventoESTransformation():
 
 
     def _dates(self):
-        #if text mit Label für dates: diesen Text in self.es["dates"]
+        ####if text mit Label für dates: diesen Text in self.es["dates"]
+
         #else if DateFrom = DateTo: Weekday DateFrom (in Datum umgewandelt), TimeFrom - TimeTo
         #else: DateString, jeweils Weekday TimeFrom-TimeTo
-        dates = []
-        if "DateString" in self.course:
-            dates.append(self.course["DateString"])
-        if "TimeFrom" in self.course and self.course["TimeFrom"] is not None:
-            dates.append(self.course["TimeFrom"])
-        if "TimeTo" in self.course and self.course["TimeTo"] is not None:
-            dates.append(self.course["TimeTo"])
 
+        dates = []
 
         dates.extend(self._check_event_text_sequence(searched_element='Kursdaten/Zeiten'))
         dates.extend(self._check_event_text_sequence(searched_element='Unterrichtszeiten'))
@@ -152,6 +149,17 @@ class EventoESTransformation():
         dates.extend(self._check_event_text_sequence(searched_element='Unterrichtzeiten/Zeitaufwand'))
         dates.extend(self._check_event_text_sequence(searched_element='Zeiten'))
 
+        if len(dates) == 0:
+            if 'DateFrom' in self.course and 'DateTo' in self.course \
+                and self.course['DateFrom'] is not None and self.course['DateTo'] is not None \
+                and self.course['DateFrom'] != '' and self.course['DateTo'] != '' \
+                and self.course['DateFrom'] == self.course['DateTo']:
+                dates.append(datetime.strftime(datetime.strptime(self.course['DateFrom'], '%Y-%m-%dT%H:%M:%S'),
+                                               '%d.%m.%Y'))
+            if 'TimeFrom' in self.course and 'DateTo' in self.course \
+                and self.course['TimeFrom'] is not None and self.course['DateTo'] is not None \
+                and self.course['TimeFrom'] != '' and self.course['DateTo'] != '':
+                dates.append(self.course['TimeFrom'] + " - " + self.course['TimeTo'])
 
         self.es["dates"] = dates
 
@@ -242,10 +250,37 @@ class EventoESTransformation():
             self.es['note'] = searched_element
 
     def _place(self):
-        #if event_location in self.course: self.es["place"] = BuildingName (ResocurceDesignation), BuildingAddress, BuildingZip BuildingLocation
-        #else if "Location" in self.course and self.course["Location"] is not None: self.es["place"] = self.course["Location"]
+
+        #I use a list because various locations might be possible
+        locations = []
+
+        if 'event_locations' in self.course and self.course['event_locations'] is not None \
+                and  isinstance(self.course['event_locations'], list):
+            for elem in self.course['event_locations']:
+                location = []
+                if 'BuildingAddress' in elem.keys():
+                    location.append(elem['BuildingAddress'])
+
+                if 'BuildingZip' in elem.keys():
+                    location.append(" " + elem['BuildingZip'] + " ")
+
+                if 'BuildingLocation' in elem.keys():
+                    location.append(" " + elem['BuildingLocation'] + " ")
+
+                #@Silvia: I haven't seen BuildingName (ResocurceDesignation)
+                if 'BuildingName' in elem.keys():
+                    location.append(" " + elem['BuildingName'] + " ")
+
+                locations.append("".join(location))
+
+        #@Sivia: don't know if it's possible that we have locations at two different places. I take it as given for
+        #the moment
         if "Location" in self.course and self.course["Location"] is not None:
-            self.es["place"] = self.course["Location"]
+            locations.append(self.course["Location"])
+
+        if len(locations) > 0:
+            self.es["place"] = "".join(locations)
+
 
 
     def _price(self):
