@@ -35,7 +35,6 @@ class EduZemKafka(AbstractBaseProducer):
 
         self.base_url = self.configuration.base_url
         self.active = True
-
         logComponenents = init_logging(configrep, self.configuration)
         self._shortcut_source_name = logComponenents['shortcut_source_name']
         self.source_logger_summary = logComponenents['source_logger_summary']
@@ -142,7 +141,9 @@ class EduZemKafka(AbstractBaseProducer):
                 # vernünftige Kursbeschreibung vorhanden ist. Also besser weg damit.
 
                 #if not "status" in fp or fp["status"] is None or fp["status"] == "done" or fp["status"] == "cancelled":
-                if not "status" in fp or fp["status"] is None or fp["status"] != 'in_progress':
+                #if not "status" in fp or fp["status"] is None or fp["status"] != 'in_progress':
+                #  continue
+                if not self.is_course_relevant_for_metisgym(fp):
                   continue
 
 
@@ -210,6 +211,7 @@ class EduZemKafka(AbstractBaseProducer):
             SOURCE=self._shortcut_source_name,
             STARTTIME=current_timestamp()
         ))
+
 
 
     def read_oauth2_credentials(self):
@@ -302,6 +304,11 @@ class EduZemKafka(AbstractBaseProducer):
         self.source_logger_summary.info("ready fetch: " + query_parameter + " " + str(datetime.now()))
 
         return json.loads(response.text)
+
+    def is_course_relevant_for_metisgym(self, fp: dict):
+        relevant = False if (not "status" in fp or fp["status"] is None or fp["status"] != 'in_progress') or \
+                            (not "category" in fp or fp["category"] is None or fp["category"] != 'ANGEBOT') else True
+        return relevant
 
 
 

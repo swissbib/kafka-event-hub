@@ -2,12 +2,16 @@
 import re
 import hashlib
 import json
+from kafka_event_hub.consumers.eduplatform.edu_utilities import EduplatformUtilities
 
 class ZemESTransformation():
 
-    def __init__(self, course : dict):
+    def __init__(self, course : dict, utilities: EduplatformUtilities):
 
         self._configuration = None
+
+        self.edu_utilities = utilities
+
         self.course = course
         self.es = {}
         self.first_2_digits_keywords = re.compile('^\d\d', re.UNICODE | re.DOTALL | re.IGNORECASE)
@@ -75,117 +79,77 @@ class ZemESTransformation():
         self._endDate()
         self._registrationDate()
         self._organiser()
-        self._provider
+        self._provider()
         self._contacts()
         self._create_id()
-        self._create_full_document()
         self._note()
+
+        self._create_full_document()
 
 
 
     def _create_full_document(self):
         fullrecord = {}
-        if "beginDate" in self.es:
-            fullrecord["beginDate"] = self.es["beginDate"]
-        #fullrecord["category"]
-        fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
-        if "courseName" in self.es:
-            fullrecord["courseName"] = self.es["courseName"]
-        #fullrecord["courseName"] = self.es["courseName"] if "courseName" in self.es else "NA"
-        if "courseType" in self.es:
-            fullrecord["courseType"] = self.es["courseType"]
-        #fullrecord["courseType"] = self.es["courseType"] if "courseType" in self.es else []
-        if "dates" in self.es:
-            fullrecord["dates"] = self.es["dates"]
-        #fullrecord["dates"] = self.es["dates"] if "dates" in self.es else "NA"
-        if "description" in self.es:
-            fullrecord["description"] = self.es["description"]
-        #fullrecord["description"] = self.es["description"] if "description" in self.es else "NA"
-        if "endDate" in self.es:
-            fullrecord["endDate"] = self.es["endDate"]
-        #fullrecord["endDate"] = self.es["endDate"] if "endDate" in self.es else "NA"
-        if "goals" in self.es:
-            fullrecord["goals"] = self.es["goals"]
-        #fullrecord["goals"] = self.es["goals"] if "goals" in self.es else "NA"
+
+        simplefields = ['beginDate', 'courseName', 'courseType', 'dates', 'description', 'endDate', 'goals'
+                        'language', 'localID', 'methods', 'maxParticipants', 'minParticipants', 'note',
+                        'organiser', 'place', 'price', 'priceNote', 'registrationDate', 'status', 'subtitle',
+                        'targetAudience', 'provider']
+
+        for fieldname in simplefields:
+            if fieldname in self.es:
+                fullrecord[fieldname] = self.es[fieldname]
+
+        if "persons" in self.es:
+            fullrecord["speakers"] = self.es["persons"]
+
         if "keywords" in self.es:
             fullrecord["keywords"] = self.es["keywords"]
             enriched_keywords = self._check_keywords_url(self.es["keywords"])
             if len(enriched_keywords) > 0:
                 fullrecord["keywordsurl"] = enriched_keywords
 
-        #fullrecord["keywords"] = self.es["keywords"] if "keywords" in self.es else []
-        if "language" in self.es:
-            fullrecord["language"] = self.es["language"]
-        #fullrecord["language"] = self.es["language"] if "language" in self.es else []
-        if "localID" in self.es:
-            fullrecord["localID"] = self.es["localID"]
-        #fullrecord["localID"] = self.es["localID"] if "localID" in self.es else "NA"
-        if "methods" in self.es:
-            fullrecord["methods"] = self.es["methods"]
-        #fullrecord["methods"] =  self.es["methods"] if "methods" in self.es else []
-        if "maxParticipants" in self.es:
-            fullrecord["maxParticipants"] = self.es["maxParticipants"]
-        #fullrecord["maxParticipants"] = self.es["maxParticipants"] if "maxParticipants" in self.es else "NA"
-        if "minParticipants" in self.es:
-            fullrecord["minParticipants"] = self.es["minParticipants"]
-        #fullrecord["minParticipants"] = self.es["minParticipants"] if "minParticipants" in self.es else "NA"
-
-        if "note" in self.es:
-            fullrecord["note"] = self.es["note"]
-
-
-        if "organiser" in self.es:
-            fullrecord["organiser"] = self.es["organiser"]
-        #fullrecord["organiser"] = self.es["organiser"] if "organiser" in self.es else {}
-        if "place" in self.es:
-            fullrecord["place"] = self.es["place"]
-        #fullrecord["place"] = self.es["place"] if "place" in self.es else {}
-        if "price" in self.es:
-            fullrecord["price"] = self.es["price"]
-        #fullrecord["price"] = self.es["price"] if "price" in self.es else "NA"
-        if "priceNote" in self.es:
-            fullrecord["priceNote"] = self.es["priceNote"]
-        #fullrecord["priceNote"] = self.es["priceNote"] if "priceNote" in self.es else "NA"
-        fullrecord["provider"] = "ZEM"
-        #fullrecord["provider"] = self.es["provider"] if "provider" in self.es else "NA"
-        if "registrationDate" in self.es:
-            fullrecord["registrationDate"] = self.es["registrationDate"]
-        #fullrecord["registrationDate"] = self.es["registrationDate"] if "registrationDate" in self.es else "NA"
-        if "status" in self.es:
-            fullrecord["status"] = self.es["status"]
-        #fullrecord["status"] = self.es["status"] if "status" in self.es else "NA"
-        if "subtitle" in self.es:
-            fullrecord["subtitle"] = self.es["subtitle"]
-        #fullrecord["subtitle"] = self.es["subtitle"] if "subtitle" in self.es else "NA"
-        if "targetAudience" in self.es:
-            fullrecord["targetAudience"] = self.es["targetAudience"]
-        #fullrecord["targetAudience"] = self.es["targetAudience"] if "targetAudience" in self.es else "NA"
 
         if "contacts" in self.course:
             contacts = self.course["contacts"]
             #contacts = self.course["contacts"] if "contacts" in self.course else []
-            fullrecord["instructors"] =  list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
-                                                  filter(lambda contact: self._filter_leiter_contacts(contact), contacts)))
-            fullrecord["speakers"] =  list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
+            instructors = list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
+                     filter(lambda contact: self._filter_leiter_contacts(contact), contacts)))
+            if len(instructors) > 0:
+                fullrecord["instructors"] =  instructors
+            speakers = list(map(lambda rc: self._prepare_relevant_contact_fullrecord(rc),
                                                   filter(lambda contact: self._filter_referent_contacts(contact), contacts)))
+            if len(speakers) > 0:
+                fullrecord["speakers"] = speakers
 
         self.es["fulldocument"] = json.dumps(fullrecord)
 
 
     def _course_methods(self):
         if "course_methods" in self.course:
-            self.es["methods"] = self.course["course_methods"]
+
+            #self.es["methods"] = self.course["course_methods"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["course_methods"],
+                                                                       "methods")
         #self.es["methods"] = self.course["methods"] if "methods" in self.course else []
 
     def _price_note(self):
         if "price_note" in self.course:
-            self.es["priceNote"] = self.course["price_note"]
+            #self.es["priceNote"] = self.course["price_note"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["price_note"],
+                                                                       "priceNote")
         #self.es["priceNote"] = self.course["priceNote"] if "priceNote" in self.course else "NA"
 
     def _create_id(self):
         #Todo: zem kafka producer should create id consisting of prefix (ZEM) + numeric id coming from zem
 
-        self.es["id"] = self._provider_Code + self.course["self"][self.course["self"].rfind("/") + 1:]
+        #self.es["id"] = self._provider_Code + self.course["self"][self.course["self"].rfind("/") + 1:]
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   self._provider_Code + self.course["self"]\
+                                                                       [self.course["self"].rfind("/") + 1:],
+                                                                   "id")
 
     def _contacts(self):
         if "contacts" in self.course:
@@ -196,7 +160,11 @@ class ZemESTransformation():
                 zem_prepared_contacts =  list(map(lambda rc: self._prepare_relevant_contact(rc),
                                                   filter(lambda contact: self._filterrelevantContacts(contact), contacts)))
 
-            self.es["persons"] = zem_prepared_contacts
+            #self.es["persons"] = zem_prepared_contacts
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       zem_prepared_contacts,
+                                                                       "persons")
+
 
     def _prepare_relevant_contact(self,rc):
         contact = {}
@@ -307,20 +275,36 @@ class ZemESTransformation():
 
     def _provider(self):
         #self.es["provider"] = "ZEM" #always ZEM
-        self.es["provider"] = self._provider_Code
+        #self.es["provider"] = self._provider_Code
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   self._provider_Code,
+                                                                   "provider")
 
     def _courseName(self):
         if "name" in self.course:
-            #self.es["courseName"] = self.course["name"] if "name" in self.course else "NA"
-            self.es["courseName"] = self.course["name"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course['name'],
+                                                                                   "courseName")
+
 
     def _key_words(self):
+
         if "keywords" in self.course:
             #self.es["keywords"] = self._filteredKeyWords(self.course["keywords"]) if "keywords" in self.course else []
-            self.es["keywords"] = self._filteredKeyWords(self.course["keywords"])
-            enriched_keywords = self._check_keywords_url(self.es["keywords"])
-            if len(enriched_keywords) > 0:
-                self.es["keywordsurl"] = enriched_keywords
+            filtered_keywords = self._filteredKeyWords(self.course["keywords"])
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       filtered_keywords,
+                                                                       "keywords")
+            if "keywords" in self.es:
+                enriched_keywords = self._check_keywords_url(self.es["keywords"])
+                self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                           enriched_keywords,
+                                                                           "keywordsurl")
+
+
+            #if len(enriched_keywords) > 0:
+            #    self.es["keywordsurl"] = enriched_keywords
 
     def _check_keywords_url(self, keywords):
         enriched_keywords = []
@@ -342,23 +326,38 @@ class ZemESTransformation():
     def _key_coursetypes(self):
         if "keywords" in self.course:
             #self.es["courseType"] = self._filteredCourseType(self.course["keywords"]) if "keywords" in self.course else []
-            self.es["courseType"] = self._filteredCourseType(self.course["keywords"])
+            #self.es["courseType"] = self._filteredCourseType(self.course["keywords"])
+            filtered_course_type = self._filteredCourseType(self.course["keywords"])
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       filtered_course_type,
+                                                                       "courseType")
+
 
     def _key_language(self):
         if "keywords" in self.course:
             #self.es["language"] = self._filteredLanguageType(self.course["keywords"]) if "keywords" in self.course else []
-            self.es["language"] = self._filteredLanguageType(self.course["keywords"])
+            #self.es["language"] = self._filteredLanguageType(self.course["keywords"])
+            filtered_language_type = self._filteredLanguageType(self.course["keywords"])
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       filtered_language_type,
+                                                                       "language")
+
 
 
     def _description(self):
         if "details" in self.course:
-            #self.es["description"] = self.course["details"] if "details" in self.course else "NA"
-            self.es["description"] = self.course["details"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course['details'],
+                                                                       'description')
+
 
     def _status(self):
         if "status" in self.course:
-            #self.es["status"] = self.course["status"] if "status" in self.course else "NA"
-            self.es["status"] = self.course["status"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["status"],
+                                                                       "status")
 
     def _localID(self):
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra1" in self.course["extra_fields"] \
@@ -367,12 +366,24 @@ class ZemESTransformation():
             #    "extra_fields" in self.course and "com.marketcircle.daylite/extra1"  in self.course["extra_fields"] \
             #    and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra1"] \
             #    else "NA"
-            self.es["localID"] = self.course["extra_fields"]["com.marketcircle.daylite/extra1"]["value"]
+            #self.es["localID"] = self.course["extra_fields"]["com.marketcircle.daylite/extra1"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"] \
+                                                                           ["com.marketcircle.daylite/extra1"]["value"],
+                                                                       "localID")
+
 
     def _maxParticipants(self):
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra2" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra2"]:
-            self.es["maxParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra2"]["value"]
+            #self.es["maxParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra2"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"] \
+                                                                           ["com.marketcircle.daylite/extra2"]["value"],
+                                                                       "maxParticipants")
+
             #self.es["maxParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra2"]["value"] if \
             #    "extra_fields" in self.course and "com.marketcircle.daylite/extra2"  in self.course["extra_fields"] \
             #    and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra2"] \
@@ -383,7 +394,13 @@ class ZemESTransformation():
 
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra3" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra3"]:
-            self.es["minParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra3"]["value"]
+            #self.es["minParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra3"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra3"]["value"],
+                                                                       "minParticipants")
+
             #self.es["minParticipants"] = self.course["extra_fields"]["com.marketcircle.daylite/extra3"]["value"] if \
             #    "extra_fields" in self.course and "com.marketcircle.daylite/extra3"  in self.course["extra_fields"] \
             #    and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra3"] \
@@ -393,7 +410,13 @@ class ZemESTransformation():
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra5" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra5"] and \
             not self.reg_number.match(self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"]) is None:
-            self.es["price"] = self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"]
+            #self.es["price"] = self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra5"]["value"],
+                                                                       "price")
+
             # self.es["price"] = self.course["extra_fields"]["com.marketcircle.daylite/extra5"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra5"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra5"] \
@@ -403,7 +426,13 @@ class ZemESTransformation():
     def _place(self):
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra6" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra6"]:
-            self.es["place"] = self.course["extra_fields"]["com.marketcircle.daylite/extra6"]["value"]
+            #self.es["place"] = self.course["extra_fields"]["com.marketcircle.daylite/extra6"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra6"]["value"],
+                                                                       "place")
+
             # self.es["place"] = self.course["extra_fields"]["com.marketcircle.daylite/extra6"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra6"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra6"] \
@@ -418,7 +447,13 @@ class ZemESTransformation():
         #todo: hier Liste als default value??
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra7" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra7"]:
-            self.es["dates"] = self.course["extra_fields"]["com.marketcircle.daylite/extra7"]["value"]
+            #self.es["dates"] = self.course["extra_fields"]["com.marketcircle.daylite/extra7"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra7"]["value"],
+                                                                       "dates")
+
             # self.es["dates"] = self.course["extra_fields"]["com.marketcircle.daylite/extra7"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra7"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra7"] \
@@ -428,7 +463,12 @@ class ZemESTransformation():
         #todo: hier Liste als default value??
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra9" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra9"]:
-            self.es["subtitle"] = self.course["extra_fields"]["com.marketcircle.daylite/extra9"]["value"]
+            #self.es["subtitle"] = self.course["extra_fields"]["com.marketcircle.daylite/extra9"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra9"]["value"],
+                                                                       "subtitle")
             # self.es["subtitle"] = self.course["extra_fields"]["com.marketcircle.daylite/extra9"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra9"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra9"] \
@@ -437,7 +477,12 @@ class ZemESTransformation():
     def _goals(self):
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra11" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra11"]:
-            self.es["goals"] = self.course["extra_fields"]["com.marketcircle.daylite/extra11"]["value"]
+            #self.es["goals"] = self.course["extra_fields"]["com.marketcircle.daylite/extra11"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra11"]["value"],
+                                                                       "goals")
             # self.es["goals"] = self.course["extra_fields"]["com.marketcircle.daylite/extra11"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra11"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra11"] \
@@ -446,7 +491,12 @@ class ZemESTransformation():
     def _targetAudience(self):
         if "extra_fields" in self.course and "com.marketcircle.daylite/extra12" in self.course["extra_fields"] \
                         and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra12"]:
-            self.es["targetAudience"] = self.course["extra_fields"]["com.marketcircle.daylite/extra12"]["value"]
+            #self.es["targetAudience"] = self.course["extra_fields"]["com.marketcircle.daylite/extra12"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra12"]["value"],
+                                                                       "targetAudience")
             # self.es["targetAudience"] = self.course["extra_fields"]["com.marketcircle.daylite/extra12"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra12"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra12"] \
@@ -457,7 +507,12 @@ class ZemESTransformation():
         if self._check_holangebot() is False and "extra_fields" in self.course and \
                 "com.marketcircle.daylite/extra_date_1"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]:
-            self.es["beginDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"]
+            #self.es["beginDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra_date_1"]["value"],
+                                                                       "beginDate")
             # self.es["beginDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_1"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_1"] \
@@ -468,7 +523,12 @@ class ZemESTransformation():
         if self._check_holangebot() is False and "extra_fields" in self.course and \
                 "com.marketcircle.daylite/extra_date_2"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]:
-            self.es["endDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"]
+            #self.es["endDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra_date_2"]\
+                                                                           ["value"],
+                                                                       "endDate")
             # self.es["endDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_2"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_2"] \
@@ -478,7 +538,12 @@ class ZemESTransformation():
 
         if self._check_holangebot() is False and "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_3"  in self.course["extra_fields"] \
                 and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]:
-            self.es["registrationDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"]
+            #self.es["registrationDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"]
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["extra_fields"]\
+                                                                           ["com.marketcircle.daylite/extra_date_3"]["value"],
+                                                                       "registrationDate")
             # self.es["registrationDate"] = self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"]["value"] if \
             #     "extra_fields" in self.course and "com.marketcircle.daylite/extra_date_3"  in self.course["extra_fields"] \
             #     and "value" in self.course["extra_fields"]["com.marketcircle.daylite/extra_date_3"] \
@@ -488,7 +553,12 @@ class ZemESTransformation():
     def _organiser(self):
         if "companies" in self.course and "details" in self.course["companies"] \
                         and "name" in self.course["companies"]["details"]:
-            self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]}
+            #self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]}
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       {'name': self.course["companies"]["details"]["name"]},
+                                                                       "organiser")
+
             # self.es["organiser"] = {'name': self.course["companies"]["details"]["name"]} if \
             #     "companies" in self.course and "details"  in self.course["companies"] \
             #     and "name" in self.course["cmpanies"]["details"] \

@@ -45,6 +45,7 @@ ES:
   hosts: "localhost:8080"
   index: metisgym6
   active: True
+  field_type_description: /basedir/configs/eduplatform/indexfieldtypes.json
 
 
 Transformations:

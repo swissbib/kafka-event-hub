@@ -182,6 +182,15 @@ class EduConfig(ContentCollectorConfig):
             if 'EDU' in self.configuration \
                and 'code_data_provider' in self.configuration['EDU'] else 'DefaultProvider'
 
+    @property
+    def field_type_description(self):
+        return self.configuration['ES']['field_type_description'] \
+            if 'ES' in self.configuration \
+               and 'field_type_description' in self.configuration['ES'] else \
+            '/basedir/configs/eduplatform/indexfieldtypes.json'
+
+
+
 class FileNebisScpConfig(ContentCollectorConfig):
 
     def __init__(self, config_path: str, config_path_special: str = None, logger=logging.getLogger(__name__)):

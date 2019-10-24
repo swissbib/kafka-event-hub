@@ -4,6 +4,7 @@ import argparse
 import json
 from elasticsearch import Elasticsearch, exceptions
 from kafka_event_hub.consumers.eduplatform.zem_es_transformation import ZemESTransformation
+from kafka_event_hub.consumers.eduplatform.edu_utilities import  EduplatformUtilities
 
 
 
@@ -20,7 +21,8 @@ class ZemConsumer(AbstractBaseConsumer):
     def createDoc(self, message):
         zemcourse = json.loads(message)
 
-        transformations = ZemESTransformation(zemcourse)
+        transformations = ZemESTransformation(zemcourse, self.edu_utilities)
+
         transformations.set_configuration(self.configuration.configuration)
         transformations.make_structure()
         result = transformations.es_structure
@@ -39,6 +41,8 @@ class ZemConsumer(AbstractBaseConsumer):
                                     index=self.configuration["ES"]["index"])
             self.indexClient = self.es.indices
             self.dI = index = self.configuration["ES"]["index"]
+
+        self.edu_utilities = EduplatformUtilities(self.configuration.configuration)
 
     def _index_doc(self,key, message):
         # fp = open ("daylite.offen.json", "a")

@@ -19,10 +19,10 @@ Producer:
   client_id: edu-zem-producer
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
-Topics: cc-zem-open
+Topics: cc-zem-open-angebot
 
 Topic:
-  name: cc-zem-open
+  name: cc-zem-open-angebot
 
 Consumer:
   #bootstrap_servers: sb-uka3:9092,sb-uka4:9092,sb-uka5:9092,sb-uka6:9092
