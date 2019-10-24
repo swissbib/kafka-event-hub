@@ -1,14 +1,17 @@
 import re
 import hashlib
 import json
+from kafka_event_hub.consumers.eduplatform.edu_utilities import EduplatformUtilities
+
 
 from datetime import datetime
 
 class EventoESTransformation():
 
-    def __init__(self, course : dict):
+    def __init__(self, course : dict, utilities: EduplatformUtilities):
 
         self._configuration = None
+        self.edu_utilities = utilities
         self.course = course
         self.es = {}
 
@@ -24,6 +27,8 @@ class EventoESTransformation():
         self._key_coursetypes()
         self._keywords()
         self._dates()
+
+        #ab hier weiter
         self._description()
         self._endDate()
         self._goals()
@@ -107,12 +112,18 @@ class EventoESTransformation():
     def _courseName(self):
         #Silvia: aus all-events.Designation
         if "Designation" in self.course:
-            self.es["courseName"] = self.course["Designation"]
+            #self.es["courseName"] = self.course["Designation"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["Designation"],
+                                                                       "courseName")
 
     def _beginDate(self):
         #Silvia: aus all-events.DateFrom
         if "DateFrom" in self.course and self.course["DateFrom"] is not None:
-            self.es["beginDate"] = self.course["DateFrom"]
+            #self.es["beginDate"] = self.course["DateFrom"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["DateFrom"],
+                                                                       "beginDate")
 
     def _key_coursetypes(self):
         #Silvia: aus all-events.AreaOfEducation und all-events.EventCategory und all-events.EventLevel und aus all-events.EventType
@@ -126,12 +137,19 @@ class EventoESTransformation():
         if "EventType" in self.course:
             coursetypes.append(self.course["EventType"])
 
-        self.es["courseType"] = coursetypes
+        #self.es["courseType"] = coursetypes
+
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   coursetypes,
+                                                                   'courseType')
 
     def _keywords(self):
 
         if "EventCategory" in self.course and self.course["EventCategory"] is not None:
-            self.es["keywords"] = self.course["EventCategory"]
+            #self.es["keywords"] = self.course["EventCategory"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["EventCategory"],
+                                                                       "keywords")
 
 
     def _dates(self):
@@ -161,7 +179,11 @@ class EventoESTransformation():
                 and self.course['TimeFrom'] != '' and self.course['DateTo'] != '':
                 dates.append(self.course['TimeFrom'] + " - " + self.course['TimeTo'])
 
-        self.es["dates"] = dates
+        #self.es["dates"] = dates
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   dates,
+                                                                   "dates")
+
 
 
     def _description(self):
@@ -411,9 +433,10 @@ class EventoESTransformation():
         self.es["fulldocument"] = json.dumps(fullrecord)
 
     def _create_id(self):
-        #Todo: zem kafka producer should create id consisting of prefix (ZEM) + numeric id coming from zem
-
-        self.es["id"] = self._provider_Code + str(self.course["Id"])
+        if "Id" in self.course["Id"]:
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self._provider_Code + str(self.course["Id"]),
+                                                                       "id")
 
     @property
     def _provider_Code(self):

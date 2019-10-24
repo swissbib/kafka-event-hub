@@ -4,6 +4,7 @@ import argparse
 import json
 from elasticsearch import Elasticsearch, exceptions
 from kafka_event_hub.consumers.eduplatform.zem_es_transformation import ZemESTransformation
+from kafka_event_hub.consumers.eduplatform.edu_utilities import EduplatformUtilities
 
 from kafka_event_hub.consumers.eduplatform.evento_es_transformation import EventoESTransformation
 
@@ -42,6 +43,8 @@ class EventoConsumer(AbstractBaseConsumer):
             self.dI = index = self.configuration["ES"]["index"]
 
         self.all_docs = []
+        self.edu_utilities = EduplatformUtilities(self.configuration.configuration)
+
 
     def _index_doc(self,key, message):
         if self.configuration["ES"]["active"]:
