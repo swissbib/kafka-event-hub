@@ -100,7 +100,7 @@ class EventoESTransformation():
         searched_element.extend(self._check_event_text_sequence(searched_element='Kosten '))
 
         if len(searched_element) > 0:
-          self.es['description'] = searched_element
+          self.es['priceNote'] = searched_element
 
 
 
