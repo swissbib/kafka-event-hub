@@ -91,6 +91,17 @@ class EduEventoKafka(AbstractBaseProducer):
             STARTTIME=current_timestamp()
         ))
 
+
+        #read data from file if needed (testdata was deleted)
+        #fp = open("data/evento-bern/evento_content_eventobern_all.json","r")
+        #all_events_dict = json.load(fp)
+        #for key, evento_course in all_events_dict.items():
+        #    self.send(key=key.encode('utf8'),
+        #              message=json.dumps(evento_course).encode('utf8'))
+
+
+
+
         # Beschreibung Vorgehen pro Evento Schule:
 
         # Public Token lösen
