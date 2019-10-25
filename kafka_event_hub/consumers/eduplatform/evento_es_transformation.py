@@ -95,8 +95,11 @@ class EventoESTransformation():
 
         searched_element = self._check_event_text_sequence(searched_element='Abschluss')
 
-        if len(searched_element) > 0:
-            self.es['certificate'] = searched_element
+        #if len(searched_element) > 0:
+        #    self.es['certificate'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "certificate")
 
 
     def _priceNote(self):
@@ -104,8 +107,11 @@ class EventoESTransformation():
         searched_element = self._check_event_text_sequence(searched_element='Kosten')
         searched_element.extend(self._check_event_text_sequence(searched_element='Kosten '))
 
-        if len(searched_element) > 0:
-          self.es['priceNote'] = searched_element
+        #if len(searched_element) > 0:
+        #  self.es['priceNote'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "priceNote")
 
 
 
@@ -195,55 +201,89 @@ class EventoESTransformation():
         searched_element.extend(self._check_event_text_sequence(searched_element='Kursinhalt, -ziel, Arbeitsweise'))
         searched_element.extend(self._check_event_text_sequence(searched_element='Programm/Kursinhalt'))
 
-        if len(searched_element) > 0:
-            self.es['description'] = searched_element
+        #if len(searched_element) > 0:
+        #    self.es['description'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "description")
+
 
 
 
     def _endDate(self):
         #Silvia: aus all_events.DateTo
         if "DateTo" in self.course and self.course["DateTo"] is not None:
-            self.es["endDate"] = self.course["DateTo"]
+            #self.es["endDate"] = self.course["DateTo"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["DateTo"],
+                                                                       "endDate")
 
     def _goals(self):
 
         searched_element = self._check_event_text_sequence(searched_element='Kursziel')
-        if len(searched_element) > 0:
-            self.es['goals'] = searched_element
+        #if len(searched_element) > 0:
+        #self.es['goals'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "goals")
 
     def _instructorsNote(self):
         #aus all_events.Leadership
         if "Leadership" in self.course and self.course["Leadership"] is not None:
-            self.es["instructorsNote"] = self.course["Leadership"]
+            #self.es["instructorsNote"] = self.course["Leadership"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["Leadership"],
+                                                                       "instructorsNote")
 
     def _key_language(self):
         #Silvia: aus all_events.LanguageOfInstruction (ist in den beiden Testsätzen null)
         if "LanguageOfInstruction" in self.course and self.course["LanguageOfInstruction"] is not None:
-            self.es["language"] = self.course["LanguageOfInstruction"]
+            #self.es["language"] = self.course["LanguageOfInstruction"]
+
+            #Todo: Hinweis Silvia - Nutzung der daylite Relationen
+
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                            self.edu_utilities._map_language(self.course["LanguageOfInstruction"]),
+                                                                       "language")
         else:
-            self.es["language"] = "ger" #just a default value
+            #self.es["language"] = "ger" #just a default value
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       "ger",
+                                                                       "language")
 
     def _localID(self):
         #aus all_events.Number
         if "Number" in self.course:
             self.es["localID"] = self.course["Number"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["Number"],
+                                                                       "localID")
 
     def _maxParticipants(self):
         #aus all_events.MaxParticipants
         if "MaxParticipants" in self.course:
-            self.es["maxParticipants"] = self.course["MaxParticipants"]
+            #self.es["maxParticipants"] = self.course["MaxParticipants"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["MaxParticipants"],
+                                                                       "maxParticipants")
 
     def _minParticipants(self):
         #aus all_events.MinParticipants
         if "MinParticipants" in self.course:
-            self.es["minParticipants"] = self.course["MinParticipants"]
+            #self.es["minParticipants"] = self.course["MinParticipants"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["MinParticipants"],
+                                                                       "minParticipants")
 
     def _methods(self):
 
         searched_element = self._check_event_text_sequence(searched_element='Arbeitsweise')
         searched_element.extend(self._check_event_text_sequence(searched_element='Methodik'))
-        if len(searched_element) > 0:
-            self.es['methods'] = searched_element
+        #if len(searched_element) > 0:
+        #    self.es['methods'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "methods")
 
     def _note(self):
 
@@ -268,8 +308,11 @@ class EventoESTransformation():
 
 
 
-        if len(searched_element) > 0:
-            self.es['note'] = searched_element
+        #if len(searched_element) > 0:
+        #    self.es['note'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "note")
 
     def _place(self):
 
@@ -300,43 +343,64 @@ class EventoESTransformation():
         if "Location" in self.course and self.course["Location"] is not None:
             locations.append(self.course["Location"])
 
-        if len(locations) > 0:
-            self.es["place"] = "".join(locations)
+        #if len(locations) > 0:
+        #    self.es["place"] = "".join(locations)
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   locations,
+                                                                   "place")
 
 
 
     def _price(self):
         #aus all_events.Price
         if "Price" in self.course and self.course["Price"] is not None:
-            self.es["price"] = self.course["Price"]
+            #self.es["price"] = self.course["Price"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["Price"],
+                                                                       "price")
 
     def _provider(self):
         #self.es["provider"] = "EVENTOTest" #only test and fix value to indicate this
-        self.es["provider"] = self._provider_Code
+        #self.es["provider"] = self._provider_Code
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   self._provider_Code,
+                                                                   "provider")
 
     def _registrationDate(self):
         #aus all_events.SubscriptionDateTo
         if "SubscriptionDateTo" in self.course and self.course["SubscriptionDateTo"] is not None:
-            self.es["registrationDate"] = self.course["SubscriptionDateTo"]
+            #self.es["registrationDate"] = self.course["SubscriptionDateTo"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["SubscriptionDateTo"],
+                                                                       "registrationDate")
 
     def _registrationInfo(self):
 
         searched_element = self._check_event_text_sequence(searched_element='Anmeldung ')
         searched_element.extend(self._check_event_text_sequence(searched_element='Anmeldung'))
         if len(searched_element) > 0:
-            self.es['registrationInfo'] = searched_element
+            #self.es['registrationInfo'] = searched_element
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       searched_element,
+                                                                       "registrationInfo")
 
     def _requirements(self):
 
         searched_element = self._check_event_text_sequence(searched_element='Voraussetzung')
         searched_element.extend(self._check_event_text_sequence(searched_element='Voraussetzungen'))
         if len(searched_element) > 0:
-            self.es['requirements'] = searched_element
+            #self.es['requirements'] = searched_element
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       searched_element,
+                                                                       "requirements")
 
     def _status(self):
         #aus all_events.Status
         if "Status" in self.course:
-            self.es["status"] = self.course["Status"]
+            #self.es["status"] = self.course["Status"]
+            self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                       self.course["Status"],
+                                                                       "status")
 
 
     def _targetAudience(self):
@@ -344,96 +408,39 @@ class EventoESTransformation():
         searched_element = self._check_event_text_sequence(searched_element='Zielgruppe')
         searched_element.extend(self._check_event_text_sequence(searched_element='Zielgruppe '))
         searched_element.extend(self._check_event_text_sequence(searched_element='Zielpublikum'))
-        if len(searched_element) > 0:
-            self.es['targetAudience'] = searched_element
+        #if len(searched_element) > 0:
+        #    self.es['targetAudience'] = searched_element
+        self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
+                                                                   searched_element,
+                                                                   "targetAudience")
 
 
     def _create_full_document(self):
+
         fullrecord = {}
-        if "beginDate" in self.es:
-            fullrecord["beginDate"] = self.es["beginDate"]
-        #fullrecord["category"]
-        #fullrecord["speakers"] = self.es["persons"] if "persons" in self.es else []
 
-        if "certificate" in self.es:
-            fullrecord["certificate"] = self.es["certificate"]
+        simplefields = ['beginDate', 'courseName', 'courseType', 'dates', 'description', 'endDate', 'goals',
+                        'language', 'localID', 'methods', 'maxParticipants', 'minParticipants', 'note',
+                        'organiser', 'place', 'price', 'priceNote', 'registrationDate', 'status', 'subtitle',
+                        'targetAudience', 'provider', "certificate", "instructorsNote", "registrationInfo",
+                        "requirements"]
+        fullrecord = {}
 
-        if "courseName" in self.es:
-            fullrecord["courseName"] = self.es["courseName"]
-        #fullrecord["courseName"] = self.es["courseName"] if "courseName" in self.es else "NA"
-        if "courseType" in self.es:
-            fullrecord["courseType"] = self.es["courseType"]
+        for fieldname in simplefields:
+            if fieldname in self.es:
+                fullrecord[fieldname] = self.es[fieldname]
 
-        if "dates" in self.es:
-            fullrecord["dates"] = self.es["dates"]
-        #fullrecord["dates"] = self.es["dates"] if "dates" in self.es else "NA"
-        if "description" in self.es:
-            fullrecord["description"] = self.es["description"]
-        #fullrecord["description"] = self.es["description"] if "description" in self.es else "NA"
-        if "endDate" in self.es:
-            fullrecord["endDate"] = self.es["endDate"]
-
-        if "goals" in self.es:
-            fullrecord["goals"] = self.es["goals"]
-
-        if "instructorsNote" in self.es:
-            fullrecord["instructorsNote"] = self.es["instructorsNote"]
-
+        #todo - or only remark: there is a specialized prepration for keywords in the fulldocument of daylite
+        # (have forgotten why) Therefor we can't put it into the simplefields list
         if "keywords" in self.es:
             fullrecord["keywords"] = self.es["keywords"]
 
-        if "language" in self.es:
-            fullrecord["language"] = self.es["language"]
-
-        if "localID" in self.es:
-            fullrecord["localID"] = self.es["localID"]
-
-        if "maxParticipants" in self.es:
-            fullrecord["maxParticipants"] = self.es["maxParticipants"]
-
-        if "minParticipants" in self.es:
-            fullrecord["minParticipants"] = self.es["minParticipants"]
-
-        if "methods" in self.es:
-            fullrecord["methods"] = self.es["methods"]
-
-        if "note" in self.es:
-            fullrecord["note"] = self.es["note"]
-
-        if "place" in self.es:
-            fullrecord["place"] = self.es["place"]
-
-        if "price" in self.es:
-            fullrecord["price"] = self.es["price"]
-
-        if "provider" in self.es:
-            fullrecord["provider"] = self.es["provider"]
-
-        if "registrationDate" in self.es:
-            fullrecord["registrationDate"] = self.es["registrationDate"]
-
-        if "registrationInfo" in self.es:
-            fullrecord["registrationInfo"] = self.es["registrationInfo"]
-
-        if "requirements" in self.es:
-            fullrecord["requirements"] = self.es["requirements"]
-
-        if "status" in self.es:
-            fullrecord["status"] = self.es["status"]
-
-        if "targetAudience" in self.es:
-            fullrecord["targetAudience"] = self.es["targetAudience"]
-
-        if "certificate" in self.es:
-            fullrecord["certificate"] = self.es["certificate"]
-
-        if "priceNote" in self.es:
-            fullrecord["priceNote"] = self.es["priceNote"]
+        #remark: no persons in the evento source because they don't provide structured informations related to persons
 
         self.es["fulldocument"] = json.dumps(fullrecord)
 
     def _create_id(self):
-        if "Id" in self.course["Id"]:
+        if "Id" in self.course:
             self.edu_utilities.add_data_to_search_doc_prepared_content(self.es,
                                                                        self._provider_Code + str(self.course["Id"]),
                                                                        "id")

@@ -22,7 +22,7 @@ class EventoConsumer(AbstractBaseConsumer):
     def createDoc(self, message):
         course = json.loads(message)
 
-        transformations = EventoESTransformation(course)
+        transformations = EventoESTransformation(course, self.edu_utilities)
         transformations.set_configuration(self.configuration.configuration)
         transformations.make_structure()
         result = transformations.es_structure

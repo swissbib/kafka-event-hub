@@ -36,6 +36,8 @@ class EduEventoKafka(AbstractBaseProducer):
         #self.refresh_access_token()
         self.read_oauth2_credentials()
 
+        #self.refresh_access_token()
+
         self.base_url = self._auth_file_dic['oauth2']['BasisURI'] + os.sep + self._auth_file_dic['oauth2']['EndpunktApi'] + os.sep
         self.url_all_events = self.base_url + "Events/"
         self.url_all_event_texts = self.base_url + "EventTexts/"

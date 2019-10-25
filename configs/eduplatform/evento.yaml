@@ -20,17 +20,17 @@ Producer:
   client_id: edu-evento-producer
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
 
-Topics: cc-evento_bzi
-#Topics: cc-evento4
+Topics: cc-evento4
+#Topics: cc-evento_bzi
 
 Topic:
-  name: cc-evento_bzi
-  #name: cc-evento4
+  name: cc-evento4
+  #name: cc-evento_bzi
 
 Consumer:
   #bootstrap_servers: sb-uka3:9092,sb-uka4:9092,sb-uka5:9092,sb-uka6:9092
   bootstrap_servers: localhost:9092,localhost:9093,localhost:9094
-  client_id: zem_consumer_clie
+  client_id: zem_consumer_cli
   auto_offset_reset: earliest
   consumer_timeout_ms: 10000
 
@@ -43,7 +43,7 @@ Logging:
 ES:
   #hosts: "sb-ues5.swissbib.unibas.ch:8080"
   hosts: "localhost:8080"
-  index: metisgym6
+  index: metisgym7
   active: True
   field_type_description: /basedir/configs/eduplatform/indexfieldtypes.json
 

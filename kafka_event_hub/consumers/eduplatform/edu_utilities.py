@@ -31,24 +31,48 @@ class EduplatformUtilities:
 
         def content_type():
             lf = search_doc_fieldname.lower()
-            return self.field_type_description[lf] if lf in self.field_type_description.keys() else "unique"
+            return self.field_type_description[lf] if lf in self.field_type_description.keys() else "string"
 
 
         def check_content(source_content):
             ct = content_type()
             if ct == "list" and isinstance(source_content, list) and len(source_content) > 0:
                 search_doc[search_doc_fieldname] = source_content
-            elif ct == "unique" and isinstance(source_content, list) and len(source_content) > 0:
+            elif ct == "string" and isinstance(source_content, list) and len(source_content) > 0:
                 search_doc[search_doc_fieldname] = "".join(source_content)
-            elif ct == "unique" and isinstance(source_content, str) and source_content != "":
+            elif ct == "string" and isinstance(source_content, str) and source_content != "":
                 search_doc[search_doc_fieldname] = source_content
             elif ct == "dict" and isinstance(source_content, dict):
                 search_doc[search_doc_fieldname] = source_content
+            elif ct == "list" and isinstance(source_content, str):
+                search_doc[search_doc_fieldname] =  "".join(source_content)
             else:
-                print("make logging - field isn't created because data is not sufficient - correct?")
+                #no empty lists
+                if not isinstance(source_content, list):
+                    #print("make logging - field isn't created because data is not sufficient - correct?")
+                    search_doc[search_doc_fieldname] = str(source_content)
 
 
 
         if content is not None:
             check_content(content)
+
+    def _map_language(self, language_value):
+        language_codes = {
+            'Deutsch': 'ger',
+            'Deutsch-English': 'gereng',
+            'Deutsch-Espa\u00f1ol': 'gerspa',
+            'Deutsch-Fran\u00e7ais': 'gerfre',
+            'Deutsch-Fran\u00e7ais-English': 'gerfreeng',
+            'English': 'eng',
+            'Espa\u00f1ol': 'spa',
+            'Fran\u00e7ais': 'fre',
+            'Italiano': 'ita',
+            '1': 'ger'
+        }
+
+        return language_codes[language_value] if language_value in language_codes else language_value
+
+
+
 

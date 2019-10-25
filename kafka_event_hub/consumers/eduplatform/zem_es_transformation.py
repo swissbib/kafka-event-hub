@@ -91,7 +91,7 @@ class ZemESTransformation():
     def _create_full_document(self):
         fullrecord = {}
 
-        simplefields = ['beginDate', 'courseName', 'courseType', 'dates', 'description', 'endDate', 'goals'
+        simplefields = ['beginDate', 'courseName', 'courseType', 'dates', 'description', 'endDate', 'goals',
                         'language', 'localID', 'methods', 'maxParticipants', 'minParticipants', 'note',
                         'organiser', 'place', 'price', 'priceNote', 'registrationDate', 'status', 'subtitle',
                         'targetAudience', 'provider']
@@ -572,32 +572,16 @@ class ZemESTransformation():
         return list(map(lambda fw: fw[2:],  filter(lambda v : self.first_digit_coursetype.search(v),rawKeywordList)))
 
     def _filteredLanguageType(self, rawKeywordList):
-        return list(map(lambda lang:self._map_language(lang),
+
+        return list(map(lambda lang:self.edu_utilities._map_language(lang),
                         map(lambda fw: fw[3:],  filter(lambda v : self.first_2_digits_language.search(v),rawKeywordList))))
-
-
-    def _map_language(self, language_value):
-        language_codes = {
-            'Deutsch': 'ger',
-            'Deutsch-English': 'gereng',
-            'Deutsch-Espa\u00f1ol': 'gerspa',
-            'Deutsch-Fran\u00e7ais': 'gerfre',
-            'Deutsch-Fran\u00e7ais-English': 'gerfreeng',
-            'English': 'eng',
-            'Espa\u00f1ol': 'spa',
-            'Fran\u00e7ais': 'fre',
-            'Italiano': 'ita'
-        }
-
-        test = language_codes[language_value] if language_value in language_codes else language_value
-        return test
 
     def _map_keywords_to_norm(self,keyword):
 
         return self.keywords_codes[keyword] if keyword in self.keywords_codes else keyword
 
     def _not_hol_angebote(self, rawKeywordList):
-        return list(map(lambda lang:self._map_language(lang),
+        return list(map(lambda lang:self.edu_utilities._map_language(lang),
                         map(lambda fw: fw[3:],  filter(lambda v : self.first_2_digits_language.search(v),rawKeywordList))))
 
     def _get_keywords(self):
