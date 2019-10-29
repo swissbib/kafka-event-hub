@@ -39,13 +39,13 @@ class EduplatformUtilities:
             if ct == "list" and isinstance(source_content, list) and len(source_content) > 0:
                 search_doc[search_doc_fieldname] = source_content
             elif ct == "string" and isinstance(source_content, list) and len(source_content) > 0:
-                search_doc[search_doc_fieldname] = "".join(source_content)
+                search_doc[search_doc_fieldname] = " ".join(source_content)
             elif ct == "string" and isinstance(source_content, str) and source_content != "":
                 search_doc[search_doc_fieldname] = source_content
             elif ct == "dict" and isinstance(source_content, dict):
                 search_doc[search_doc_fieldname] = source_content
             elif ct == "list" and isinstance(source_content, str):
-                search_doc[search_doc_fieldname] =  "".join(source_content)
+                search_doc[search_doc_fieldname] =  [source_content]
             else:
                 #no empty lists
                 if not isinstance(source_content, list):
