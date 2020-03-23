@@ -18,9 +18,9 @@ ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET} ]  &&  mkdir -p ${TARGET}"
 echo "cp tar file to target host"
 scp kafka-event-hub.tar harvester@${TARGET_HOST}:$TARGET
 
-scp -r configs/oai harvester@${TARGET_HOST}:$TARGET/configs
-scp -r configs/filepush harvester@${TARGET_HOST}:$TARGET/configs
-scp -r configs/share/cc.share.yaml harvester@${TARGET_HOST}:$TARGET/configs/share/
+#scp -r configs/oai harvester@${TARGET_HOST}:$TARGET/configs
+#scp -r configs/filepush harvester@${TARGET_HOST}:$TARGET/configs
+#scp -r configs/share/cc.share.yaml harvester@${TARGET_HOST}:$TARGET/configs/share/
 
 
 echo "rm already existing image om target host"
@@ -44,7 +44,7 @@ ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/nebis-working} ]  &&  mkdir -p ${T
 
 
 #echo "cp config and admin scripts on target host"
-#scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
+scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
 
 rm kafka-event-hub.tar
 
