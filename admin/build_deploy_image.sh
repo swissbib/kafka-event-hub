@@ -2,12 +2,12 @@
 
 
 EVENT_HUB_BASE=/home/swissbib/environment/code/swissbib.repositories/kafka-event-hub
-TARGET=/swissbib/harvesting/docker.cc
+TARGET=/swissbib/harvesting/docker.cc.test
 
-cd $EVENT_HUB_BASE
+cd $EVENT_HUB_BASE || echo "directory $EVENT_HUB_BASE not available"; exit
 
 #echo "build new latest image kafka-event-hub"
-#docker image build -t kafka-event-hub -f docker.small/Dockerfile .
+#docker image build --no-cache -t kafka-event-hub -f docker.small/Dockerfile .
 
 echo "save latest image kafka-event-hub as tar file"
 docker save kafka-event-hub --output kafka-event-hub.tar

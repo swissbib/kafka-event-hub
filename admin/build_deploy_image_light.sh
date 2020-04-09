@@ -33,18 +33,18 @@ ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/logs} ]  &&  mkdir -p ${TARGET}/lo
 
 
 echo "create other required dirs"
-ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/rero-src} ]  &&  mkdir -p ${TARGET}/rero-src"
-ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/rero-working} ]  &&  mkdir -p ${TARGET}/rero-working"
+ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET}/rero-src ] &&   echo \"create ${TARGET}/rero-src\" && mkdir -p ${TARGET}/rero-src"
+ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET}/rero-working ] && echo \"create ${TARGET}/rero-working\" &&  mkdir -p ${TARGET}/rero-working"
 
-ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/incomingnebis} ]  &&  mkdir -p ${TARGET}/incomingnebis"
-ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/nebis-src} ]  &&  mkdir -p ${TARGET}/nebis-src"
-ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET/nebis-working} ]  &&  mkdir -p ${TARGET}/nebis-working"
+ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET}/incomingnebis ] &&  echo \"create ${TARGET}/incomingnebis\" &&  mkdir -p ${TARGET}/incomingnebis"
+ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET}/nebis-src ] &&   echo \"create ${TARGET}/nebis-src\";  mkdir -p ${TARGET}/nebis-src"
+ssh harvester@${TARGET_HOST} "[ ! -d ${TARGET}/nebis-working ] &&  echo \"create ${TARGET}/nebis-working\";  mkdir -p ${TARGET}/nebis-working"
 
 
 
 
 #echo "cp config and admin scripts on target host"
-scp -r admin configs harvester@sb-ucoai2.swissbib.unibas.ch:$TARGET
+scp -r admin configs harvester@${TARGET_HOST}.swissbib.unibas.ch:$TARGET
 
 rm kafka-event-hub.tar
 

@@ -2,7 +2,7 @@ AdminClient:
   client_id: oai-admin-sbt-producer
 OAI:
   set: SWISSBIB-FULL-OAI
-  timestampUTC: '2019-05-16T01:01:01Z'
+  timestampUTC: '2020-03-21T01:01:01Z'
   url: http://aleph.sbt.ti.ch/OAI
 Processing:
   Default:

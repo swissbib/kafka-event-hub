@@ -14,7 +14,11 @@ FROM python:3.7.0-alpine3.8
 #https://learning.oreilly.com/library/view/learn-docker-/9781788997027/41a4845a-e102-477d-b3c3-0ca1067e68fa.xhtml
 
 
+#RUN addgroup --gid 55864 harvester
+#RUN adduser -g harvester -u 55864   harvester
 
+#RUN addgroup harvester
+#RUN adduser -g harvester  harvester
 
 ARG LIBRDKAFKA_NAME="librdkafka"
 ARG LIBRDKAFKA_VER="0.11.6"
@@ -70,6 +74,8 @@ org.label-schema.vcs-url="https://github.com/ucalgary/docker-python-librdkafka"
 #RUN wget http://nl.alpinelinux.org/alpine/edge/main/x86_64/py-libxml2-2.9.8-r2.apk -O /var/cache/apk/py-lxml.apk
 #RUN apk add --allow-untrusted /var/cache/apk/py-lxml.apk
 
+
+
 RUN apk update && apk upgrade && pip install -U pip
 RUN apk add --update alpine-sdk make gcc python3-dev python-dev libxslt-dev libxml2-dev libc-dev  libffi-dev zlib-dev \
 py-pip bash && rm -rf /var/cache/apk/*
@@ -85,13 +91,21 @@ RUN mkdir -p /app/kafka_event_hub
 WORKDIR /app
 
 COPY requirements.txt /app
+
+
 RUN pip install -r requirements.txt
+
+#RUN chown -R harvester:harvester /app
+
 
 COPY run.py /app
 
 
 #was machen wir mit den Tests?
 COPY kafka_event_hub /app/kafka_event_hub
+
+USER 52799:52799
+
 
 VOLUME /basedir
 VOLUME /webdav

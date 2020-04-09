@@ -9,7 +9,7 @@ CONFDIR=$DOCKER_BASE/configs
 cd $DOCKER_BASE
 
 
-DEFAULTREPOS="abn alexrepo bgr boris ecod edoc eperiodica ethresearch hemu idsbb idslu idssg kbtg libib nb posters sbt serval sgbn vaud_lib vaud_school zora nebis rero"
+DEFAULTREPOS="abn alexrepo alex bgr boris ecod edoc eperiodica ethresearch hemu idsbb idslu idssg kbtg libib nb posters sbt serval sgbn vaud_lib vaud_school zora nebis rero"
 
 
 if [ -n "$1" ]; then

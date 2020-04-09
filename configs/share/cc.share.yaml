@@ -1,6 +1,7 @@
 AdminClient:
   client_id: oai_share_basic_admin
-  bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+  #bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+  bootstrap_servers: sb-uka7.swissbib.unibas.ch:9092,sb-uka8.swissbib.unibas.ch:9092,sb-uka9.swissbib.unibas.ch:9092
 OAI:
   metadataPrefix: marc21
   httpproxy: None
@@ -29,11 +30,12 @@ Processing:
   Filepush: None
 
 Producer:
-  bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+  #bootstrap_servers: sb-uka3.swissbib.unibas.ch:9092,sb-uka4.swissbib.unibas.ch:9092,sb-uka5.swissbib.unibas.ch:9092,sb-uka6.swissbib.unibas.ch:9092
+  bootstrap_servers: sb-uka7.swissbib.unibas.ch:9092,sb-uka8.swissbib.unibas.ch:9092,sb-uka9.swissbib.unibas.ch:9092
 
 Topic:
   name: should_not_be_used_from_share
-  num_partitions: 4
+  num_partitions: 3
   replication_factor: 1
 
 Logging:
